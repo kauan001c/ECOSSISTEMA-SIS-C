@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>SIS-C | Login</title>
+	<link rel="icon" href="icosis-c.png" type="image/x-icon">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		:root {
+			--bg: #edf1f3;
+			--surface: rgba(255, 255, 255, 0.82);
+			--surface-strong: #ffffff;
+			--text: #1f3442;
+			--muted: #667786;
+			--line: rgba(31, 52, 66, 0.12);
+			--primary: #2f7fb3;
+			--primary-dark: #24648d;
+			--secondary: #1d4d42;
+			--shadow: 0 24px 80px rgba(31, 52, 66, 0.12);
+			--radius-xl: 28px;
+			--radius-lg: 20px;
+			--radius-md: 14px;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			min-height: 100vh;
+			font-family: "Manrope", sans-serif;
+			color: var(--text);
+			background:
+				radial-gradient(circle at top left, rgba(47, 127, 179, 0.18), transparent 28%),
+				radial-gradient(circle at bottom right, rgba(29, 77, 66, 0.14), transparent 24%),
+				linear-gradient(135deg, #f7f9fb 0%, #e9eef2 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 32px;
+		}
+
+		button,
+		input {
+			font-family: inherit;
+		}
+
+		.app-stage {
+			width: min(1120px, 100%);
+			position: relative;
+		}
+
+		.app-stage.authenticated,
+		.app-stage.show-office-dev {
+			width: min(1480px, 100%);
+		}
+
+		.shell {
+			width: 100%;
+			min-height: 680px;
+			border: 1px solid rgba(255, 255, 255, 0.7);
+			border-radius: 36px;
+			background: rgba(255, 255, 255, 0.44);
+			box-shadow: var(--shadow);
+			backdrop-filter: blur(18px);
+			overflow: hidden;
+			display: grid;
+			grid-template-columns: 1.15fr 0.85fr;
+			position: relative;
+		}
+
+		.screen {
+			transition: opacity 0.35s ease, transform 0.35s ease;
+		}
+
+		.modules-screen {
+			display: none;
+			padding: 42px;
+			grid-template-columns: 1fr;
+			background: rgba(255, 255, 255, 0.52);
+		}
+
+		.development-screen {
+			display: none;
+			padding: 42px;
+			grid-template-columns: 1fr;
+			background: rgba(255, 255, 255, 0.56);
+		}
+
+		.app-stage.authenticated .login-screen {
+			display: none;
+		}
+
+		.app-stage.authenticated .modules-screen {
+			display: grid;
+			animation: rise 0.5s ease-out both;
+		}
+
+		.app-stage.show-office-dev .modules-screen {
+			display: none;
+		}
+
+		.app-stage.show-office-dev .development-screen {
+			display: grid;
+			animation: rise 0.45s ease-out both;
+		}
+
+		.shell::before,
+		.shell::after {
+			content: "";
+			position: absolute;
+			border-radius: 999px;
+			filter: blur(8px);
+			opacity: 0.7;
+		}
+
+		.shell::before {
+			width: 220px;
+			height: 220px;
+			background: rgba(47, 127, 179, 0.14);
+			top: -72px;
+			right: 24%;
+		}
+
+		.shell::after {
+			width: 260px;
+			height: 260px;
+			background: rgba(29, 77, 66, 0.12);
+			bottom: -120px;
+			left: -40px;
+		}
+
+		.hero,
+		.panel {
+			position: relative;
+			z-index: 1;
+		}
+
+		.hero {
+			padding: 72px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+		}
+
+		.badge {
+			width: fit-content;
+			padding: 10px 16px;
+			border-radius: 999px;
+			background: rgba(255, 255, 255, 0.72);
+			border: 1px solid rgba(31, 52, 66, 0.08);
+			color: var(--primary);
+			font-size: 0.85rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+		}
+
+		.headline {
+			display: grid;
+			gap: 24px;
+			max-width: 560px;
+			animation: rise 0.8s ease-out both;
+		}
+
+		.headline h1 {
+			font-size: clamp(2.8rem, 5vw, 4.6rem);
+			line-height: 0.96;
+			letter-spacing: -0.05em;
+			font-weight: 800;
+		}
+
+		.headline p {
+			font-size: 1.08rem;
+			line-height: 1.7;
+			color: var(--muted);
+			max-width: 520px;
+		}
+
+		.title-accent {
+			color: var(--secondary);
+			display: block;
+			margin-top: 10px;
+		}
+
+		.greetings {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+			color: var(--muted);
+			font-size: 0.98rem;
+		}
+
+		.greetings strong {
+			color: var(--text);
+			display: block;
+			font-size: 1.05rem;
+		}
+
+		.greetings-mark {
+			width: 66px;
+			height: 66px;
+			border-radius: 20px;
+			background: radial-gradient(circle at center, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.55));
+			display: grid;
+			place-items: center;
+			box-shadow: 0 16px 30px rgba(47, 127, 179, 0.18);
+			border: 1px solid rgba(47, 127, 179, 0.12);
+		}
+
+		.panel {
+			padding: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.login-card {
+			width: min(420px, 100%);
+			padding: 34px;
+			border-radius: var(--radius-xl);
+			background: var(--surface);
+			border: 1px solid rgba(255, 255, 255, 0.74);
+			box-shadow: 0 18px 56px rgba(20, 33, 61, 0.12);
+			backdrop-filter: blur(16px);
+			animation: rise 0.9s ease-out 0.1s both;
+		}
+
+		.login-card h2 {
+			font-size: 2rem;
+			font-weight: 800;
+			letter-spacing: -0.04em;
+			margin-bottom: 10px;
+		}
+
+		.login-card p {
+			color: var(--muted);
+			line-height: 1.6;
+			margin-bottom: 28px;
+		}
+
+		.form {
+			display: grid;
+			gap: 18px;
+		}
+
+		.field {
+			display: grid;
+			gap: 8px;
+		}
+
+		.field label {
+			font-size: 0.94rem;
+			font-weight: 700;
+		}
+
+		.field input {
+			width: 100%;
+			padding: 15px 16px;
+			border-radius: var(--radius-md);
+			border: 1px solid var(--line);
+			background: var(--surface-strong);
+			font: inherit;
+			color: var(--text);
+			transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+		}
+
+		.field input::placeholder {
+			color: #9ba7bc;
+		}
+
+		.field input:focus {
+			outline: none;
+			border-color: rgba(47, 127, 179, 0.4);
+			box-shadow: 0 0 0 4px rgba(47, 127, 179, 0.12);
+			transform: translateY(-1px);
+		}
+
+		.form-row {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 12px;
+			margin-top: 4px;
+			font-size: 0.92rem;
+		}
+
+		.checkbox {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			color: var(--muted);
+		}
+
+		.checkbox input {
+			width: 16px;
+			height: 16px;
+			accent-color: var(--secondary);
+		}
+
+		.link {
+			color: var(--secondary);
+			text-decoration: none;
+			font-weight: 700;
+		}
+
+		.cta {
+			border: 0;
+			border-radius: 16px;
+			padding: 16px 18px;
+			font: inherit;
+			font-weight: 800;
+			letter-spacing: 0.01em;
+			cursor: pointer;
+			color: #ffffff;
+			background: linear-gradient(135deg, var(--secondary), #286151);
+			box-shadow: 0 18px 30px rgba(29, 77, 66, 0.24);
+			transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+			margin-top: 8px;
+		}
+
+		.cta:hover {
+			transform: translateY(-2px);
+			filter: saturate(1.05);
+			box-shadow: 0 22px 34px rgba(29, 77, 66, 0.3);
+		}
+
+		.card-footer {
+			display: flex;
+			justify-content: center;
+			margin-top: 22px;
+			color: var(--muted);
+			font-size: 0.92rem;
+		}
+
+		.card-footer a {
+			color: var(--secondary);
+			font-weight: 800;
+			text-decoration: none;
+		}
+
+		.modules-shell {
+			display: grid;
+			gap: 28px;
+			height: 100%;
+		}
+
+		.modules-layout {
+			display: grid;
+			grid-template-columns: minmax(0, 1fr) 240px;
+			gap: 22px;
+			align-items: start;
+		}
+
+		.modules-main {
+			display: grid;
+			gap: 28px;
+		}
+
+		.modules-topbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 18px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid rgba(20, 33, 61, 0.08);
+		}
+
+		.brand-block {
+			display: grid;
+			gap: 10px;
+		}
+
+		.brand-block h2 {
+			font-size: clamp(2rem, 4vw, 3.2rem);
+			line-height: 1;
+			letter-spacing: -0.05em;
+		}
+
+		.brand-block p {
+			max-width: 700px;
+			color: var(--muted);
+			font-size: 1.02rem;
+			line-height: 1.7;
+		}
+
+		.topbar-actions {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.ghost-button {
+			border: 1px solid rgba(20, 33, 61, 0.12);
+			background: rgba(255, 255, 255, 0.7);
+			color: var(--text);
+			padding: 13px 18px;
+			border-radius: 14px;
+			font-size: 0.95rem;
+			font-weight: 800;
+			cursor: pointer;
+			transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.ghost-button:hover {
+			transform: translateY(-1px);
+			border-color: rgba(47, 127, 179, 0.26);
+			box-shadow: 0 12px 24px rgba(20, 33, 61, 0.08);
+		}
+
+		.modules-summary {
+			display: grid;
+			grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+			gap: 22px;
+		}
+
+		.modules-summary > * {
+			min-width: 0;
+		}
+
+		.summary-card,
+		.user-card,
+		.module-card {
+			border-radius: 26px;
+			background: rgba(255, 255, 255, 0.78);
+			border: 1px solid rgba(255, 255, 255, 0.72);
+			box-shadow: 0 18px 45px rgba(20, 33, 61, 0.09);
+		}
+
+		.summary-card {
+			padding: 28px;
+			display: grid;
+			gap: 18px;
+		}
+
+		.summary-card strong,
+		.user-card strong,
+		.module-card strong {
+			font-size: 0.92rem;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: var(--secondary);
+		}
+
+		.summary-card h3 {
+			font-size: clamp(1.8rem, 3vw, 2.5rem);
+			line-height: 1.05;
+			letter-spacing: -0.04em;
+		}
+
+		.summary-card p,
+		.user-card p,
+		.module-card p {
+			color: var(--muted);
+			line-height: 1.7;
+		}
+
+		.summary-pill-row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 12px;
+		}
+
+		.summary-pill {
+			padding: 11px 14px;
+			border-radius: 999px;
+			background: rgba(47, 127, 179, 0.08);
+			color: var(--primary-dark);
+			font-size: 0.9rem;
+			font-weight: 800;
+		}
+
+		.user-card {
+			padding: 24px;
+			display: grid;
+			gap: 14px;
+			align-content: space-between;
+		}
+
+		.user-card-header {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+		}
+
+		.user-avatar {
+			width: 66px;
+			height: 66px;
+			border-radius: 18px;
+			background: radial-gradient(circle at center, rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.72));
+			display: grid;
+			place-items: center;
+			box-shadow: 0 16px 30px rgba(47, 127, 179, 0.18);
+			border: 1px solid rgba(47, 127, 179, 0.12);
+		}
+
+		.sis-logo {
+			width: 40px;
+			height: 40px;
+			display: block;
+		}
+
+		.sis-logo.logo-large {
+			width: 54px;
+			height: 54px;
+		}
+
+		.sis-logo .logo-left {
+			stroke: url(#sisGradientLeft);
+		}
+
+		.sis-logo .logo-right {
+			stroke: url(#sisGradientRight);
+		}
+
+		.sis-logo .logo-core {
+			fill: url(#sisCoreGradient);
+		}
+
+		.sis-logo .logo-orbit {
+			fill: url(#sisOrbitGradient);
+		}
+
+		.sis-logo .logo-dot {
+			fill: url(#sisDotGradient);
+		}
+
+		.sis-logo .logo-center {
+			fill: #ffffff;
+		}
+
+		.module-grid {
+			display: grid;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 18px;
+		}
+
+		.module-card {
+			padding: 26px;
+			display: grid;
+			gap: 18px;
+			min-height: 180px;
+			align-content: space-between;
+			position: relative;
+			overflow: hidden;
+			transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+		}
+
+		.module-card:hover {
+			transform: translateY(-5px);
+			border-color: rgba(47, 127, 179, 0.18);
+			box-shadow: 0 24px 54px rgba(20, 33, 61, 0.12);
+		}
+
+		.module-card.is-locked {
+			border-color: rgba(255, 145, 41, 0.42);
+			box-shadow: 0 24px 54px rgba(20, 33, 61, 0.14);
+		}
+
+		.module-card.is-locked::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			padding: 2px;
+			border-radius: 26px;
+			background: repeating-linear-gradient(
+				-45deg,
+				#ff9a2f 0 16px,
+				#121212 16px 32px
+			);
+			background-size: 180% 180%;
+			animation: cautionShift 6s linear infinite;
+			-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+			mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+			-webkit-mask-composite: xor;
+			mask-composite: exclude;
+			pointer-events: none;
+		}
+
+		.module-card.is-locked::after {
+			content: "Em desenvolvimento";
+			position: absolute;
+			top: 16px;
+			right: -42px;
+			padding: 8px 48px;
+			background: repeating-linear-gradient(
+				-45deg,
+				#ff9a2f 0 12px,
+				#121212 12px 24px
+			);
+			color: #ffffff;
+			font-size: 0.68rem;
+			font-weight: 800;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			transform: rotate(34deg);
+			box-shadow: 0 10px 20px rgba(18, 18, 18, 0.22);
+			pointer-events: none;
+		}
+
+		.module-card.is-locked > * {
+			position: relative;
+			z-index: 1;
+		}
+
+		.lock-badge {
+			width: fit-content;
+			padding: 7px 12px;
+			border-radius: 999px;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			background: rgba(255, 154, 47, 0.14);
+			border: 1px solid rgba(255, 154, 47, 0.32);
+			color: #8b4b10;
+			font-size: 0.76rem;
+			font-weight: 800;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+		}
+
+		.lock-badge svg {
+			width: 14px;
+			height: 14px;
+			stroke: currentColor;
+			fill: none;
+			stroke-width: 2;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		.module-icon {
+			width: 56px;
+			height: 56px;
+			border-radius: 18px;
+			display: grid;
+			place-items: center;
+			font-size: 1.3rem;
+			font-weight: 800;
+			color: #fff;
+		}
+
+		.module-card[data-module="contabil"] .module-icon {
+			background: linear-gradient(135deg, #2f7fb3, #76a9ca);
+		}
+
+		.module-card[data-module="office"] .module-icon {
+			background: linear-gradient(135deg, #7c8b97, #aab5bd);
+		}
+
+		.module-card[data-module="fiscal"] .module-icon {
+			background: linear-gradient(135deg, #1d4d42, #3f7467);
+		}
+
+		.module-card[data-module="societario"] .module-icon {
+			background: linear-gradient(135deg, #4e6776, #8ba0ad);
+		}
+
+		.module-card h4 {
+			font-size: 1.3rem;
+			line-height: 1.1;
+			letter-spacing: -0.03em;
+		}
+
+		.module-link,
+		.office-button {
+			border: 0;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 14px 16px;
+			border-radius: 14px;
+			background: #233845;
+			color: #fff;
+			font-size: 0.95rem;
+			font-weight: 800;
+			cursor: pointer;
+			transition: transform 0.2s ease, opacity 0.2s ease;
+			text-decoration: none;
+		}
+
+		.module-link:hover,
+		.office-button:hover {
+			transform: translateY(-1px);
+			opacity: 0.94;
+		}
+
+		.modules-sidebar {
+			position: sticky;
+			top: 42px;
+			padding: 22px;
+			border-radius: 26px;
+			background: rgba(255, 255, 255, 0.82);
+			border: 1px solid rgba(255, 255, 255, 0.72);
+			box-shadow: 0 18px 45px rgba(20, 33, 61, 0.09);
+			display: grid;
+			gap: 16px;
+		}
+
+		.modules-sidebar-title {
+			font-size: 0.82rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: var(--secondary);
+		}
+
+		.modules-sidebar p {
+			color: var(--muted);
+			font-size: 0.94rem;
+			line-height: 1.6;
+		}
+
+		.sidebar-nav {
+			display: grid;
+			gap: 12px;
+		}
+
+		.sidebar-link {
+			display: grid;
+			gap: 4px;
+			padding: 16px;
+			border-radius: 18px;
+			text-decoration: none;
+			background: linear-gradient(135deg, rgba(47, 127, 179, 0.08), rgba(29, 77, 66, 0.08));
+			border: 1px solid rgba(47, 127, 179, 0.1);
+			transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.sidebar-link-header {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.sidebar-icon {
+			width: 46px;
+			height: 46px;
+			border-radius: 16px;
+			display: grid;
+			place-items: center;
+			flex-shrink: 0;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.sidebar-link[data-quick="msg"] .sidebar-icon {
+			background: linear-gradient(135deg, #1d4d42, #2f7fb3);
+			box-shadow: 0 14px 24px rgba(29, 77, 66, 0.18);
+		}
+
+		.sidebar-link[data-quick="mail"] .sidebar-icon {
+			background: linear-gradient(135deg, #2f7fb3, #4e6776);
+			box-shadow: 0 14px 24px rgba(47, 127, 179, 0.18);
+		}
+
+		.sidebar-icon svg {
+			width: 26px;
+			height: 26px;
+			stroke: #ffffff;
+			fill: none;
+			stroke-width: 1.8;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+			position: relative;
+			z-index: 1;
+		}
+
+		.sidebar-icon::after {
+			content: "";
+			position: absolute;
+			inset: 8px;
+			border-radius: 12px;
+			border: 1px solid rgba(255, 255, 255, 0.18);
+		}
+
+		.sidebar-link:hover {
+			transform: translateY(-2px);
+			border-color: rgba(47, 127, 179, 0.18);
+			box-shadow: 0 16px 28px rgba(20, 33, 61, 0.08);
+		}
+
+		.sidebar-link strong {
+			font-size: 0.96rem;
+			letter-spacing: 0.02em;
+			color: var(--text);
+		}
+
+		.sidebar-link span {
+			font-size: 0.84rem;
+			color: var(--muted);
+		}
+
+		@media (max-width: 1180px) {
+			body {
+				padding: 24px;
+			}
+
+			.app-stage {
+				width: min(100%, 1040px);
+			}
+
+			.shell {
+				min-height: 640px;
+			}
+
+			.hero {
+				padding: 56px;
+			}
+
+			.modules-layout {
+				grid-template-columns: minmax(0, 1fr) 220px;
+			}
+
+			.module-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+		}
+
+		.development-shell {
+			height: 100%;
+			display: grid;
+			grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+			gap: 24px;
+			align-items: stretch;
+		}
+
+		.development-copy,
+		.development-visual {
+			border-radius: 30px;
+			background: rgba(255, 255, 255, 0.8);
+			border: 1px solid rgba(255, 255, 255, 0.76);
+			box-shadow: 0 18px 45px rgba(20, 33, 61, 0.09);
+		}
+
+		.development-copy {
+			padding: 36px;
+			display: grid;
+			gap: 18px;
+			align-content: center;
+		}
+
+		.development-copy h2 {
+			font-size: clamp(2.3rem, 4vw, 3.6rem);
+			line-height: 0.98;
+			letter-spacing: -0.05em;
+		}
+
+		.development-copy p {
+			color: var(--muted);
+			line-height: 1.8;
+			max-width: 560px;
+		}
+
+		.development-copy p + p {
+			margin-top: -4px;
+		}
+
+		.development-actions {
+			display: flex;
+			gap: 14px;
+			flex-wrap: wrap;
+			margin-top: 8px;
+		}
+
+		.secondary-link {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			padding: 14px 18px;
+			border-radius: 14px;
+			border: 1px solid rgba(31, 52, 66, 0.12);
+			color: var(--text);
+			text-decoration: none;
+			font-weight: 800;
+			background: rgba(255, 255, 255, 0.74);
+		}
+
+		.development-visual {
+			padding: 28px;
+			display: grid;
+			place-items: center;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.orbit-wrap {
+			position: relative;
+			width: min(100%, 340px);
+			aspect-ratio: 1;
+			display: grid;
+			place-items: center;
+		}
+
+		.orbit-ring,
+		.orbit-ring::before,
+		.orbit-ring::after {
+			position: absolute;
+			border-radius: 50%;
+			border: 1px solid rgba(47, 127, 179, 0.18);
+			content: "";
+		}
+
+		.orbit-ring {
+			width: 78%;
+			height: 78%;
+			animation: spin 16s linear infinite;
+		}
+
+		.orbit-ring::before {
+			inset: -14%;
+			border-color: rgba(29, 77, 66, 0.14);
+			animation: spinReverse 11s linear infinite;
+		}
+
+		.orbit-ring::after {
+			inset: 14%;
+			border-color: rgba(124, 139, 151, 0.18);
+		}
+
+		.core-badge {
+			width: 140px;
+			height: 140px;
+			border-radius: 34px;
+			background: linear-gradient(135deg, var(--secondary), var(--primary));
+			box-shadow: 0 24px 40px rgba(29, 77, 66, 0.18);
+			display: grid;
+			place-items: center;
+			color: #fff;
+			font-size: 1rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			text-align: center;
+			animation: pulseCard 2.6s ease-in-out infinite;
+		}
+
+		.float-dot {
+			position: absolute;
+			width: 18px;
+			height: 18px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, var(--primary), #90b7d0);
+			box-shadow: 0 8px 18px rgba(47, 127, 179, 0.22);
+		}
+
+		.float-dot.dot-a {
+			top: 16%;
+			right: 22%;
+			animation: floatDot 4s ease-in-out infinite;
+		}
+
+		.float-dot.dot-b {
+			bottom: 18%;
+			left: 18%;
+			background: linear-gradient(135deg, var(--secondary), #4d7d71);
+			animation: floatDot 4.8s ease-in-out infinite 0.3s;
+		}
+
+		.float-dot.dot-c {
+			top: 50%;
+			left: 8%;
+			width: 12px;
+			height: 12px;
+			background: linear-gradient(135deg, #8998a3, #c2cbd1);
+			animation: floatDot 5.2s ease-in-out infinite 0.6s;
+		}
+
+		.status-chip {
+			width: fit-content;
+			padding: 10px 14px;
+			border-radius: 999px;
+			background: rgba(29, 77, 66, 0.08);
+			color: var(--secondary);
+			font-size: 0.9rem;
+			font-weight: 800;
+		}
+
+		@keyframes rise {
+			from {
+				opacity: 0;
+				transform: translateY(18px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		@keyframes spinReverse {
+			from {
+				transform: rotate(360deg);
+			}
+			to {
+				transform: rotate(0deg);
+			}
+		}
+
+		@keyframes pulseCard {
+			0%, 100% {
+				transform: scale(1);
+			}
+			50% {
+				transform: scale(1.04);
+			}
+		}
+
+		@keyframes floatDot {
+			0%, 100% {
+				transform: translateY(0);
+			}
+			50% {
+				transform: translateY(-12px);
+			}
+		}
+
+		@keyframes cautionShift {
+			from {
+				background-position: 0 0;
+			}
+			to {
+				background-position: 180% 0;
+			}
+		}
+
+		@media (max-width: 960px) {
+			body {
+				align-items: flex-start;
+			}
+
+			.shell {
+				grid-template-columns: 1fr;
+				min-height: auto;
+			}
+
+			.modules-screen {
+				padding: 28px;
+			}
+
+			.development-screen {
+				padding: 28px;
+			}
+
+			.hero {
+				padding: 44px 32px 18px;
+				gap: 36px;
+				justify-content: flex-start;
+			}
+
+			.panel {
+				padding: 16px 24px 32px;
+			}
+
+			.modules-topbar,
+			.modules-summary {
+				grid-template-columns: 1fr;
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.module-grid {
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+			}
+
+			.modules-layout {
+				grid-template-columns: 1fr;
+				gap: 18px;
+			}
+
+			.modules-sidebar {
+				position: static;
+				order: -1;
+			}
+
+			.development-shell {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 720px) {
+			body {
+				padding: 18px;
+			}
+
+			.app-stage {
+				width: 100%;
+			}
+
+			.hero {
+				padding: 32px 24px 12px;
+				gap: 28px;
+			}
+
+			.panel {
+				padding: 12px 18px 24px;
+			}
+
+			.modules-screen,
+			.development-screen {
+				padding: 22px;
+			}
+
+			.modules-topbar {
+				gap: 14px;
+			}
+
+			.modules-summary {
+				grid-template-columns: 1fr;
+			}
+
+			.module-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.login-card,
+			.summary-card,
+			.user-card,
+			.module-card,
+			.modules-sidebar,
+			.development-copy,
+			.development-visual {
+				padding-left: 20px;
+				padding-right: 20px;
+			}
+
+			.modules-sidebar {
+				padding-top: 20px;
+				padding-bottom: 20px;
+			}
+		}
+
+		@media (max-width: 640px) {
+			body {
+				padding: 16px;
+			}
+
+			.shell {
+				min-height: auto;
+				border-radius: 28px;
+			}
+
+			.hero,
+			.panel {
+				padding-left: 20px;
+				padding-right: 20px;
+			}
+
+			.hero {
+				padding-top: 28px;
+			}
+
+			.headline h1 {
+				font-size: 2.3rem;
+			}
+
+			.login-card {
+				padding: 26px 22px;
+				border-radius: 22px;
+			}
+
+			.badge {
+				font-size: 0.74rem;
+				padding: 9px 13px;
+			}
+
+			.modules-screen {
+				padding: 18px;
+			}
+
+			.development-screen {
+				padding: 18px;
+			}
+
+			.summary-card,
+			.user-card,
+			.module-card,
+			.modules-sidebar,
+			.development-copy,
+			.development-visual {
+				border-radius: 22px;
+			}
+
+			.module-grid {
+				grid-template-columns: 1fr;
+			}
+
+			.modules-topbar {
+				align-items: stretch;
+			}
+
+			.topbar-actions,
+			.development-actions {
+				width: 100%;
+			}
+
+			.ghost-button,
+			.cta,
+			.secondary-link,
+			.module-link,
+			.office-button {
+				width: 100%;
+			}
+
+			.user-card-header,
+			.sidebar-link-header,
+			.greetings {
+				align-items: flex-start;
+			}
+
+			.sidebar-link {
+				padding: 14px;
+			}
+
+			.form-row {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+		}
+
+		@media (max-width: 420px) {
+			body {
+				padding: 12px;
+			}
+
+			.shell {
+				border-radius: 24px;
+			}
+
+			.hero,
+			.panel,
+			.modules-screen,
+			.development-screen {
+				padding-left: 14px;
+				padding-right: 14px;
+			}
+
+			.headline h1,
+			.brand-block h2,
+			.development-copy h2 {
+				word-break: break-word;
+			}
+
+			.greetings-mark,
+			.user-avatar,
+			.module-icon {
+				width: 42px;
+				height: 42px;
+				border-radius: 14px;
+			}
+
+			.sis-logo.logo-large {
+				width: 34px;
+				height: 34px;
+			}
+
+			.sidebar-icon {
+				width: 42px;
+				height: 42px;
+				border-radius: 14px;
+			}
+		}
+
+		/* Visual refresh aligned with the new SIS-C dashboard direction */
+		:root {
+			--bg: #e5fbff;
+			--surface: rgba(255, 255, 255, 0.9);
+			--surface-strong: #ffffff;
+			--text: #15345f;
+			--muted: #6b85a7;
+			--line: rgba(17, 74, 160, 0.12);
+			--primary: #0f57d6;
+			--primary-dark: #093daa;
+			--secondary: #18cdc2;
+			/* Use arquivo local: url("./sua-imagem.jpg") ou link direto: url("https://seu-site.com/sua-imagem.jpg") */
+			--modules-bg-image: url("FUNDO_MODULOS.jpg");
+			--shadow: 0 32px 90px rgba(13, 65, 145, 0.16);
+		}
+
+		body {
+			background:
+				radial-gradient(circle at top left, rgba(15, 87, 214, 0.18), transparent 26%),
+				radial-gradient(circle at 78% 18%, rgba(24, 205, 194, 0.16), transparent 18%),
+				radial-gradient(circle at bottom right, rgba(24, 205, 194, 0.14), transparent 24%),
+				linear-gradient(135deg, #dffbfd 0%, #eef7ff 38%, #ecfff6 100%);
+		}
+		.shell {
+			border: 1px solid rgba(255, 255, 255, 0.72);
+			background: rgba(255, 255, 255, 0.42);
+			box-shadow: var(--shadow);
+		}
+		.shell::before {
+			background: rgba(15, 87, 214, 0.12);
+		}
+		.shell::after {
+			background: rgba(24, 205, 194, 0.14);
+		}
+		.hero {
+			background:
+				linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02)),
+				linear-gradient(180deg, #0f57d6 0%, #0c48c0 56%, #18cdc2 100%);
+			color: #eff8ff;
+		}
+		.badge,
+		.summary-pill,
+		.lock-badge {
+			background: rgba(255, 255, 255, 0.16);
+			border: 1px solid rgba(255, 255, 255, 0.18);
+			color: #eef8ff;
+		}
+		.headline h1,
+		.brand-block h2,
+		.development-copy h2 {
+			font-family: "Sora", sans-serif;
+			color: #ffffff;
+			letter-spacing: -0.05em;
+		}
+		.title-accent {
+			color: #b9fff2;
+		}
+		.headline p,
+		.greetings,
+		.greetings strong {
+			color: rgba(239, 248, 255, 0.92);
+		}
+		.greetings-mark,
+		.user-avatar,
+		.sidebar-icon,
+		.module-icon {
+			background: linear-gradient(135deg, rgba(255, 255, 255, 0.94), rgba(220, 244, 255, 0.74));
+			border: 1px solid rgba(255, 255, 255, 0.28);
+			box-shadow: 0 18px 32px rgba(8, 48, 126, 0.18);
+		}
+		.panel,
+		.modules-screen,
+		.development-screen {
+			background: rgba(255, 255, 255, 0.52);
+		}
+		.login-card,
+		.summary-card,
+		.user-card,
+		.module-card,
+		.modules-sidebar,
+		.development-copy,
+		.development-visual {
+			background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(244,250,255,0.94));
+			border: 1px solid rgba(179, 214, 255, 0.66);
+			box-shadow: 0 22px 50px rgba(13, 65, 145, 0.12);
+		}
+		.login-card h2,
+		.brand-block h2,
+		.summary-card h3,
+		.module-card h4,
+		.modules-sidebar-title,
+		.development-copy h2,
+		.user-card strong,
+		.module-card strong {
+			color: var(--text);
+		}
+		.login-card p,
+		.brand-block p,
+		.summary-card p,
+		.user-card p,
+		.module-card p,
+		.modules-sidebar p,
+		.development-copy p,
+		.card-footer,
+		.greetings {
+			color: var(--muted);
+		}
+		.field input {
+			border: 1px solid rgba(165, 201, 243, 0.88);
+			background: rgba(255,255,255,0.96);
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
+		}
+		.field input:focus {
+			border-color: rgba(15, 87, 214, 0.48);
+			box-shadow: 0 0 0 4px rgba(15, 87, 214, 0.1);
+		}
+		.cta,
+		.module-link,
+		.office-button {
+			background: linear-gradient(90deg, #0f57d6 0%, #1399e1 58%, #18cdc2 100%);
+			color: #ffffff;
+			box-shadow: 0 16px 28px rgba(13, 65, 145, 0.18);
+		}
+		.cta:hover,
+		.module-link:hover,
+		.office-button:hover {
+			filter: brightness(1.03);
+			transform: translateY(-2px);
+		}
+		.ghost-button {
+			background: #ffffff;
+			color: var(--primary-dark);
+			border: 1px solid rgba(132, 183, 245, 0.64);
+		}
+		.ghost-button:hover {
+			background: #eff7ff;
+		}
+		.module-card {
+			border-radius: 24px;
+		}
+		.module-card:hover {
+			box-shadow: 0 26px 54px rgba(13, 65, 145, 0.16);
+		}
+		.module-card::before,
+		.summary-card::before,
+		.user-card::before,
+		.modules-sidebar::before,
+		.development-copy::before,
+		.development-visual::before {
+			content: "";
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 4px;
+			border-radius: 24px 24px 0 0;
+			background: linear-gradient(90deg, #0f57d6 0%, #1399e1 58%, #18cdc2 100%);
+		}
+		.summary-pill {
+			color: var(--primary-dark);
+			background: rgba(15, 87, 214, 0.08);
+			border-color: rgba(15, 87, 214, 0.12);
+		}
+		.modules-sidebar {
+			background: linear-gradient(180deg, #0f57d6 0%, #0c48c0 56%, #18cdc2 100%);
+			color: #eef8ff;
+		}
+		.modules-sidebar-title,
+		.sidebar-link strong {
+			color: #ffffff;
+		}
+		.modules-sidebar p,
+		.sidebar-link span {
+			color: rgba(239, 248, 255, 0.8);
+		}
+		.sidebar-link {
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+		}
+		.sidebar-link:hover {
+			background: rgba(255, 255, 255, 0.16);
+			transform: translateY(-1px);
+		}
+
+		/* Modules dashboard refresh inspired by a broad urban control-center composition */
+		.modules-screen {
+			padding: 0;
+			grid-template-columns: 1fr;
+			background:
+				linear-gradient(180deg, rgba(8, 18, 34, 0.2), rgba(8, 18, 34, 0.68)),
+				var(--modules-bg-image) center/cover no-repeat,
+				linear-gradient(180deg, #274863 0%, #3e5e75 24%, #28445b 58%, #162536 100%);
+			position: relative;
+			isolation: isolate;
+		}
+
+		.modules-screen::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background:
+				linear-gradient(90deg, rgba(10, 23, 37, 0.78) 0, rgba(10, 23, 37, 0.32) 24%, rgba(10, 23, 37, 0.14) 46%, rgba(10, 23, 37, 0.58) 100%),
+				repeating-linear-gradient(90deg, transparent 0 11%, rgba(255, 210, 142, 0.08) 11.4% 11.8%, transparent 12.2% 21%),
+				linear-gradient(180deg, transparent 0 54%, rgba(7, 13, 22, 0.44) 54% 61%, rgba(7, 13, 22, 0.82) 61% 100%);
+			pointer-events: none;
+			z-index: 0;
+		}
+
+		.modules-screen::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			height: 32%;
+			background:
+				linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(13, 20, 31, 0.16) 28%, rgba(8, 12, 20, 0.84) 100%),
+				repeating-linear-gradient(90deg, rgba(24, 38, 58, 0.94) 0 8%, rgba(45, 64, 86, 0.98) 8% 13%, rgba(16, 27, 41, 0.96) 13% 21%);
+			clip-path: polygon(0 34%, 4% 28%, 9% 42%, 14% 20%, 18% 36%, 24% 14%, 31% 44%, 36% 9%, 42% 31%, 47% 7%, 53% 39%, 58% 18%, 63% 48%, 69% 11%, 75% 41%, 81% 24%, 87% 46%, 92% 18%, 100% 38%, 100% 100%, 0 100%);
+			opacity: 0.92;
+			pointer-events: none;
+			z-index: 0;
+		}
+
+		.modules-dashboard {
+			position: relative;
+			z-index: 1;
+			display: grid;
+			gap: 28px;
+			padding: 22px 20px 24px;
+			min-height: 720px;
+		}
+
+		.dashboard-topbar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			gap: 18px;
+			color: #f6fbff;
+		}
+
+		.dashboard-brandline {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			flex-wrap: wrap;
+		}
+
+		.dashboard-wordmark {
+			font-family: "Sora", sans-serif;
+			font-size: 1.15rem;
+			font-weight: 800;
+			letter-spacing: -0.03em;
+			color: #9df7cf;
+		}
+
+		.dashboard-companyline {
+			font-size: 0.82rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: rgba(255, 255, 255, 0.74);
+		}
+
+		.dashboard-toolbar {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			flex-wrap: wrap;
+			justify-content: flex-end;
+		}
+
+		.dashboard-icon-btn {
+			width: 40px;
+			height: 40px;
+			border-radius: 14px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			background: rgba(255, 255, 255, 0.1);
+			border: 1px solid rgba(255, 255, 255, 0.14);
+			backdrop-filter: blur(10px);
+			transition: transform 0.2s ease, background 0.2s ease;
+		}
+
+		.dashboard-icon-btn:hover {
+			transform: translateY(-1px);
+			background: rgba(255, 255, 255, 0.18);
+		}
+
+		.dashboard-icon-btn svg {
+			width: 18px;
+			height: 18px;
+			stroke: #ffffff;
+			fill: none;
+			stroke-width: 1.8;
+			stroke-linecap: round;
+			stroke-linejoin: round;
+		}
+
+		.dashboard-user-pill {
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			padding: 6px 8px 6px 6px;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.12);
+			border: 1px solid rgba(255, 255, 255, 0.16);
+			backdrop-filter: blur(12px);
+		}
+
+		.dashboard-user-avatar {
+			width: 42px;
+			height: 42px;
+			border-radius: 14px;
+			box-shadow: none;
+			background: rgba(255, 255, 255, 0.92);
+		}
+
+		.dashboard-user-copy {
+			display: grid;
+			gap: 2px;
+		}
+
+		.dashboard-user-copy span {
+			font-size: 0.72rem;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: rgba(255, 255, 255, 0.68);
+		}
+
+		.dashboard-user-copy strong {
+			font-size: 0.92rem;
+			color: #ffffff;
+		}
+
+		.dashboard-logout {
+			background: rgba(255, 255, 255, 0.12);
+			color: #ffffff;
+			border-color: rgba(255, 255, 255, 0.18);
+		}
+
+		.dashboard-main {
+			display: grid;
+			grid-template-columns: 1fr;
+			gap: 22px;
+			align-items: start;
+			margin-top: 14px;
+		}
+
+		.dashboard-content {
+			display: grid;
+			gap: 22px;
+		}
+
+		.dashboard-copy {
+			display: grid;
+			gap: 8px;
+			max-width: 520px;
+			color: #ffffff;
+		}
+
+		.dashboard-kicker {
+			font-size: 0.82rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: #1de3d7;
+		}
+
+		.dashboard-copy h2 {
+			font-family: "Sora", sans-serif;
+			font-size: clamp(2rem, 4vw, 3.2rem);
+			line-height: 0.98;
+			letter-spacing: -0.05em;
+		}
+
+		.dashboard-copy p {
+			font-size: 1rem;
+			line-height: 1.6;
+			color: rgba(244, 249, 255, 0.88);
+		}
+
+		.dashboard-module-grid {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 16px;
+			align-items: stretch;
+		}
+
+		.dashboard-module-grid .module-card {
+			min-height: 220px;
+			padding: 22px 20px;
+			border-radius: 10px;
+			border: none;
+			box-shadow: 0 18px 36px rgba(5, 14, 28, 0.18);
+			color: #ffffff;
+			gap: 16px;
+		}
+
+		.dashboard-module-grid .module-card::before,
+		.dashboard-module-grid .module-card::after {
+			display: none;
+		}
+
+		.dashboard-module-grid .module-card:hover {
+			transform: translateY(-6px) scale(1.01);
+			box-shadow: 0 24px 48px rgba(5, 14, 28, 0.24);
+		}
+
+		.dashboard-module-grid .module-card strong,
+		.dashboard-module-grid .module-card h4,
+		.dashboard-module-grid .module-card p {
+			color: #ffffff;
+		}
+
+		.dashboard-module-grid .module-card strong {
+			font-size: 0.72rem;
+			letter-spacing: 0.08em;
+			opacity: 0.82;
+		}
+
+		.dashboard-module-grid .module-card h4 {
+			font-size: 1.42rem;
+		}
+
+		.dashboard-module-grid .module-card p {
+			font-size: 0.9rem;
+			line-height: 1.5;
+			opacity: 0.9;
+		}
+
+		.dashboard-module-grid .module-icon {
+			width: 34px;
+			height: 34px;
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.14) !important;
+			box-shadow: none;
+			font-size: 1rem;
+		}
+
+		.dashboard-module-grid .module-link,
+		.dashboard-module-grid .office-button {
+			justify-content: flex-start;
+			padding: 0;
+			background: none;
+			box-shadow: none;
+			border-radius: 0;
+			font-size: 0.86rem;
+			font-weight: 800;
+			color: rgba(255, 255, 255, 0.96);
+		}
+
+		.dashboard-module-grid .module-link::after,
+		.dashboard-module-grid .office-button::after {
+			content: "↗";
+			margin-left: 8px;
+			font-size: 0.92rem;
+		}
+
+		.dashboard-module-grid .module-card[data-module="contabil"] {
+			background: linear-gradient(180deg, #2068c8 0%, #2e7fe1 100%);
+		}
+
+		.dashboard-module-grid .module-card[data-module="office"] {
+			background: linear-gradient(180deg, #f59d23 0%, #ffb03b 100%);
+		}
+
+		.dashboard-module-grid .module-card[data-module="fiscal"] {
+			background: linear-gradient(180deg, #18b9b8 0%, #1fd4cf 100%);
+		}
+
+		.dashboard-module-grid .module-card[data-module="societario"] {
+			background: linear-gradient(180deg, #ff5f4d 0%, #ff7761 100%);
+		}
+
+		.dashboard-module-grid .module-card.is-locked {
+			overflow: hidden;
+		}
+
+		.dashboard-module-grid .module-card.is-locked::after {
+			display: block;
+			content: "Em desenvolvimento";
+			position: absolute;
+			top: 12px;
+			right: 12px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			background: rgba(9, 14, 23, 0.22);
+			box-shadow: none;
+			transform: none;
+			font-size: 0.62rem;
+			letter-spacing: 0.08em;
+		}
+
+		.dashboard-module-grid .lock-badge {
+			background: rgba(255, 255, 255, 0.14);
+			border-color: rgba(255, 255, 255, 0.18);
+			color: #ffffff;
+		}
+
+		.dashboard-support-row {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 16px;
+			align-items: stretch;
+		}
+
+		.dashboard-support-card {
+			padding: 22px;
+			border-radius: 18px;
+			background: rgba(255, 255, 255, 0.9);
+			border: 1px solid rgba(255, 255, 255, 0.72);
+			box-shadow: 0 18px 34px rgba(7, 17, 29, 0.16);
+			display: grid;
+			gap: 12px;
+		}
+
+		.dashboard-support-card.is-external {
+			align-content: space-between;
+			min-height: 220px;
+		}
+
+		.dashboard-section-title {
+			font-size: 0.84rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: rgba(241, 249, 255, 0.76);
+		}
+
+		.dashboard-section-heading {
+			display: grid;
+			gap: 8px;
+			max-width: 760px;
+		}
+
+		.dashboard-section-heading h3 {
+			font-family: "Sora", sans-serif;
+			font-size: clamp(1.4rem, 3vw, 2rem);
+			line-height: 1.02;
+			letter-spacing: -0.04em;
+			color: #ffffff;
+		}
+
+		.dashboard-section-heading p {
+			color: rgba(241, 249, 255, 0.84);
+			line-height: 1.6;
+		}
+
+		.dashboard-support-icon {
+			width: 54px;
+			height: 54px;
+			border-radius: 18px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			background: linear-gradient(135deg, rgba(15, 87, 214, 0.16), rgba(24, 205, 194, 0.16));
+			color: #0d4e98;
+			font-size: 1.2rem;
+			font-weight: 800;
+		}
+
+		.dashboard-support-label {
+			display: grid;
+			gap: 4px;
+		}
+
+		.dashboard-support-label span {
+			font-size: 0.76rem;
+			font-weight: 800;
+			letter-spacing: 0.08em;
+			text-transform: uppercase;
+			color: #3d6b97;
+		}
+
+		.dashboard-support-label h4 {
+			font-size: 1.26rem;
+			letter-spacing: -0.03em;
+			color: #123e66;
+		}
+
+		.dashboard-support-button {
+			border: none;
+			padding: 14px 16px;
+			border-radius: 14px;
+			background: linear-gradient(90deg, #0f57d6 0%, #18cdc2 100%);
+			color: #ffffff;
+			font: inherit;
+			font-weight: 800;
+			cursor: pointer;
+			box-shadow: 0 14px 26px rgba(13, 65, 145, 0.18);
+		}
+
+		.dashboard-support-card strong {
+			font-size: 0.9rem;
+			text-transform: uppercase;
+			letter-spacing: 0.08em;
+			color: #114a8f;
+		}
+
+		.dashboard-support-card p {
+			color: #47627f;
+			line-height: 1.6;
+		}
+
+		.dashboard-support-card.is-contrast {
+			background: rgba(11, 24, 39, 0.76);
+			border-color: rgba(255, 255, 255, 0.14);
+		}
+
+		.dashboard-support-card.is-contrast strong,
+		.dashboard-support-card.is-contrast p {
+			color: #f3f8fd;
+		}
+
+		@media (max-width: 1080px) {
+			.dashboard-module-grid {
+				grid-template-columns: repeat(2, minmax(160px, 1fr));
+			}
+
+			.dashboard-support-row {
+				grid-template-columns: 1fr;
+			}
+		}
+
+		@media (max-width: 780px) {
+			.modules-dashboard {
+				padding: 16px;
+			}
+
+			.dashboard-topbar,
+			.dashboard-toolbar {
+				align-items: stretch;
+				justify-content: flex-start;
+			}
+
+			.dashboard-topbar {
+				flex-direction: column;
+			}
+
+			.dashboard-module-grid,
+			.dashboard-support-row {
+				grid-template-columns: 1fr;
+			}
+
+			.dashboard-user-pill,
+			.dashboard-logout,
+			.dashboard-support-button {
+				width: 100%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="app-stage" id="appStage">
+		<main class="shell screen login-screen">
+			<section class="hero">
+				<span class="badge">Ecossistema SIS-C AI</span>
+
+				<div class="headline">
+					<h1>
+						BEM VINDO AO
+						<span class="title-accent">ECOSSISTEMA SIS-C AI</span>
+					</h1>
+					<p>
+						Centralize o acesso aos seus modulos com uma experiencia objetiva, clara e pronta para a rotina financeira, contabil e operacional.
+					</p>
+				</div>
+
+				<div class="greetings">
+					<div class="greetings-mark" aria-hidden="true">
+						<svg class="sis-logo logo-large" viewBox="0 0 100 100" role="presentation">
+							<defs>
+								<linearGradient id="sisGradientLeft" x1="12%" y1="15%" x2="75%" y2="85%">
+									<stop offset="0%" stop-color="#9ebde4"></stop>
+									<stop offset="55%" stop-color="#305fb8"></stop>
+									<stop offset="100%" stop-color="#143b8f"></stop>
+								</linearGradient>
+								<linearGradient id="sisGradientRight" x1="18%" y1="18%" x2="88%" y2="84%">
+									<stop offset="0%" stop-color="#66aef0"></stop>
+									<stop offset="60%" stop-color="#34b8dd"></stop>
+									<stop offset="100%" stop-color="#b0eff3"></stop>
+								</linearGradient>
+								<radialGradient id="sisCoreGradient" cx="50%" cy="50%" r="50%">
+									<stop offset="0%" stop-color="#dff5ff"></stop>
+									<stop offset="100%" stop-color="#4a8df0"></stop>
+								</radialGradient>
+								<radialGradient id="sisOrbitGradient" cx="50%" cy="50%" r="50%">
+									<stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"></stop>
+									<stop offset="100%" stop-color="#e7f3ff" stop-opacity="0.2"></stop>
+								</radialGradient>
+								<linearGradient id="sisDotGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+									<stop offset="0%" stop-color="#d8f7ff"></stop>
+									<stop offset="100%" stop-color="#7bc4ea"></stop>
+								</linearGradient>
+							</defs>
+							<path class="logo-left" d="M31 25c-14 0-25 11-25 25s11 25 25 25c13.4 0 24.4-10.3 25-23.6" stroke-width="8" stroke-linecap="round" fill="none"></path>
+							<path class="logo-right" d="M69 25c14 0 25 11 25 25S83 75 69 75c-7.4 0-14.1-3.1-18.7-8.2" stroke-width="8" stroke-linecap="round" fill="none"></path>
+							<path class="logo-left" d="M34 83c11.8-2.3 21.8-10.4 26.3-21.5 1.6-3.9 2.4-8.1 2.4-12.4" stroke-width="6" stroke-linecap="round" fill="none"></path>
+							<path class="logo-right" d="M65 17c-11.6 2.3-21.5 10.1-26.1 20.8-1.8 4.1-2.6 8.4-2.6 12.7" stroke-width="6" stroke-linecap="round" fill="none"></path>
+							<ellipse class="logo-orbit" cx="50" cy="50" rx="17" ry="22"></ellipse>
+							<path class="logo-core" d="M50 30c5.6 7.3 9 13.8 9 20s-3.4 12.7-9 20c-5.6-7.3-9-13.8-9-20s3.4-12.7 9-20Z"></path>
+							<circle class="logo-center" cx="50" cy="50" r="8.8"></circle>
+							<circle class="logo-dot" cx="83" cy="18" r="1.8"></circle>
+							<circle class="logo-dot" cx="88.5" cy="22.8" r="1.45"></circle>
+							<circle class="logo-dot" cx="92.2" cy="29" r="1.1"></circle>
+							<circle class="logo-dot" cx="17" cy="82" r="1.5"></circle>
+							<circle class="logo-dot" cx="22.5" cy="86.5" r="1.95"></circle>
+							<circle class="logo-dot" cx="28.5" cy="89" r="2.25"></circle>
+						</svg>
+					</div>
+					<div>
+						<strong>Ola, seja bem-vindo.</strong>
+						Acesse sua conta para continuar no ambiente SIS-C.
+					</div>
+				</div>
+			</section>
+
+			<section class="panel">
+				<div class="login-card">
+					<h2>Entrar</h2>
+					<p>Informe seus dados para acessar o portal com seguranca e rapidez.</p>
+
+					<form class="form" id="loginForm">
+						<div class="field">
+							<label for="email">E-mail</label>
+							<input id="email" name="email" type="email" placeholder="seuemail@empresa.com.br">
+						</div>
+
+						<div class="field">
+							<label for="password">Senha</label>
+							<input id="password" name="password" type="password" placeholder="Digite sua senha">
+						</div>
+
+						<div class="form-row">
+							<label class="checkbox" for="remember">
+								<input id="remember" name="remember" type="checkbox">
+								Manter conectado
+							</label>
+							<a class="link" href="#">Esqueci minha senha</a>
+						</div>
+
+						<button class="cta" type="submit">Acessar plataforma</button>
+					</form>
+
+					<div class="card-footer">
+						Precisa de suporte?&nbsp;<a href="#">Fale com a equipe SIS-C</a>
+					</div>
+				</div>
+			</section>
+		</main>
+
+		<main class="shell screen modules-screen" aria-live="polite">
+			<div class="modules-dashboard">
+				<header class="dashboard-topbar">
+					<div class="dashboard-brandline">
+						<div class="dashboard-wordmark">SIS-C AI</div>
+						<div class="dashboard-companyline">Central inteligente de modulos</div>
+					</div>
+					<div class="dashboard-toolbar">
+						<a class="dashboard-icon-btn" href="indexmsg.html" id="msgLink" aria-label="SIS-C MSG - WhatsApp Web" target="_self">
+							<svg viewBox="0 0 24 24" role="presentation">
+								<path d="M4.5 18.5 6.2 15a7.4 7.4 0 1 1 3.1 2.4Z"></path>
+								<path d="M8.5 10.5h7"></path>
+								<path d="M8.5 13.5h4.5"></path>
+							</svg>
+						</a>
+						<a class="dashboard-icon-btn" href="indexEmail.html" id="mailLink" aria-label="SIS-C MAIL" target="_self">
+							<svg viewBox="0 0 24 24" role="presentation">
+								<rect x="3.5" y="6" width="17" height="12" rx="2"></rect>
+								<path d="m4.5 7 7.5 6 7.5-6"></path>
+							</svg>
+						</a>
+						<div class="dashboard-user-pill">
+							<div class="user-avatar dashboard-user-avatar" id="userAvatar" aria-hidden="true">
+								<svg class="sis-logo" viewBox="0 0 100 100" role="presentation">
+									<defs>
+										<linearGradient id="sisGradientLeftUser" x1="12%" y1="15%" x2="75%" y2="85%">
+											<stop offset="0%" stop-color="#9ebde4"></stop>
+											<stop offset="55%" stop-color="#305fb8"></stop>
+											<stop offset="100%" stop-color="#143b8f"></stop>
+										</linearGradient>
+										<linearGradient id="sisGradientRightUser" x1="18%" y1="18%" x2="88%" y2="84%">
+											<stop offset="0%" stop-color="#66aef0"></stop>
+											<stop offset="60%" stop-color="#34b8dd"></stop>
+											<stop offset="100%" stop-color="#b0eff3"></stop>
+										</linearGradient>
+										<radialGradient id="sisCoreGradientUser" cx="50%" cy="50%" r="50%">
+											<stop offset="0%" stop-color="#dff5ff"></stop>
+											<stop offset="100%" stop-color="#4a8df0"></stop>
+										</radialGradient>
+										<radialGradient id="sisOrbitGradientUser" cx="50%" cy="50%" r="50%">
+											<stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"></stop>
+											<stop offset="100%" stop-color="#e7f3ff" stop-opacity="0.2"></stop>
+										</radialGradient>
+										<linearGradient id="sisDotGradientUser" x1="0%" y1="0%" x2="100%" y2="100%">
+											<stop offset="0%" stop-color="#d8f7ff"></stop>
+											<stop offset="100%" stop-color="#7bc4ea"></stop>
+										</linearGradient>
+									</defs>
+									<path d="M31 25c-14 0-25 11-25 25s11 25 25 25c13.4 0 24.4-10.3 25-23.6" stroke="url(#sisGradientLeftUser)" stroke-width="8" stroke-linecap="round" fill="none"></path>
+									<path d="M69 25c14 0 25 11 25 25S83 75 69 75c-7.4 0-14.1-3.1-18.7-8.2" stroke="url(#sisGradientRightUser)" stroke-width="8" stroke-linecap="round" fill="none"></path>
+									<path d="M34 83c11.8-2.3 21.8-10.4 26.3-21.5 1.6-3.9 2.4-8.1 2.4-12.4" stroke="url(#sisGradientLeftUser)" stroke-width="6" stroke-linecap="round" fill="none"></path>
+									<path d="M65 17c-11.6 2.3-21.5 10.1-26.1 20.8-1.8 4.1-2.6 8.4-2.6 12.7" stroke="url(#sisGradientRightUser)" stroke-width="6" stroke-linecap="round" fill="none"></path>
+									<ellipse cx="50" cy="50" rx="17" ry="22" fill="url(#sisOrbitGradientUser)"></ellipse>
+									<path d="M50 30c5.6 7.3 9 13.8 9 20s-3.4 12.7-9 20c-5.6-7.3-9-13.8-9-20s3.4-12.7 9-20Z" fill="url(#sisCoreGradientUser)"></path>
+									<circle cx="50" cy="50" r="8.8" fill="#ffffff"></circle>
+									<circle cx="83" cy="18" r="1.8" fill="url(#sisDotGradientUser)"></circle>
+									<circle cx="88.5" cy="22.8" r="1.45" fill="url(#sisDotGradientUser)"></circle>
+									<circle cx="92.2" cy="29" r="1.1" fill="url(#sisDotGradientUser)"></circle>
+									<circle cx="17" cy="82" r="1.5" fill="url(#sisDotGradientUser)"></circle>
+									<circle cx="22.5" cy="86.5" r="1.95" fill="url(#sisDotGradientUser)"></circle>
+									<circle cx="28.5" cy="89" r="2.25" fill="url(#sisDotGradientUser)"></circle>
+								</svg>
+							</div>
+							<div class="dashboard-user-copy">
+								<span>Operador conectado</span>
+								<strong id="userIdentity">Aguardando identificacao</strong>
+							</div>
+						</div>
+						<button class="ghost-button dashboard-logout" type="button" id="logoutButton">Sair</button>
+					</div>
+				</header>
+
+				<div class="dashboard-main">
+					<section class="dashboard-content">
+						<div class="dashboard-copy">
+							<span class="dashboard-kicker">Area de modulos</span>
+							<h2>Ola, <span id="dashboardGreetingName">contador</span>!</h2>
+							<p>Em que rotina voce vai trabalhar hoje? Escolha o modulo SIS-C ideal para abrir o ambiente certo sem perder contexto.</p>
+						</div>
+
+						<section class="module-grid dashboard-module-grid">
+							<article class="module-card" data-module="contabil">
+								<div class="module-icon">C</div>
+								<div>
+									<strong>Modulo 01</strong>
+									<h4>CONTABIL</h4>
+									<p>Fluxos de lancamentos, conciliacao, analises e produtividade contabil.</p>
+								</div>
+								<a class="module-link" id="contabilLink" href="indexC.html" target="_self">Entrar no modulo</a>
+							</article>
+
+							<article class="module-card is-locked" data-module="office">
+								<div class="module-icon">O</div>
+								<div>
+									<strong>Modulo 02</strong>
+									<h4>OFFICE</h4>
+									<p>Organizacao operacional, documentos e automacoes internas em desenvolvimento.</p>
+								</div>
+								<button class="office-button" id="officeButton" type="button">Em desenvolvimento</button>
+							</article>
+
+							<article class="module-card" data-module="fiscal">
+								<div class="module-icon">F</div>
+								<div>
+									<strong>Modulo 03</strong>
+									<h4>FISCAL</h4>
+									<p>Apuracao, obrigacoes e inteligencia fiscal integradas ao ecossistema.</p>
+								</div>
+								<a class="module-link" id="fiscalLink" href="indexF.html" target="_self">Entrar no modulo</a>
+							</article>
+
+							<article class="module-card" data-module="societario">
+								<div class="module-icon">S</div>
+								<div>
+									<strong>Modulo 04</strong>
+									<h4>SOCIETARIO</h4>
+									<p>Documentacao societaria, controle de atos e acompanhamento juridico.</p>
+								</div>
+								<a class="module-link" id="societarioLink" href="indexS.html" target="_self">Entrar no modulo</a>
+							</article>
+						</section>
+
+						<div class="dashboard-section-heading">
+							<span class="dashboard-section-title">Sistemas externos</span>
+							<h3>Atalhos organizados para os canais e plataformas complementares do ecossistema.</h3>
+							<p>Na parte inferior ficam as conexoes externas do SIS-C para mensagens, e-mail e operacao financeira.</p>
+						</div>
+
+						<div class="dashboard-support-row">
+							<article class="dashboard-support-card is-external">
+								<div class="dashboard-support-icon">M</div>
+								<div class="dashboard-support-label">
+									<span>Sistema externo</span>
+									<h4>SIS-C MSG</h4>
+								</div>
+								<p>Sistema de WhatsApp Web do ecossistema para mensagens, atendimento e fluxo colaborativo.</p>
+								<button class="dashboard-support-button" type="button" onclick="document.getElementById('msgLink').click()">Abrir SIS-C MSG</button>
+							</article>
+
+							<article class="dashboard-support-card is-external">
+								<div class="dashboard-support-icon">E</div>
+								<div class="dashboard-support-label">
+									<span>Sistema externo</span>
+									<h4>SIS-C EMAIL</h4>
+								</div>
+								<p>Correio do ecossistema para notificacoes, triagem e produtividade de equipe.</p>
+								<button class="dashboard-support-button" type="button" onclick="document.getElementById('mailLink').click()">Abrir SIS-C EMAIL</button>
+							</article>
+
+							<article class="dashboard-support-card is-external">
+								<div class="dashboard-support-icon">F</div>
+								<div class="dashboard-support-label">
+									<span>Sistema externo</span>
+									<h4>SIS-C F</h4>
+								</div>
+								<p>Sistema financeiro do ecossistema, ligado ao arquivo indexFinanceiro.html para operacao integrada de caixa, agenda e controle.</p>
+								<a class="dashboard-support-button" href="indexFinanceiro.html" id="financeLink" target="_self">Abrir SIS-C F</a>
+							</article>
+						</div>
+					</section>
+				</div>
+			</div>
+		</main>
+
+		<main class="shell screen development-screen" aria-live="polite">
+			<div class="development-shell">
+				<section class="development-copy">
+					<span class="badge" id="developmentBadge">Modulo Office</span>
+					<span class="status-chip" id="developmentStatus">Em desenvolvimento</span>
+					<h2 id="developmentTitle">O modulo Office ainda esta em construcao.</h2>
+					<p id="developmentDescription">Estamos finalizando a experiencia desta area para disponibilizar um ambiente mais completo, estavel e alinhado com o ecossistema SIS-C.</p>
+					<p id="developmentDetails">Enquanto isso, voce pode voltar para a selecao de modulos e seguir para as demais areas ja disponiveis.</p>
+					<div class="development-actions">
+						<button class="cta" id="backToModulesButton" type="button">Voltar para modulos</button>
+						<button class="ghost-button" id="backToLoginFromDev" type="button">Sair para login</button>
+					</div>
+				</section>
+
+				<section class="development-visual" aria-hidden="true">
+					<div class="orbit-wrap">
+						<div class="orbit-ring"></div>
+						<div class="core-badge">Office<br>Em breve</div>
+						<div class="float-dot dot-a"></div>
+						<div class="float-dot dot-b"></div>
+						<div class="float-dot dot-c"></div>
+					</div>
+				</section>
+			</div>
+		</main>
+	</div>
+
+	<script>
+		const MODULE_LINKS = {
+			contabil: "indexC.html",
+			fiscal: "indexF.html",
+			societario: "indexS.html",
+			msg: "indexmsg.html",
+			mail: "indexEmail.html",
+			finance: "indexFinanceiro.html"
+		};
+
+		const DEVELOPMENT_MODULES = new Set(["office"]);
+
+		const DEVELOPMENT_CONTENT = {
+			office: {
+				badge: "Modulo Office",
+				status: "Em desenvolvimento",
+				title: "O modulo Office ainda esta em construcao.",
+				description: "Estamos finalizando a experiencia desta area para disponibilizar um ambiente mais completo, estavel e alinhado com o ecossistema SIS-C.",
+				details: "Enquanto isso, voce pode voltar para a selecao de modulos e seguir para as demais areas ja disponiveis."
+			},
+			fiscal: {
+				badge: "Modulo Fiscal",
+				status: "Em desenvolvimento",
+				title: "O modulo Fiscal ainda esta em desenvolvimento.",
+				description: "Esta area esta sendo preparada para entregar uma operacao fiscal mais clara, estavel e integrada ao restante do ecossistema SIS-C.",
+				details: "Assim que for liberado, o modulo estara disponivel nesta mesma central de acesso."
+			},
+			msg: {
+				badge: "SIS-C MSG",
+				status: "Nova plataforma em desenvolvimento",
+				title: "O SIS-C MSG esta em desenvolvimento.",
+				description: "Esta sera a nova plataforma de comunicacao do ecossistema, no estilo de um mensageiro corporativo moderno, com uma experiencia ainda mais forte e inteligente.",
+				details: "A proposta e entregar um ambiente de mensagens muito melhor, com recursos de IA para acelerar a rotina e organizar interacoes com mais contexto."
+			},
+			mail: {
+				badge: "SIS-C EMAIL",
+				status: "Em desenvolvimento",
+				title: "O SIS-C EMAIL esta em desenvolvimento.",
+				description: "O correio do ecossistema esta sendo construido para centralizar notificacoes, comunicacoes e fluxos importantes em um unico ambiente.",
+				details: "A plataforma tambem contara com IA para apoiar leitura, organizacao e produtividade no tratamento dos e-mails."
+			},
+			finance: {
+				badge: "SIS-C F",
+				status: "Sistema financeiro em desenvolvimento",
+				title: "O SIS-C F ainda esta em desenvolvimento.",
+				description: "Esta sera a central financeira do ecossistema, conectando operacao de caixa, acompanhamento e inteligencia de rotinas financeiras.",
+				details: "Assim que estiver disponivel, o acesso sera liberado nesta mesma area de sistemas externos."
+			}
+		};
+
+		const appStage = document.getElementById("appStage");
+		const loginForm = document.getElementById("loginForm");
+		const logoutButton = document.getElementById("logoutButton");
+		const officeButton = document.getElementById("officeButton");
+		const backToModulesButton = document.getElementById("backToModulesButton");
+		const backToLoginFromDev = document.getElementById("backToLoginFromDev");
+		const contabilLink = document.getElementById("contabilLink");
+		const fiscalLink = document.getElementById("fiscalLink");
+		const societarioLink = document.getElementById("societarioLink");
+		const msgLink = document.getElementById("msgLink");
+		const mailLink = document.getElementById("mailLink");
+		const financeLink = document.getElementById("financeLink");
+		const userIdentity = document.getElementById("userIdentity");
+		const userAvatar = document.getElementById("userAvatar");
+		const dashboardGreetingName = document.getElementById("dashboardGreetingName");
+		const developmentBadge = document.getElementById("developmentBadge");
+		const developmentStatus = document.getElementById("developmentStatus");
+		const developmentTitle = document.getElementById("developmentTitle");
+		const developmentDescription = document.getElementById("developmentDescription");
+		const developmentDetails = document.getElementById("developmentDetails");
+
+		contabilLink.href = MODULE_LINKS.contabil;
+		fiscalLink.href = MODULE_LINKS.fiscal;
+		societarioLink.href = MODULE_LINKS.societario;
+		msgLink.href = MODULE_LINKS.msg;
+		mailLink.href = MODULE_LINKS.mail;
+		financeLink.href = MODULE_LINKS.finance;
+
+		function buildInitials(value) {
+			const text = value.trim();
+			if (!text) {
+				return "SC";
+			}
+
+			const parts = text.split(/[@.\s_-]+/).filter(Boolean);
+			return parts.slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "SC";
+		}
+
+		function buildDisplayName(value) {
+			const text = value.trim();
+			if (!text) {
+				return "Contador";
+			}
+
+			const base = text.includes("@") ? text.split("@")[0] : text;
+			const words = base.split(/[._\-\s]+/).filter(Boolean);
+			const formatted = words.slice(0, 2).map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()).join(" ");
+			return formatted || "Contador";
+		}
+
+		function openExternalLink(url) {
+			window.location.assign(url);
+		}
+
+		function openDevelopmentModuleInNewTab(key) {
+			const nextUrl = new URL(window.location.href);
+			nextUrl.searchParams.set("view", "development");
+			nextUrl.searchParams.set("module", key);
+			window.open(nextUrl.toString(), "_blank", "noopener,noreferrer");
+		}
+
+		function showDevelopmentScreen(key) {
+			const content = DEVELOPMENT_CONTENT[key];
+
+			if (!content) {
+				return;
+			}
+
+			developmentBadge.textContent = content.badge;
+			developmentStatus.textContent = content.status;
+			developmentTitle.textContent = content.title;
+			developmentDescription.textContent = content.description;
+			developmentDetails.textContent = content.details;
+			appStage.classList.add("show-office-dev");
+		}
+
+		function syncInitialViewFromUrl() {
+			const currentUrl = new URL(window.location.href);
+			const view = currentUrl.searchParams.get("view");
+			const moduleKey = currentUrl.searchParams.get("module");
+
+			if (view !== "development" || !DEVELOPMENT_MODULES.has(moduleKey)) {
+				return;
+			}
+
+			appStage.classList.add("authenticated");
+			showDevelopmentScreen(moduleKey);
+		}
+
+		loginForm.addEventListener("submit", (event) => {
+			event.preventDefault();
+			const email = document.getElementById("email").value.trim();
+			const displayName = buildDisplayName(email);
+
+			userIdentity.textContent = displayName;
+			if (dashboardGreetingName) dashboardGreetingName.textContent = displayName;
+			userAvatar.setAttribute("title", buildInitials(displayName));
+			appStage.classList.remove("show-office-dev");
+			appStage.classList.add("authenticated");
+		});
+
+		logoutButton.addEventListener("click", () => {
+			appStage.classList.remove("show-office-dev");
+			appStage.classList.remove("authenticated");
+			userIdentity.textContent = "Aguardando identificacao";
+			if (dashboardGreetingName) dashboardGreetingName.textContent = "contador";
+		});
+
+		contabilLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.contabil);
+		});
+
+		officeButton.addEventListener("click", () => {
+			showDevelopmentScreen("office");
+		});
+
+		fiscalLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.fiscal);
+		});
+
+		societarioLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.societario);
+		});
+
+		msgLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.msg);
+		});
+
+		mailLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.mail);
+		});
+
+		financeLink.addEventListener("click", (event) => {
+			event.preventDefault();
+			openExternalLink(MODULE_LINKS.finance);
+		});
+
+		backToModulesButton.addEventListener("click", () => {
+			appStage.classList.remove("show-office-dev");
+		});
+
+		backToLoginFromDev.addEventListener("click", () => {
+			appStage.classList.remove("show-office-dev");
+			appStage.classList.remove("authenticated");
+			userIdentity.textContent = "Aguardando identificacao";
+			if (dashboardGreetingName) dashboardGreetingName.textContent = "contador";
+		});
+
+		syncInitialViewFromUrl();
+	</script>
+</body>
+</html>
