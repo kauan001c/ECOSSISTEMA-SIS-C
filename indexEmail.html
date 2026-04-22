@@ -1,60 +1,369 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>SIS-C EMAIL</title>
-	<link rel="icon" type="image/x-icon" href="icosis-c.png">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-	<style>
-		* { box-sizing: border-box; margin: 0; padding: 0; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>SIS-C AI · E-mail — DEX Engine</title>
+  <link rel="icon" type="image/png" href="icosis-c.png">
+  <link rel="apple-touch-icon" href="icosis-c.png">
 
-		body {
-			min-height: 100vh;
-			font-family: "Manrope", sans-serif;
-			display: grid;
-			place-items: center;
-			padding: 24px;
-			background:
-				radial-gradient(circle at top left, rgba(47, 127, 179, 0.18), transparent 28%),
-				radial-gradient(circle at bottom right, rgba(29, 77, 66, 0.14), transparent 24%),
-				linear-gradient(135deg, #f7f9fb 0%, #e9eef2 100%);
-		}
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-		.message {
-			width: min(680px, 100%);
-			padding: 40px 32px;
-			border-radius: 32px;
-			background: rgba(255, 255, 255, 0.86);
-			border: 1px solid rgba(255, 255, 255, 0.76);
-			box-shadow: 0 24px 80px rgba(31, 52, 66, 0.12);
-			backdrop-filter: blur(16px);
-			text-align: center;
-		}
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-		.message h1 {
-			font-family: "Sora", sans-serif;
-			font-size: clamp(2rem, 4vw, 3rem);
-			line-height: 1.05;
-			letter-spacing: -0.04em;
-			color: #1f3442;
-		}
-
-		.message p {
-			margin-top: 14px;
-			font-size: 1rem;
-			line-height: 1.7;
-			color: #667786;
-		}
-	</style>
+  <!-- Styles -->
+  <link rel="stylesheet" href="email.css">
 </head>
 <body>
-	<div class="message">
-		<h1>SIS-C EMAIL</h1>
-		<p>Este módulo está em desenvolvimento.</p>
-	</div>
+
+<!-- ════════════════════════════════════════════
+     WELCOME GATE
+     ════════════════════════════════════════════ -->
+<div class="email-welcome" id="welcomeGate">
+  <!-- Hero Left -->
+  <div class="email-welcome__hero">
+    <div class="email-welcome__dex-orb"><i class="fa-solid fa-brain"></i></div>
+    <h1 class="email-welcome__title">DEX · E-mail Intelligence</h1>
+    <p class="email-welcome__subtitle">
+      Sou <strong>DEX — Data Exchange Expert</strong>, a inteligência artificial responsável pelo seu e-mail contábil.
+      Classifico, roteiro, priorizo e organizo tudo automaticamente.
+    </p>
+    <div class="email-welcome__skills">
+      <span class="email-welcome__skill"><i class="fa-solid fa-route"></i> Auto-roteamento</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-tags"></i> Classificação IA</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-building"></i> Pastas por empresa</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-bell"></i> Notificações</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-wand-magic-sparkles"></i> Sugestão de resposta</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-shield-halved"></i> Detecção de urgência</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-chart-bar"></i> Análise de sentimento</span>
+      <span class="email-welcome__skill"><i class="fa-solid fa-bolt"></i> Regras automáticas</span>
+    </div>
+  </div>
+
+  <!-- Form Right -->
+  <div class="email-welcome__side">
+    <div class="email-welcome__form" id="welcomeForm">
+      <h2><i class="fa-solid fa-envelope" style="margin-right:6px;opacity:.7"></i> Configurar E-mail</h2>
+      <p>Preencha para ativar o DEX no seu e-mail contábil</p>
+
+      <div class="email-welcome__field">
+        <label>Seu nome</label>
+        <input type="text" id="welcomeName" placeholder="Ex: Ana Silva" autocomplete="name">
+      </div>
+      <div class="email-welcome__field">
+        <label>Seu e-mail</label>
+        <input type="email" id="welcomeEmail" placeholder="Ex: ana@escritorio.com.br" autocomplete="email">
+      </div>
+      <div class="email-welcome__field">
+        <label>Cargo / Função</label>
+        <select id="welcomeRole">
+          <option value="contador">Contador(a)</option>
+          <option value="auxiliar">Auxiliar Contábil</option>
+          <option value="gerente">Gerente</option>
+          <option value="fiscal">Analista Fiscal</option>
+          <option value="dp">Analista DP</option>
+          <option value="admin">Administrador</option>
+        </select>
+      </div>
+
+      <button class="email-welcome__enter" id="welcomeEnter">
+        <i class="fa-solid fa-brain" style="margin-right:6px"></i> Ativar DEX e Entrar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SHELL
+     ════════════════════════════════════════════ -->
+<div class="email-shell">
+
+  <!-- ── TOPBAR ── -->
+  <header class="email-topbar">
+    <div class="email-topbar__left">
+      <div class="email-topbar__logo"><img src="icosis-c.png" alt="SIS-C" style="width:28px;height:28px;object-fit:contain"></div>
+      <div class="email-topbar__brand">
+        <span class="email-topbar__title">SIS-C E-mail</span>
+        <span class="email-topbar__sub">DEX Engine v2.0</span>
+      </div>
+    </div>
+
+    <div class="email-topbar__center">
+      <div class="email-topbar__search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Buscar e-mails, empresas, assuntos... ( / )">
+      </div>
+    </div>
+
+    <div class="email-topbar__right">
+      <button class="email-btn email-btn--ghost email-btn--icon" id="dexToggle" title="Painel DEX (D)">
+        <i class="fa-solid fa-brain"></i>
+      </button>
+      <button class="email-btn email-btn--ghost email-btn--icon email-topbar__notif" id="notifBtn" title="Notificações (N)">
+        <i class="fa-solid fa-bell"></i>
+        <span class="email-topbar__notif-badge" id="notifBadge"></span>
+      </button>
+      <button class="email-btn email-btn--ghost email-btn--icon" id="themeBtn" title="Tema">
+        <i class="fa-solid fa-circle-half-stroke"></i>
+      </button>
+      <button class="email-btn email-btn--ghost email-btn--icon" id="settingsBtn" title="Configurações">
+        <i class="fa-solid fa-gear"></i>
+      </button>
+      <button class="email-btn email-btn--ghost email-btn--icon" id="resetBtn" title="Resetar dados">
+        <i class="fa-solid fa-rotate-left"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="email-sidebar">
+    <div class="email-sidebar__compose">
+      <button class="email-btn email-btn--primary" id="composeBtn" style="width:100%">
+        <i class="fa-solid fa-pen-to-square"></i> Compor (C)
+      </button>
+    </div>
+
+    <div class="email-sidebar__head">
+      <h3><i class="fa-solid fa-building"></i> Empresa</h3>
+      <select class="email-sidebar__company-select" id="companySelect">
+        <option value="all">Todas as empresas</option>
+        <option value="c1">Oliveira & Santos Ltda</option>
+        <option value="c2">Tech Solutions S.A.</option>
+        <option value="c3">BR Comércio Eireli</option>
+        <option value="c4">Construmax Engenharia</option>
+        <option value="c5">MedVida Clínica</option>
+        <option value="c6">Agro Norte S.A.</option>
+        <option value="c7">JM Transportes</option>
+        <option value="c8">Rede Farma Popular</option>
+      </select>
+    </div>
+
+    <nav class="email-sidebar__nav" id="sidebarNav">
+      <!-- Rendered by JS -->
+    </nav>
+
+    <div class="email-sidebar__labels" id="sidebarLabels">
+      <!-- Rendered by JS -->
+    </div>
+
+    <div class="email-sidebar__auto" id="sidebarAuto">
+      <!-- Rendered by JS -->
+    </div>
+  </aside>
+
+  <!-- ── EMAIL LIST ── -->
+  <section class="email-list">
+    <div class="email-list__head">
+      <div class="email-list__head-left">
+        <label><input type="checkbox" id="selectAll"> Todos</label>
+        <button class="email-btn email-btn--ghost email-btn--sm" id="batchDeleteBtn" title="Excluir selecionados">
+          <i class="fa-solid fa-trash-can"></i> Excluir selecionados
+        </button>
+        <span class="email-list__count" id="emailListCount">0 e-mails</span>
+      </div>
+      <div class="email-list__head-right">
+        <select class="email-list__sort" id="sortSelect">
+          <option value="date">Mais recentes</option>
+          <option value="from">Remetente</option>
+          <option value="priority">Prioridade</option>
+        </select>
+        <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" id="refreshBtn" title="Atualizar">
+          <i class="fa-solid fa-arrows-rotate"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="email-new-bar" id="newEmailBar">
+      <i class="fa-solid fa-arrow-up"></i>
+      <span><span id="newEmailCount">0</span> novo(s) e-mail(s)</span>
+      <span style="margin-left:auto;font-size:10px;opacity:.8">Clique para ver</span>
+    </div>
+
+    <div class="email-list__body" id="emailListBody">
+      <!-- Rendered by JS -->
+    </div>
+  </section>
+
+  <!-- ── READER ── -->
+  <main class="email-reader">
+    <div id="readerContent">
+      <div class="email-reader__empty">
+        <div class="email-reader__empty-orb"></div>
+        <h3>SIS-C E-mail</h3>
+        <p>Selecione um e-mail para ler ou clique em <strong>Compor</strong> para enviar uma nova mensagem.</p>
+      </div>
+    </div>
+
+    <!-- Reply Box -->
+    <div class="email-reader__reply" id="replyBox">
+      <div class="email-reply-box">
+        <textarea placeholder="Escreva sua resposta..."></textarea>
+        <div class="email-reply-box__footer">
+          <div class="email-reply-box__tools">
+            <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" title="Anexar"><i class="fa-solid fa-paperclip"></i></button>
+            <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" title="Formatar"><i class="fa-solid fa-bold"></i></button>
+            <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" title="Emoji"><i class="fa-solid fa-face-smile"></i></button>
+            <button class="email-btn email-btn--ai email-btn--sm" id="replyDexSuggest" title="DEX sugerir resposta"><i class="fa-solid fa-wand-magic-sparkles"></i> DEX</button>
+          </div>
+          <button class="email-btn email-btn--primary email-btn--sm" id="replySend"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ── DEX PANEL ── -->
+  <aside class="email-dex" id="dexPanel">
+    <div class="email-dex__head">
+      <div class="email-dex__head-top">
+        <div class="email-dex__head-orb"><i class="fa-solid fa-brain"></i></div>
+        <span class="email-dex__head-title">DEX · Data Exchange Expert</span>
+        <button class="email-dex__head-close" id="dexClose" title="Fechar"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="email-dex__head-sub">Inteligência de e-mail ativa</div>
+    </div>
+
+    <div class="email-dex__body">
+      <!-- Stats -->
+      <div class="email-dex__section">
+        <div class="email-dex__section-head"><i class="fa-solid fa-chart-bar"></i> Estatísticas</div>
+        <div class="email-dex__stats" id="dexStats"></div>
+      </div>
+
+      <!-- Activity Log -->
+      <div class="email-dex__section">
+        <div class="email-dex__section-head"><i class="fa-solid fa-clock-rotate-left"></i> Atividade DEX</div>
+        <div class="email-dex__log" id="dexLog"></div>
+      </div>
+
+      <!-- Company Folders -->
+      <div class="email-dex__section">
+        <div class="email-dex__section-head"><i class="fa-solid fa-building"></i> Pastas por Empresa</div>
+        <div class="email-dex__folders" id="dexFolders"></div>
+      </div>
+    </div>
+
+    <!-- Chat -->
+    <div class="email-dex__chat">
+      <div class="email-dex__chat-messages" id="dexChatMessages">
+        <div class="email-dex__chat-msg is-dex">Olá! Sou DEX, sua IA de e-mail. Pergunte qualquer coisa — resumos, estatísticas, ou peça ajuda com classificação.</div>
+      </div>
+      <div class="email-dex__chat-input">
+        <input type="text" id="dexChatInput" placeholder="Pergunte ao DEX...">
+        <button id="dexChatSend"><i class="fa-solid fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </aside>
+
+</div><!-- /shell -->
+
+<!-- ════════════════════════════════════════════
+     COMPOSE MODAL
+     ════════════════════════════════════════════ -->
+<div class="email-compose-overlay" id="composeOverlay">
+  <div class="email-compose">
+    <div class="email-compose__head">
+      <h3><i class="fa-solid fa-pen-to-square"></i> Nova Mensagem</h3>
+      <button id="composeClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="email-compose__fields">
+      <div class="email-compose__field">
+        <label>Para</label>
+        <input type="email" id="composeTo" placeholder="destinatario@email.com">
+      </div>
+      <div class="email-compose__field">
+        <label>Assunto</label>
+        <input type="text" id="composeSubject" placeholder="Assunto do e-mail">
+      </div>
+    </div>
+    <div class="email-compose__body">
+      <textarea id="composeBody" placeholder="Escreva sua mensagem..."></textarea>
+    </div>
+    <div class="email-compose__dex-bar" id="composeDexBar">
+      <div class="email-compose__dex-bar-head"><i class="fa-solid fa-brain"></i> Análise DEX</div>
+      <div class="email-compose__dex-bar-text" id="composeDexText"></div>
+      <div class="email-compose__dex-bar-actions">
+        <button class="email-btn email-btn--xs email-btn--ai">Aceitar sugestão</button>
+      </div>
+    </div>
+    <div class="email-compose__footer">
+      <div class="email-compose__footer-tools">
+        <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" title="Anexar"><i class="fa-solid fa-paperclip"></i></button>
+        <button class="email-btn email-btn--ghost email-btn--icon email-btn--sm" title="Formatar"><i class="fa-solid fa-bold"></i></button>
+        <button class="email-btn email-btn--ai email-btn--sm" id="composeDexSuggest" title="DEX analisar"><i class="fa-solid fa-brain"></i> DEX Analisar</button>
+      </div>
+      <button class="email-btn email-btn--primary" id="composeSend"><i class="fa-solid fa-paper-plane"></i> Enviar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     SETTINGS MODAL
+     ════════════════════════════════════════════ -->
+<div class="email-modal-overlay" id="settingsOverlay">
+  <div class="email-modal">
+    <div class="email-modal__head">
+      <h3><i class="fa-solid fa-gear"></i> Configurações</h3>
+      <button class="email-btn email-btn--ghost email-btn--icon" id="settingsClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="email-modal__tabs">
+      <div class="email-modal__tab is-active" data-tab="settingsAccount"><i class="fa-solid fa-user"></i> Conta</div>
+      <div class="email-modal__tab" data-tab="settingsAutomation"><i class="fa-solid fa-bolt"></i> Automação</div>
+      <div class="email-modal__tab" data-tab="settingsDex"><i class="fa-solid fa-brain"></i> DEX IA</div>
+      <div class="email-modal__tab" data-tab="settingsAppearance"><i class="fa-solid fa-palette"></i> Aparência</div>
+    </div>
+    <div class="email-modal__body">
+      <div class="email-modal__panel is-active" id="settingsAccount"></div>
+      <div class="email-modal__panel" id="settingsAutomation"></div>
+      <div class="email-modal__panel" id="settingsDex"></div>
+      <div class="email-modal__panel" id="settingsAppearance"></div>
+    </div>
+    <div class="email-modal__footer">
+      <button class="email-btn" onclick="document.getElementById('settingsOverlay').classList.remove('is-open')">Cancelar</button>
+      <button class="email-btn email-btn--primary" id="settingsSave"><i class="fa-solid fa-check"></i> Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     NOTIFICATION DRAWER
+     ════════════════════════════════════════════ -->
+<div class="email-notif-drawer" id="notifDrawer">
+  <div class="email-notif-drawer__head">
+    <h3><i class="fa-solid fa-bell"></i> Notificações</h3>
+    <div style="display:flex;gap:4px">
+      <button class="email-btn email-btn--ghost email-btn--xs" id="notifClear">Marcar lidas</button>
+      <button class="email-btn email-btn--ghost email-btn--icon email-btn--xs" id="notifClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+  </div>
+  <div class="email-notif-drawer__body" id="notifDrawerBody">
+    <!-- Rendered by JS -->
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     CONTEXT MENU
+     ════════════════════════════════════════════ -->
+<div class="email-context" id="contextMenu">
+  <div class="email-context__item" data-action="read"><i class="fa-solid fa-envelope-open"></i> Marcar lido/não lido</div>
+  <div class="email-context__item" data-action="star"><i class="fa-solid fa-star"></i> Favoritar</div>
+  <div class="email-context__item" data-action="label"><i class="fa-solid fa-tags"></i> Etiqueta</div>
+  <div class="email-context__item" data-action="snooze"><i class="fa-solid fa-clock"></i> Adiar</div>
+  <div class="email-context__divider"></div>
+  <div class="email-context__item email-context__item--ai" data-action="dex-analyze"><i class="fa-solid fa-brain"></i> DEX Analisar</div>
+  <div class="email-context__item email-context__item--ai" data-action="dex-classify"><i class="fa-solid fa-wand-magic-sparkles"></i> DEX Classificar</div>
+  <div class="email-context__divider"></div>
+  <div class="email-context__item email-context__item--danger" data-action="trash"><i class="fa-solid fa-trash-can"></i> Mover p/ lixeira</div>
+</div>
+
+<!-- Toast -->
+<div class="email-toast-wrap" id="toastWrap"></div>
+
+<!-- Script -->
+<script src="email.js"></script>
+
 </body>
 </html>
