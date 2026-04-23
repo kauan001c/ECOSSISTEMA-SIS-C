@@ -12,6 +12,29 @@
 </head>
 <body>
 
+  <div id="maintenance-overlay" class="maintenance-overlay">
+    <div class="maintenance-card">
+      <div class="maintenance-card__eyebrow">AREA RESTRITA</div>
+      <h2 class="maintenance-card__title">Sistema em manutencao geral</h2>
+      <p class="maintenance-card__text">
+        O ambiente SIS-C AI esta em manutencao geral e sem previsao de retorno.
+        O acesso regular permanece bloqueado ate nova liberacao da equipe responsavel.
+      </p>
+      <div class="maintenance-card__alert">
+        Acesso permitido apenas para usuarios Master durante a janela de manutencao.
+      </div>
+      <div class="maintenance-card__form">
+        <label for="master-access-code">Acesso Master</label>
+        <input id="master-access-code" type="password" placeholder="Digite a senha Master" autocomplete="off" />
+        <div class="maintenance-card__actions">
+          <button type="button" id="btn-master-unlock" class="maintenance-card__btn maintenance-card__btn--primary">Liberar acesso Master</button>
+          <button type="button" id="btn-master-clear" class="maintenance-card__btn maintenance-card__btn--ghost">Limpar</button>
+        </div>
+        <p id="maintenance-feedback" class="maintenance-card__feedback"></p>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== TELA DE LOGIN ===== -->
   <div id="tela-login" class="login-page">
     <!-- Canvas de particulas -->
