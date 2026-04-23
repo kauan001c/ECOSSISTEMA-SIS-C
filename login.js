@@ -152,6 +152,13 @@
   var btnSistemasExternos = document.getElementById('btn-sistemas-externos');
   var cardSistemasExternos = document.getElementById('card-sistemas-externos');
   var areaSistemasExternos = document.getElementById('modulos-tools');
+  var maintenanceOverlay = document.getElementById('maintenance-overlay');
+  var masterAccessCode = document.getElementById('master-access-code');
+  var btnMasterUnlock = document.getElementById('btn-master-unlock');
+  var btnMasterClear = document.getElementById('btn-master-clear');
+  var maintenanceFeedback = document.getElementById('maintenance-feedback');
+  var MASTER_CODE = 'SuliK01';
+  var MASTER_ACCESS_KEY = 'sisc_master_access';
 
   // ---------- Helpers ----------
   function getUsuario() {
@@ -187,6 +194,29 @@
     var abrir = cardSistemasExternos.hidden;
     cardSistemasExternos.hidden = !abrir;
     btnSistemasExternos.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+  }
+
+  function bloquearSistema() {
+    if (!maintenanceOverlay) return;
+    maintenanceOverlay.classList.remove('hidden');
+    if (masterAccessCode) masterAccessCode.focus();
+  }
+
+  function liberarSistemaMaster() {
+    if (!maintenanceOverlay) return;
+    maintenanceOverlay.classList.add('hidden');
+    if (maintenanceFeedback) maintenanceFeedback.textContent = '';
+    sessionStorage.setItem(MASTER_ACCESS_KEY, 'true');
+  }
+
+  function validarSenhaMaster() {
+    if (!masterAccessCode || !maintenanceFeedback) return;
+    if (masterAccessCode.value === MASTER_CODE) {
+      liberarSistemaMaster();
+      return;
+    }
+    maintenanceFeedback.textContent = 'Senha invalida. O acesso segue bloqueado fora do modo Master.';
+    masterAccessCode.select();
   }
 
   // ---------- Navegacao entre telas ----------
@@ -258,5 +288,32 @@
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') fecharCardSistemasExternos();
   });
+
+  if (btnMasterUnlock) {
+    btnMasterUnlock.addEventListener('click', validarSenhaMaster);
+  }
+
+  if (btnMasterClear) {
+    btnMasterClear.addEventListener('click', function () {
+      if (masterAccessCode) masterAccessCode.value = '';
+      if (maintenanceFeedback) maintenanceFeedback.textContent = '';
+      if (masterAccessCode) masterAccessCode.focus();
+    });
+  }
+
+  if (masterAccessCode) {
+    masterAccessCode.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        validarSenhaMaster();
+      }
+    });
+  }
+
+  if (sessionStorage.getItem(MASTER_ACCESS_KEY) === 'true') {
+    liberarSistemaMaster();
+  } else {
+    bloquearSistema();
+  }
 
 })();
