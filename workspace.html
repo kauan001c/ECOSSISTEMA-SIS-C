@@ -57,6 +57,12 @@
 			padding: 14px;
 		}
 
+		.workspace-shell.is-locked {
+			filter: blur(12px) saturate(.7);
+			pointer-events: none;
+			user-select: none;
+		}
+
 		.sidebar,
 		.inspector,
 		.board {
@@ -915,6 +921,130 @@
 			z-index: 2;
 		}
 
+		.access-overlay {
+			position: fixed;
+			inset: 0;
+			z-index: 999;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 24px;
+			background:
+				radial-gradient(circle at top left, rgba(34, 211, 238, 0.14), transparent 26%),
+				radial-gradient(circle at bottom right, rgba(248, 113, 113, 0.14), transparent 24%),
+				rgba(4, 8, 14, 0.84);
+			backdrop-filter: blur(18px);
+		}
+
+		.access-overlay.hidden {
+			display: none !important;
+		}
+
+		.access-card {
+			width: min(100%, 520px);
+			padding: 28px;
+			border-radius: 28px;
+			border: 1px solid rgba(120, 144, 176, 0.28);
+			background: linear-gradient(180deg, rgba(11, 17, 27, 0.96), rgba(7, 12, 20, 0.98));
+			box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+		}
+
+		.access-card__eyebrow {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			border-radius: 999px;
+			border: 1px solid rgba(248, 113, 113, 0.22);
+			background: rgba(248, 113, 113, 0.1);
+			color: #ffb4b4;
+			font-size: 11px;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+			margin-bottom: 18px;
+		}
+
+		.access-card h2 {
+			font-family: 'Sora', sans-serif;
+			font-size: 28px;
+			line-height: 1.2;
+			margin-bottom: 12px;
+		}
+
+		.access-card p {
+			font-size: 14px;
+			line-height: 1.75;
+			color: var(--text-soft);
+		}
+
+		.access-highlight {
+			margin: 18px 0 20px;
+			padding: 14px 16px;
+			border-radius: 18px;
+			border: 1px solid var(--line);
+			background: rgba(255, 255, 255, 0.03);
+			font-size: 13px;
+			color: var(--text);
+		}
+
+		.access-form {
+			display: grid;
+			gap: 12px;
+		}
+
+		.access-form label {
+			font-size: 11px;
+			letter-spacing: .12em;
+			text-transform: uppercase;
+			color: var(--text-faint);
+		}
+
+		.access-form input {
+			width: 100%;
+			padding: 14px 16px;
+			border-radius: 16px;
+			border: 1px solid var(--line);
+			background: rgba(255, 255, 255, 0.04);
+			color: var(--text);
+			outline: none;
+		}
+
+		.access-form input:focus {
+			border-color: rgba(34, 211, 238, 0.38);
+			box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.08);
+		}
+
+		.access-actions {
+			display: flex;
+			gap: 10px;
+			flex-wrap: wrap;
+		}
+
+		.access-button {
+			border-radius: 16px;
+			padding: 13px 16px;
+			border: 1px solid var(--line);
+			cursor: pointer;
+			color: var(--text);
+			font-weight: 700;
+		}
+
+		.access-button--primary {
+			background: linear-gradient(135deg, rgba(20, 184, 166, 0.9), rgba(59, 130, 246, 0.86));
+			border-color: transparent;
+			flex: 1;
+		}
+
+		.access-button--ghost {
+			background: rgba(255, 255, 255, 0.03);
+		}
+
+		.access-feedback {
+			min-height: 20px;
+			font-size: 12px;
+			color: #ffb4b4;
+		}
+
 		.hidden { display: none !important; }
 
 		@media (max-width: 1500px) {
@@ -951,6 +1081,23 @@
 	</style>
 </head>
 <body>
+	<div class="access-overlay" id="accessOverlay">
+		<div class="access-card">
+			<div class="access-card__eyebrow"><i class="fa-solid fa-shield-halved"></i> Area Restrita</div>
+			<h2>Workspace protegido para desenvolvedores e usuarios Master</h2>
+			<p>O acesso a este ambiente e liberado apenas para desenvolvedores autorizados e usuarios Master. Informe o codigo de acesso para liberar o workspace.</p>
+			<div class="access-highlight">Aviso: conteudo interno de automacao, integracoes, operacao tecnica e manutencao do sistema.</div>
+			<div class="access-form">
+				<label for="accessCodeInput">Codigo de acesso</label>
+				<input id="accessCodeInput" type="password" placeholder="Digite o codigo de acesso" autocomplete="off">
+				<div class="access-actions">
+					<button class="access-button access-button--primary" type="button" id="unlockWorkspaceBtn"><i class="fa-solid fa-lock-open"></i> Liberar workspace</button>
+					<button class="access-button access-button--ghost" type="button" id="clearAccessBtn"><i class="fa-solid fa-eraser"></i> Limpar</button>
+				</div>
+				<div class="access-feedback" id="accessFeedback"></div>
+			</div>
+		</div>
+	</div>
 	<div class="workspace-shell">
 		<aside class="sidebar">
 			<div class="brand">
@@ -1289,6 +1436,14 @@
 			var aiCards = Array.prototype.slice.call(document.querySelectorAll('.ai-card[data-ai-card]'));
 			var stageHint = document.getElementById('stageHint');
 			var aiWorkspaceChip = document.getElementById('aiWorkspaceChip');
+			var workspaceShell = document.querySelector('.workspace-shell');
+			var accessOverlay = document.getElementById('accessOverlay');
+			var accessCodeInput = document.getElementById('accessCodeInput');
+			var unlockWorkspaceBtn = document.getElementById('unlockWorkspaceBtn');
+			var clearAccessBtn = document.getElementById('clearAccessBtn');
+			var accessFeedback = document.getElementById('accessFeedback');
+			var ACCESS_CODE = 'SuliK01';
+			var ACCESS_STORAGE_KEY = 'sisCAiWorkspaceUnlocked';
 
 			var aiWorkspaceProfiles = {
 				dex: {
@@ -1426,6 +1581,28 @@
 
 			function nodeLabel(nodeId) {
 				return currentNodeMap[nodeId] ? currentNodeMap[nodeId].title : nodeId;
+			}
+
+			function lockWorkspace() {
+				workspaceShell.classList.add('is-locked');
+				accessOverlay.classList.remove('hidden');
+				accessCodeInput.focus();
+			}
+
+			function unlockWorkspace() {
+				workspaceShell.classList.remove('is-locked');
+				accessOverlay.classList.add('hidden');
+				accessFeedback.textContent = '';
+				sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
+			}
+
+			function validateAccess() {
+				if (accessCodeInput.value === ACCESS_CODE) {
+					unlockWorkspace();
+					return;
+				}
+				accessFeedback.textContent = 'Codigo invalido. Acesso permitido apenas para desenvolvedores e usuarios Master.';
+				accessCodeInput.select();
 			}
 
 			function cloneConnectionList(items) {
@@ -1720,6 +1897,20 @@
 				linkFrom.focus();
 			});
 
+			unlockWorkspaceBtn.addEventListener('click', validateAccess);
+			clearAccessBtn.addEventListener('click', function () {
+				accessCodeInput.value = '';
+				accessFeedback.textContent = '';
+				accessCodeInput.focus();
+			});
+
+			accessCodeInput.addEventListener('keydown', function (event) {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+					validateAccess();
+				}
+			});
+
 			window.addEventListener('pointermove', onDrag);
 			window.addEventListener('pointerup', endDrag);
 			window.addEventListener('pointercancel', endDrag);
@@ -1728,6 +1919,11 @@
 
 			runWorkflowBtn.addEventListener('click', runWorkflow);
 			switchAIWorkspace('dex');
+			if (sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true') {
+				unlockWorkspace();
+			} else {
+				lockWorkspace();
+			}
 		})();
 	</script>
 </body>
