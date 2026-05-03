@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIS-C | Login ERP</title>
+    <link rel="icon" type="image/png" href="icosis-c.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Urbanist:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --panel: #eef6ff;
+            --line: #d9e7f4;
+            --text: #202737;
+            --muted: #6f798d;
+            --blue: #1f7ae0;
+            --blue-dark: #155eb1;
+            --cyan: #4fd0e8;
+            --navy: #1d3f98;
+            --green: #18bf57;
+            --shadow: 0 28px 70px rgba(63, 90, 138, 0.14);
+            --glow: radial-gradient(circle at 20% 20%, rgba(83, 173, 255, 0.22), transparent 34%), radial-gradient(circle at 80% 76%, rgba(129, 214, 255, 0.22), transparent 32%), linear-gradient(180deg, #f8fbff 0%, #f3f6fb 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Manrope", sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, #07122f 0%, #0a183d 100%);
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::before {
+            top: -120px;
+            left: -100px;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(94, 176, 255, 0.18), rgba(94, 176, 255, 0));
+            filter: blur(18px);
+        }
+
+        body::after {
+            right: -140px;
+            bottom: -120px;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(79, 208, 232, 0.16), rgba(79, 208, 232, 0));
+            filter: blur(22px);
+        }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            padding: 28px;
+        }
+
+        .page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(4, 13, 37, 0.48), rgba(6, 17, 46, 0.56)), url("fundo.jpg") center center / cover no-repeat;
+            opacity: 0.88;
+            filter: saturate(1.04);
+            pointer-events: none;
+            z-index: -1;
+            transform: scale(1.01);
+        }
+
+        .brand-bar,
+        .signature {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #f8fbff;
+            font-family: "Urbanist", sans-serif;
+            font-size: clamp(1.45rem, 1.8vw, 1.9rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .brand-bar img,
+        .signature img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .signature {
+            font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+            color: #eef5ff;
+        }
+
+        .signature strong {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: "Urbanist", sans-serif;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        @keyframes loginCardReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(26px) scale(0.985);
+                box-shadow: 0 20px 44px rgba(13, 28, 58, 0.18);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                box-shadow: var(--shadow);
+            }
+        }
+
+        @keyframes loginCardFloat {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        .login-shell {
+            width: min(1180px, 100%);
+            min-height: 680px;
+            display: grid;
+            grid-template-columns: 1.06fr 0.94fr;
+            background: var(--card);
+            border: 1px solid rgba(193, 214, 233, 0.72);
+            border-radius: 26px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: loginCardReveal 0.85s cubic-bezier(.2,.8,.2,1), loginCardFloat 7s ease-in-out 0.95s infinite;
+            transform-origin: center;
+            will-change: transform;
+        }
+
+        .login-shell:hover {
+            animation-play-state: running;
+        }
+
+        .info-panel {
+            position: relative;
+            padding: 56px 58px 50px;
+            background: linear-gradient(180deg, #f0f7ff 0%, #edf5fe 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .info-panel::before {
+            content: "SIS-C";
+            position: absolute;
+            left: 48px;
+            bottom: 72px;
+            font-family: "Urbanist", sans-serif;
+            font-size: clamp(4rem, 12vw, 8rem);
+            font-weight: 800;
+            letter-spacing: -0.08em;
+            color: rgba(43, 123, 202, 0.07);
+            transform: rotate(-28deg);
+            user-select: none;
+        }
+
+        .info-panel::after {
+            content: "";
+            position: absolute;
+            left: 92px;
+            bottom: 72px;
+            width: 140px;
+            height: 140px;
+            background: url("icosis-c.png") center/contain no-repeat;
+            opacity: 0.08;
+            transform: rotate(-18deg);
+        }
+
+        .sync-mark {
+            align-self: center;
+            width: 76px;
+            height: 76px;
+            display: grid;
+            place-items: center;
+            color: var(--green);
+            font-size: 2.55rem;
+            margin-bottom: 18px;
+        }
+
+        .system-card {
+            align-self: center;
+            width: min(100%, 400px);
+            border: 2px solid rgba(78, 127, 184, 0.16);
+            border-radius: 12px;
+            background: #fff;
+            overflow: hidden;
+            box-shadow: 0 18px 30px rgba(41, 99, 161, 0.08);
+        }
+
+        .system-card-top {
+            height: 24px;
+            background: #1f7ae0;
+        }
+
+        .system-card-body {
+            display: grid;
+            grid-template-columns: 128px 1fr;
+            min-height: 160px;
+        }
+
+        .system-card-gear {
+            border-right: 1px solid var(--line);
+            display: grid;
+            place-items: center;
+            color: var(--blue);
+            font-size: 4.4rem;
+            position: relative;
+        }
+
+        .system-card-gear::after {
+            content: "↻";
+            position: absolute;
+            top: 40px;
+            right: 18px;
+            font-size: 2rem;
+            color: rgba(31, 122, 224, 0.45);
+            transform: rotate(-20deg);
+        }
+
+        .system-card-status {
+            padding: 24px 18px 20px;
+        }
+
+        .status-label {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: #5c8fc4;
+            margin-bottom: 8px;
+        }
+
+        .status-track,
+        .status-track-short {
+            border-radius: 999px;
+            background: #f5f7fb;
+            border: 2px solid #d5dce7;
+            overflow: hidden;
+        }
+
+        .status-track {
+            height: 14px;
+            width: 100%;
+        }
+
+        .status-track-short {
+            height: 16px;
+            width: 92px;
+            margin-left: auto;
+            margin-top: 12px;
+        }
+
+        .status-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #25d557 0%, #15ba4c 100%);
+            border-radius: inherit;
+        }
+
+        .status-fill-main {
+            width: 58%;
+        }
+
+        .status-fill-short {
+            width: 52%;
+            background: linear-gradient(90deg, #2c86ea 0%, #1e73d6 100%);
+        }
+
+        .card-footer-line {
+            margin-top: 36px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #98a2b3;
+        }
+
+        .card-footer-line::before {
+            content: "□";
+            font-size: 0.72rem;
+        }
+
+        .card-footer-line span {
+            width: 68px;
+            height: 5px;
+            border-radius: 999px;
+            background: #a5afb9;
+        }
+
+        .info-copy {
+            max-width: 430px;
+            margin: 26px auto 0;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #5e6777;
+        }
+
+        .info-links {
+            max-width: 430px;
+            margin: 18px auto 0;
+            display: grid;
+            gap: 10px;
+        }
+
+        .info-links a {
+            color: var(--blue);
+            text-decoration: none;
+            font-size: 0.98rem;
+            font-weight: 700;
+        }
+
+        .info-links a:hover {
+            color: var(--blue-dark);
+        }
+
+        .form-panel {
+            position: relative;
+            padding: 54px 54px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #ffffff 0%, #fcfdff 100%);
+        }
+
+        .form-panel::before {
+            content: "S";
+            position: absolute;
+            top: 70px;
+            right: 72px;
+            font-family: "Urbanist", sans-serif;
+            font-size: clamp(10rem, 19vw, 14rem);
+            font-weight: 800;
+            color: rgba(31, 39, 55, 0.05);
+            line-height: 1;
+            user-select: none;
+        }
+
+        .login-card {
+            position: relative;
+            width: min(100%, 372px);
+            z-index: 1;
+        }
+
+        .symbol-badge {
+            width: 112px;
+            height: 112px;
+            margin: 0 auto 28px;
+            border-radius: 50%;
+            border: 2px solid rgba(146, 195, 241, 0.62);
+            background: linear-gradient(180deg, rgba(247, 251, 255, 0.98) 0%, rgba(237, 246, 255, 0.96) 100%);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 14px 28px rgba(89, 140, 190, 0.08);
+        }
+
+        .symbol-badge img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }
+
+        .field {
+            position: relative;
+            margin-bottom: 18px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 52px;
+            padding: 0 16px;
+            border: 1.5px solid #d9e3ee;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.96);
+            font: 600 1rem "Manrope", sans-serif;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .field input::placeholder {
+            color: #9099a9;
+            font-weight: 600;
+        }
+
+        .field input:focus {
+            border-color: #7db8ef;
+            box-shadow: 0 0 0 4px rgba(31, 122, 224, 0.08);
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #8a93a1;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 6px;
+        }
+
+        .password-toggle:hover {
+            color: #4d5a70;
+        }
+
+        .login-button {
+            display: block;
+            width: 200px;
+            margin: 26px auto 0;
+            height: 44px;
+            border: 0;
+            border-radius: 4px;
+            background: linear-gradient(180deg, #2582e8 0%, #1f7ae0 100%);
+            color: #fff;
+            font: 800 1rem "Manrope", sans-serif;
+            letter-spacing: 0.01em;
+            cursor: pointer;
+            box-shadow: 0 12px 20px rgba(31, 122, 224, 0.18);
+            transition: transform 0.16s ease, box-shadow 0.16s ease, background 0.16s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 16px 24px rgba(31, 122, 224, 0.2);
+            background: linear-gradient(180deg, #2a89f0 0%, #1c72d4 100%);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .social-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 16px;
+            color: #8d97a7;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .social-divider::before,
+        .social-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(217, 227, 238, 0), rgba(217, 227, 238, 1) 30%, rgba(217, 227, 238, 1) 70%, rgba(217, 227, 238, 0));
+        }
+
+        .social-login {
+            display: grid;
+            gap: 12px;
+        }
+
+        .social-button {
+            width: 100%;
+            min-height: 48px;
+            border: 1.5px solid #d9e3ee;
+            border-radius: 10px;
+            background: #fff;
+            color: #233145;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font: 700 0.98rem "Manrope", sans-serif;
+            cursor: pointer;
+            transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+        }
+
+        .social-button:hover {
+            transform: translateY(-1px);
+            border-color: #c3d8ef;
+            box-shadow: 0 12px 22px rgba(47, 92, 144, 0.08);
+        }
+
+        .social-button i {
+            font-size: 1.15rem;
+        }
+
+        .social-button.google i {
+            color: #ea4335;
+        }
+
+        .social-button.apple i {
+            color: #111111;
+        }
+
+        @media (max-width: 980px) {
+            .page {
+                padding: 20px;
+                gap: 18px;
+            }
+
+            .login-shell {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .info-panel,
+            .form-panel {
+                padding: 40px 28px;
+            }
+
+            .form-panel::before {
+                top: 18px;
+                right: 24px;
+                font-size: 9rem;
+            }
+
+            .info-panel::before {
+                left: 24px;
+                bottom: 32px;
+                font-size: 5rem;
+            }
+
+            .info-panel::after {
+                left: 42px;
+                bottom: 18px;
+                width: 96px;
+                height: 96px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .brand-bar,
+            .signature {
+                font-size: 1.15rem;
+            }
+
+            .brand-bar img,
+            .signature img {
+                width: 22px;
+                height: 22px;
+            }
+
+            .page {
+                padding: 14px;
+            }
+
+            .info-panel,
+            .form-panel {
+                padding: 28px 18px;
+            }
+
+            .system-card-body {
+                grid-template-columns: 108px 1fr;
+            }
+
+            .system-card-gear {
+                font-size: 3.4rem;
+            }
+
+            .info-copy,
+            .info-links {
+                max-width: 100%;
+            }
+
+            .symbol-badge {
+                width: 96px;
+                height: 96px;
+            }
+
+            .symbol-badge img {
+                width: 56px;
+                height: 56px;
+            }
+
+            .field input {
+                height: 50px;
+            }
+
+            .login-button {
+                width: 100%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .login-shell {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="page">
+        <div class="brand-bar">
+            <img src="icosis-c.png" alt="SIS-C">
+            <span>SIS-C</span>
+        </div>
+
+        <section class="login-shell" aria-label="Tela de login do ERP">
+            <div class="info-panel">
+                <div class="sync-mark" aria-hidden="true">
+                    <i class="fa-solid fa-rotate"></i>
+                </div>
+
+                <div class="system-card" aria-hidden="true">
+                    <div class="system-card-top"></div>
+                    <div class="system-card-body">
+                        <div class="system-card-gear">
+                            <i class="fa-solid fa-gears"></i>
+                        </div>
+                        <div class="system-card-status">
+                            <div class="status-label">updated</div>
+                            <div class="status-track">
+                                <div class="status-fill status-fill-main"></div>
+                            </div>
+                            <div class="status-track-short">
+                                <div class="status-fill status-fill-short"></div>
+                            </div>
+                            <div class="card-footer-line">
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="info-copy">
+                    Bem-vindo ao SIS-C. Acesse sua conta para continuar com segurança e utilizar os recursos do sistema de forma simples, centralizada e eficiente.
+                </p>
+            </div>
+
+            <div class="form-panel">
+                <form class="login-card" action="#" method="post" autocomplete="on">
+                    <div class="symbol-badge">
+                        <img src="icosis-c.png" alt="Símbolo do sistema SIS-C">
+                    </div>
+
+                    <label class="field">
+                        <input type="text" name="usuario" placeholder="Admin" aria-label="Usuário" autocomplete="username">
+                    </label>
+
+                    <label class="field">
+                        <input id="password" type="password" name="senha" placeholder="Senha" aria-label="Senha" autocomplete="current-password">
+                        <button class="password-toggle" type="button" aria-label="Mostrar senha" aria-controls="password">
+                            <i class="fa-regular fa-eye-slash"></i>
+                        </button>
+                    </label>
+
+                    <button class="login-button" type="submit">Login</button>
+
+                    <div class="social-divider">ou continue com</div>
+
+                    <div class="social-login">
+                        <button class="social-button google" type="button">
+                            <i class="fa-brands fa-google" aria-hidden="true"></i>
+                            <span>Entrar com Google</span>
+                        </button>
+                        <button class="social-button apple" type="button">
+                            <i class="fa-brands fa-apple" aria-hidden="true"></i>
+                            <span>Entrar com Apple</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <div class="signature">
+            <strong>
+                <img src="icosis-c.png" alt="SIS-C">
+                <span>SIS-C</span>
+            </strong>
+        </div>
+    </main>
+
+    <script>
+        const loginForm = document.querySelector(".login-card");
+        const passwordInput = document.querySelector("#password");
+        const toggleButton = document.querySelector(".password-toggle");
+
+        toggleButton.addEventListener("click", () => {
+            const isPassword = passwordInput.type === "password";
+
+            passwordInput.type = isPassword ? "text" : "password";
+            toggleButton.setAttribute("aria-label", isPassword ? "Ocultar senha" : "Mostrar senha");
+            toggleButton.innerHTML = isPassword
+                ? '<i class="fa-regular fa-eye"></i>'
+                : '<i class="fa-regular fa-eye-slash"></i>';
+        });
+
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            const modulosUrl = new URL("./modulos.html", window.location.href);
+            window.location.assign(modulosUrl.href);
+        });
+    </script>
+</body>
+</html>

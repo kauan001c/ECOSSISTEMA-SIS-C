@@ -1,0 +1,1891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIS-C | Conciliação</title>
+    <style>
+        :root {
+            --bg: #dfe4ea;
+            --surface: #f7f8fb;
+            --surface-strong: #eef1f5;
+            --surface-panel: #ffffff;
+            --line: #c8d0db;
+            --line-strong: #aeb9c8;
+            --text: #1f2937;
+            --muted: #667389;
+            --blue: #2b6ecb;
+            --blue-soft: #dcecff;
+            --green: #1fa971;
+            --green-soft: #daf4ea;
+            --red: #d64545;
+            --red-soft: #fde7e7;
+            --yellow: #b88213;
+            --yellow-soft: #fdf1d6;
+            --shadow: 0 10px 22px rgba(67, 84, 102, 0.12);
+            --topbar-height: 166px;
+            --footer-height: 74px;
+            --center-width: 182px;
+            --font-ui: Tahoma, Verdana, Segoe UI, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-ui);
+            background:
+                linear-gradient(180deg, rgba(255,255,255,0.75), rgba(223,228,234,0.96)),
+                linear-gradient(90deg, rgba(163, 177, 198, 0.22) 1px, transparent 1px),
+                linear-gradient(rgba(163, 177, 198, 0.16) 1px, transparent 1px);
+            background-size: auto, 28px 28px, 28px 28px;
+            color: var(--text);
+        }
+
+        body {
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) var(--footer-height);
+        }
+
+        .topbar {
+            border-bottom: 1px solid var(--line-strong);
+            background: linear-gradient(180deg, #f8fafc 0%, #ebeff4 100%);
+            box-shadow: inset 0 -1px 0 rgba(255,255,255,0.8);
+            padding: 10px 14px 12px;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            gap: 10px;
+        }
+
+        .topbar-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand {
+            min-width: 300px;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3642;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-subtitle {
+            margin-top: 3px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .status-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .pill {
+            min-width: 180px;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, #ffffff, #f3f6fa);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+            padding: 8px 10px;
+        }
+
+        .pill-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .pill-value {
+            margin-top: 4px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #243142;
+        }
+
+        .controls-grid {
+            display: grid;
+            grid-template-columns: minmax(280px, 1.5fr) repeat(5, minmax(135px, 0.45fr));
+            gap: 10px;
+            align-items: stretch;
+        }
+
+        .control-box {
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, #ffffff, #f4f6fa);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+            padding: 8px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .control-box label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        .field,
+        .btn {
+            height: 34px;
+            border: 1px solid var(--line-strong);
+            background: #ffffff;
+            color: var(--text);
+            padding: 0 10px;
+            font-size: 13px;
+            font-family: var(--font-ui);
+            outline: none;
+        }
+
+        .field:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 2px rgba(43, 110, 203, 0.12);
+        }
+
+        .btn {
+            cursor: pointer;
+            background: linear-gradient(180deg, #fefefe, #e8edf4);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.85);
+            font-weight: 700;
+        }
+
+        .btn:hover {
+            background: linear-gradient(180deg, #ffffff, #e2e9f2);
+        }
+
+        .btn:disabled {
+            cursor: not-allowed;
+            color: #7b8796;
+            border-color: #c9d2dd;
+            background: linear-gradient(180deg, #f5f7fa, #e5eaf0);
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            color: #ffffff;
+            border-color: #2259a3;
+            background: linear-gradient(180deg, #4b8be0, #2b6ecb);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(180deg, #5d98e5, #2f74d3);
+        }
+
+        .btn-success {
+            color: #ffffff;
+            border-color: #1a8d5d;
+            background: linear-gradient(180deg, #32bc83, #1fa971);
+        }
+
+        .btn-warning {
+            color: #ffffff;
+            border-color: #a86f0e;
+            background: linear-gradient(180deg, #d99a1f, #b88213);
+        }
+
+        .btn-danger {
+            color: #ffffff;
+            border-color: #b53a3a;
+            background: linear-gradient(180deg, #df6464, #d64545);
+        }
+
+        .brand-title-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .module-accounting-icon {
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(43, 110, 203, 0.35);
+            background: linear-gradient(180deg, #eff6ff, #dcecff);
+            color: var(--blue);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+
+        .module-accounting-icon svg {
+            width: 14px;
+            height: 14px;
+            display: block;
+        }
+
+        .btn-inline-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) var(--center-width) minmax(0, 1fr);
+            min-height: 0;
+            background: rgba(255,255,255,0.24);
+        }
+
+        .panel {
+            min-width: 0;
+            min-height: 0;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            border-right: 1px solid var(--line);
+            background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(240,244,248,0.92));
+        }
+
+        .panel:last-child {
+            border-right: none;
+        }
+
+        .panel-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--line);
+            background: linear-gradient(180deg, #fbfcfe, #edf2f7);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .panel-subtitle {
+            margin-top: 2px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .panel-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag {
+            border: 1px solid var(--line);
+            background: #ffffff;
+            padding: 4px 7px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .month-picker {
+            min-width: 150px;
+            height: 28px;
+            border: 1px solid var(--line);
+            background: #ffffff;
+            color: var(--text);
+            font-size: 11px;
+            font-family: var(--font-ui);
+            padding: 0 8px;
+        }
+
+        .shortcuts-bar {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--line);
+            background: #f8fafc;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .panel-body {
+            min-height: 0;
+            overflow: auto;
+            cursor: grab;
+            overscroll-behavior: contain;
+            touch-action: pan-y pan-x;
+            scrollbar-gutter: stable;
+        }
+
+        .panel-body.is-dragging {
+            cursor: grabbing;
+            user-select: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            padding: 8px 8px;
+            border-bottom: 1px solid var(--line-strong);
+            border-right: 1px solid var(--line);
+            background: linear-gradient(180deg, #f9fafc, #e8edf4);
+            font-size: 10px;
+            font-weight: 700;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #58657a;
+        }
+
+        thead th:last-child,
+        tbody td:last-child {
+            border-right: none;
+        }
+
+        tbody td {
+            padding: 8px 8px;
+            border-bottom: 1px solid #e4e9f0;
+            border-right: 1px solid #edf1f5;
+            font-size: 12px;
+            vertical-align: top;
+            background: rgba(255,255,255,0.86);
+        }
+
+        tbody tr:hover td {
+            background: #f4f8fe;
+        }
+
+        .group-row td {
+            position: sticky;
+            top: 30px;
+            z-index: 2;
+            padding: 7px 10px;
+            background: linear-gradient(180deg, #f0f5fb, #e4edf8);
+            border-bottom: 1px solid #cfd9e4;
+            border-right: none;
+            font-size: 11px;
+            font-weight: 700;
+            color: #375a84;
+        }
+
+        .selected td {
+            background: #e2f0ff !important;
+        }
+
+        .selected-fiscal td {
+            background: #e5f8ef !important;
+        }
+
+        .conciliated td {
+            background: #f4f7fa;
+            color: #657388;
+        }
+
+        .seal {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            padding: 2px 7px;
+            border: 1px solid #b9c9e3;
+            background: #e6f0ff;
+            color: #285ea6;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .amount {
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .tick-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .tick-button {
+            width: 22px;
+            height: 22px;
+            border-radius: 999px;
+            border: 2px solid #b6c1cf;
+            background: linear-gradient(180deg, #ffffff, #eef2f6);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+        }
+
+        .tick-button:hover {
+            transform: scale(1.05);
+            border-color: #8ea3bf;
+        }
+
+        .tick-button::after {
+            content: '✓';
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1;
+            color: #ffffff;
+            opacity: 0;
+        }
+
+        .tick-button.is-selected {
+            border-color: #2b6ecb;
+            background: linear-gradient(180deg, #4b8be0, #2b6ecb);
+        }
+
+        .tick-button.is-selected::after {
+            opacity: 1;
+        }
+
+        .tick-button.is-conciliated {
+            border-color: #1fa971;
+            background: linear-gradient(180deg, #32bc83, #1fa971);
+        }
+
+        .tick-button.is-conciliated::after {
+            opacity: 1;
+        }
+
+        .tick-button:disabled {
+            cursor: default;
+            opacity: 0.95;
+        }
+
+        .direction {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        .direction.in {
+            color: #17704f;
+            background: var(--green-soft);
+            border-color: #b7e6d2;
+        }
+
+        .direction.out {
+            color: #b53333;
+            background: var(--red-soft);
+            border-color: #efc2c2;
+        }
+
+        .ellipsis {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .wrap {
+            white-space: normal;
+            word-break: break-word;
+            line-height: 1.35;
+        }
+
+        .table-input {
+            width: 100%;
+            min-height: 28px;
+            border: 1px solid #cdd6e0;
+            background: #ffffff;
+            color: var(--text);
+            padding: 4px 6px;
+            font-size: 12px;
+            font-family: var(--font-ui);
+        }
+
+        .table-input:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 2px rgba(43, 110, 203, 0.12);
+            outline: none;
+        }
+
+        .center-rail {
+            display: grid;
+            grid-template-rows: auto auto 1fr;
+            min-height: 0;
+            height: 100%;
+            border-right: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+            background: linear-gradient(180deg, #f7f9fb, #ecf0f5);
+        }
+
+        .center-head {
+            padding: 12px 10px 10px;
+            border-bottom: 1px solid var(--line);
+            text-align: center;
+        }
+
+        .center-title {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .center-note {
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .draft-box {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, #ffffff, #f4f6f9);
+        }
+
+        .draft-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.08em;
+        }
+
+        .draft-value {
+            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .draft-diff {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #e4e8ee;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .draft-diff.alert {
+            color: var(--yellow);
+            border-top-color: #f0ddb3;
+        }
+
+        .draft-diff.alert strong {
+            color: #9a6708;
+        }
+
+        .draft-actions {
+            display: grid;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .draft-button {
+            width: 100%;
+        }
+
+        .timeline {
+            min-height: 0;
+            overflow: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .timeline-dot,
+        .timeline-entry-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 999px;
+            border: 2px solid #c4cbd6;
+            background: #d3d8e0;
+            flex: 0 0 auto;
+        }
+
+        .timeline-dot.ready {
+            background: #26b274;
+            border-color: #26b274;
+        }
+
+        .timeline-entry-dot.done {
+            background: #2b6ecb;
+            border-color: #2b6ecb;
+        }
+
+        .timeline-entry {
+            display: grid;
+            grid-template-columns: 16px 1fr;
+            gap: 8px;
+            align-items: start;
+            padding: 8px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.92);
+        }
+
+        .timeline-entry-title {
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #28405f;
+        }
+
+        .timeline-entry-meta {
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .timeline-entry-meta .difference-alert {
+            color: #9a6708;
+            font-weight: 700;
+        }
+
+        .timeline-entry-actions {
+            margin-top: 8px;
+        }
+
+        .timeline-entry-actions .btn {
+            width: 100%;
+            height: 28px;
+            font-size: 11px;
+        }
+
+        .timeline-summary {
+            padding: 12px;
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.92);
+            font-size: 11px;
+            line-height: 1.6;
+            color: #405065;
+        }
+
+        .context-card {
+            position: fixed;
+            z-index: 50;
+            min-width: 220px;
+            max-width: 280px;
+            padding: 10px;
+            border: 1px solid var(--line-strong);
+            background: linear-gradient(180deg, #ffffff, #f4f7fb);
+            box-shadow: var(--shadow);
+        }
+
+        .context-card[hidden] {
+            display: none;
+        }
+
+        .context-card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #2b3a4b;
+        }
+
+        .context-card-note {
+            margin-top: 4px;
+            font-size: 10px;
+            color: var(--muted);
+            line-height: 1.45;
+        }
+
+        .context-card-actions {
+            margin-top: 10px;
+            display: grid;
+            gap: 6px;
+        }
+
+        .empty-state {
+            padding: 24px 14px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .footerbar {
+            border-top: 1px solid var(--line-strong);
+            background: linear-gradient(180deg, #f5f8fb, #e7ecf3);
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(280px, 1.2fr);
+            gap: 8px;
+            align-items: center;
+            padding: 8px 12px;
+        }
+
+        .footer-box {
+            height: 100%;
+            border: 1px solid var(--line);
+            background: linear-gradient(180deg, #ffffff, #f3f6fa);
+            padding: 8px 10px;
+        }
+
+        .footer-status {
+            font-size: 12px;
+            color: #334155;
+            line-height: 1.5;
+            display: flex;
+            align-items: center;
+        }
+
+        .count-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            padding: 0 6px;
+            height: 20px;
+            margin-left: 6px;
+            background: #ffffff;
+            border: 1px solid var(--line);
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .top-alert {
+            font-size: 11px;
+            color: #425166;
+        }
+
+        .subline {
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .muted {
+            color: var(--muted);
+        }
+
+        .hidden-input {
+            display: none;
+        }
+
+        @media (max-width: 1280px) {
+            :root {
+                --center-width: 170px;
+            }
+
+            .controls-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-row">
+            <div class="brand">
+                <div class="brand-title-line">
+                    <span class="module-accounting-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+                            <path d="M4 5h16v14H4z"></path>
+                            <path d="M4 10h16"></path>
+                            <path d="M9 10v9"></path>
+                        </svg>
+                    </span>
+                    <div class="brand-title">Conciliação de Lançamentos</div>
+                </div>
+                <div class="brand-subtitle">Ligado ao módulo contábil, com conciliação manual e atalho por Control + clique.</div>
+            </div>
+            <div class="status-pills">
+                <div class="pill">
+                    <div class="pill-label">Total não conciliado contábil</div>
+                    <div class="pill-value" id="pendingAccountingTotal">R$ 0,00</div>
+                </div>
+                <div class="pill">
+                    <div class="pill-label">Total não conciliado fiscal</div>
+                    <div class="pill-value" id="pendingFiscalTotal">R$ 0,00</div>
+                </div>
+                <div class="pill">
+                    <div class="pill-label">Diferença pendente</div>
+                    <div class="pill-value" id="pendingDifference">R$ 0,00</div>
+                </div>
+                <div class="pill">
+                    <div class="pill-label">Pares de conciliação</div>
+                    <div class="pill-value" id="groupCount">0</div>
+                </div>
+            </div>
+        </div>
+        <div class="topbar-row top-alert" id="topAlert">Aguardando recebimento dos lançamentos do módulo contábil ou importação manual de XML.</div>
+        <div class="controls-grid">
+            <div class="control-box">
+                <label for="globalFilter">Filtro único por CNPJ, nome ou valor</label>
+                <input id="globalFilter" class="field" type="text" placeholder="Digite CNPJ, nome ou valor para filtrar ambos os lados">
+            </div>
+            <div class="control-box">
+                <label>Conciliação atual</label>
+                <button class="btn btn-primary" id="manualConciliateButton">Conciliar seleção atual</button>
+            </div>
+            <div class="control-box">
+                <label>Origem contábil</label>
+                <button class="btn" id="openAccountingModuleButton"><span class="btn-inline-icon"><span class="module-accounting-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 5h16v14H4z"></path><path d="M4 10h16"></path><path d="M9 10v9"></path></svg></span><span>Abrir módulo contábil</span></span></button>
+            </div>
+            <div class="control-box">
+                <label>Importação fiscal</label>
+                <button class="btn" id="importXmlButton">Importar XML de NF</button>
+                <input id="xmlInput" class="hidden-input" type="file" accept=".xml,text/xml,application/xml" multiple>
+            </div>
+            <div class="control-box">
+                <label>Seleções</label>
+                <div class="field" style="display:flex;align-items:center;justify-content:space-between;background:#fbfdff;">
+                    <span>Contábil <span class="count-chip" id="selectedAccountingCount">0</span></span>
+                    <span>Fiscal <span class="count-chip" id="selectedFiscalCount">0</span></span>
+                </div>
+            </div>
+            <div class="control-box">
+                <label>Fechamento</label>
+                <button class="btn btn-success" id="finalizeButton">Finalizar conciliação</button>
+            </div>
+            <div class="control-box">
+                <label>Baixar movimentação</label>
+                <button class="btn btn-warning" id="downloadMovementButton">Baixar planilha CSV</button>
+            </div>
+            <div class="control-box">
+                <label>Nova empresa</label>
+                <button class="btn btn-danger" id="clearWorkspaceButton">Limpar tudo</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace">
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <div class="panel-title">Contábil</div>
+                    <div class="panel-subtitle">Lançamentos agrupados por data e ordenados com conciliados ao final.</div>
+                </div>
+                <div class="panel-meta">
+                    <select class="month-picker" id="accountingMonthFilter" aria-label="Selecionar mês contábil recebido do módulo contábil">
+                        <option value="all">Todos os meses</option>
+                    </select>
+                    <div class="tag">Origem: módulo contábil</div>
+                    <div class="tag">Linhas <span id="accountingCount">0</span></div>
+                </div>
+            </div>
+            <div class="shortcuts-bar">
+                <span>Atalho: segure <strong>Ctrl</strong>, clique em lançamentos dos dois lados e solte para conciliar.</span>
+                <span id="accountingSelectionHint">Selecione lançamentos contábeis.</span>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:86px;">Data</th>
+                            <th style="width:260px;">Descrição</th>
+                            <th style="width:110px;">Valor</th>
+                            <th style="width:92px;">Movimento</th>
+                            <th style="width:150px;">CNPJ/CPF</th>
+                            <th style="width:120px;">Conta Débito</th>
+                            <th style="width:120px;">Conta Crédito</th>
+                            <th style="width:62px;text-align:center;">Tick</th>
+                        </tr>
+                    </thead>
+                    <tbody id="accountingTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="center-rail">
+            <div class="center-head">
+                <div class="center-title">Trilha de Conciliação</div>
+                <div class="center-note">Cinza: aguardando. Verde: seleção pronta. Azul: conciliação confirmada.</div>
+            </div>
+            <div class="draft-box">
+                <div class="draft-label">Operação em rascunho</div>
+                <div class="draft-value" id="draftLabel">Selecione lançamentos dos dois lados.</div>
+                <div class="draft-diff">Total contábil selecionado: <strong id="draftAccountingTotal">R$ 0,00</strong></div>
+                <div class="draft-diff">Total fiscal selecionado: <strong id="draftFiscalTotal">R$ 0,00</strong></div>
+                <div class="draft-diff" id="draftDifferenceRow">Diferença da seleção: <strong id="draftDifference">R$ 0,00</strong></div>
+                <div class="draft-diff">Esfera: <span class="timeline-dot" id="draftDot" style="display:inline-block;vertical-align:middle;margin-left:6px;"></span></div>
+                <div class="draft-actions">
+                    <button class="btn btn-primary draft-button" id="draftConciliateButton" disabled>Confirmar conciliação</button>
+                </div>
+            </div>
+            <div class="timeline" id="timeline"></div>
+        </section>
+
+        <section class="panel">
+            <div class="panel-head">
+                <div>
+                    <div class="panel-title">Fiscal</div>
+                    <div class="panel-subtitle">XMLs importados pelo usuário e lançamentos fiscais recebidos do fluxo atual.</div>
+                </div>
+                <div class="panel-meta">
+                    <div class="tag">Origem: XML / payload</div>
+                    <div class="tag">Linhas <span id="fiscalCount">0</span></div>
+                </div>
+            </div>
+            <div class="shortcuts-bar">
+                <span>Use o mesmo filtro único para CNPJ, nome e valor.</span>
+                <span id="fiscalSelectionHint">Selecione lançamentos fiscais.</span>
+            </div>
+            <div class="panel-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:86px;">Data</th>
+                            <th style="width:110px;">Valor</th>
+                            <th style="width:260px;">Nome</th>
+                            <th style="width:150px;">CNPJ/CPF</th>
+                            <th style="width:110px;">Número NF</th>
+                            <th style="width:62px;text-align:center;">Tick</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fiscalTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footerbar">
+        <div class="footer-box">
+            <div class="pill-label">Contábil pendente</div>
+            <div class="pill-value" id="footerAccountingPending">R$ 0,00</div>
+        </div>
+        <div class="footer-box">
+            <div class="pill-label">Fiscal pendente</div>
+            <div class="pill-value" id="footerFiscalPending">R$ 0,00</div>
+        </div>
+        <div class="footer-box">
+            <div class="pill-label">Diferença pendente</div>
+            <div class="pill-value" id="footerPendingDifference">R$ 0,00</div>
+        </div>
+        <div class="footer-box">
+            <div class="pill-label">Diferença da seleção</div>
+            <div class="pill-value" id="footerDraftDifference">R$ 0,00</div>
+        </div>
+        <div class="footer-box footer-status" id="footerStatus">Sistema pronto para uso.</div>
+    </footer>
+
+    <div class="context-card" id="rowContextCard" hidden>
+        <div class="context-card-title">Lançamento conciliado</div>
+        <div class="context-card-note" id="rowContextNote">Use esta ação para desfazer a conciliação do grupo selecionado.</div>
+        <div class="context-card-actions">
+            <button class="btn" id="undoConciliationContextButton" type="button">Desfazer conciliação</button>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'sisc_conciliacao_workspace_html';
+        const SHARED_PAYLOAD_KEY = 'sisc_conciliacao_shared_payload';
+        const MESSAGE_TYPE = 'sisc-conciliacao-payload';
+        const ACCOUNTING_MODULE_URL = './contabil.html';
+
+        const state = {
+            accountingEntries: [],
+            fiscalEntries: [],
+            groups: [],
+            selectedAccountingIds: new Set(),
+            selectedFiscalIds: new Set(),
+            isCtrlPressed: false,
+            ctrlTouchedSelection: false,
+            finalizedAt: null,
+            contextGroupId: null,
+            selectedAccountingMonth: 'all'
+        };
+
+        const elements = {
+            globalFilter: document.getElementById('globalFilter'),
+            importXmlButton: document.getElementById('importXmlButton'),
+            xmlInput: document.getElementById('xmlInput'),
+            manualConciliateButton: document.getElementById('manualConciliateButton'),
+            openAccountingModuleButton: document.getElementById('openAccountingModuleButton'),
+            downloadMovementButton: document.getElementById('downloadMovementButton'),
+            clearWorkspaceButton: document.getElementById('clearWorkspaceButton'),
+            finalizeButton: document.getElementById('finalizeButton'),
+            accountingTableBody: document.getElementById('accountingTableBody'),
+            fiscalTableBody: document.getElementById('fiscalTableBody'),
+            accountingCount: document.getElementById('accountingCount'),
+            accountingMonthFilter: document.getElementById('accountingMonthFilter'),
+            fiscalCount: document.getElementById('fiscalCount'),
+            selectedAccountingCount: document.getElementById('selectedAccountingCount'),
+            selectedFiscalCount: document.getElementById('selectedFiscalCount'),
+            pendingAccountingTotal: document.getElementById('pendingAccountingTotal'),
+            pendingFiscalTotal: document.getElementById('pendingFiscalTotal'),
+            pendingDifference: document.getElementById('pendingDifference'),
+            groupCount: document.getElementById('groupCount'),
+            draftLabel: document.getElementById('draftLabel'),
+            draftAccountingTotal: document.getElementById('draftAccountingTotal'),
+            draftFiscalTotal: document.getElementById('draftFiscalTotal'),
+            draftDifferenceRow: document.getElementById('draftDifferenceRow'),
+            draftDifference: document.getElementById('draftDifference'),
+            draftDot: document.getElementById('draftDot'),
+            draftConciliateButton: document.getElementById('draftConciliateButton'),
+            timeline: document.getElementById('timeline'),
+            footerAccountingPending: document.getElementById('footerAccountingPending'),
+            footerFiscalPending: document.getElementById('footerFiscalPending'),
+            footerPendingDifference: document.getElementById('footerPendingDifference'),
+            footerDraftDifference: document.getElementById('footerDraftDifference'),
+            footerStatus: document.getElementById('footerStatus'),
+            accountingSelectionHint: document.getElementById('accountingSelectionHint'),
+            fiscalSelectionHint: document.getElementById('fiscalSelectionHint'),
+            topAlert: document.getElementById('topAlert'),
+            rowContextCard: document.getElementById('rowContextCard'),
+            rowContextNote: document.getElementById('rowContextNote'),
+            undoConciliationContextButton: document.getElementById('undoConciliationContextButton')
+        };
+
+        let dragScrollState = null;
+
+        function currency(value) {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value || 0));
+        }
+
+        function numberOnly(value) {
+            return String(value || '').replace(/\D/g, '');
+        }
+
+        function formatTaxId(value) {
+            const digits = numberOnly(value);
+            if (digits.length === 11) return digits.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            if (digits.length === 14) return digits.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            return value || 'Não informado';
+        }
+
+        function normalizeDate(value) {
+            const text = String(value || '').trim();
+            if (!text) return '';
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(text)) return text;
+            const date = new Date(text);
+            if (Number.isNaN(date.getTime())) return text;
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function parseDateKey(value) {
+            const [day, month, year] = String(value || '').split('/').map(Number);
+            if (!day || !month || !year) return 0;
+            return new Date(year, month - 1, day).getTime();
+        }
+
+        function getMonthKey(value) {
+            const [day, month, year] = String(value || '').split('/').map(Number);
+            if (!month || !year) return '';
+            return `${year}-${String(month).padStart(2, '0')}`;
+        }
+
+        function formatMonthLabel(monthKey) {
+            const [year, month] = String(monthKey || '').split('-').map(Number);
+            if (!month || !year) return 'Sem mês';
+            return new Date(year, month - 1, 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+        }
+
+        function getAvailableAccountingMonths() {
+            return [...new Set(state.accountingEntries.map((entry) => getMonthKey(entry.date)).filter(Boolean))].sort((left, right) => right.localeCompare(left));
+        }
+
+        function matchesSelectedAccountingMonth(entry) {
+            if (state.selectedAccountingMonth === 'all') return true;
+            return getMonthKey(entry.date) === state.selectedAccountingMonth;
+        }
+
+        function normalizeAccountingEntry(entry) {
+            const signedAmount = Number(entry.amount || 0);
+            return {
+                id: String(entry.id || `acc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`),
+                date: normalizeDate(entry.date),
+                description: String(entry.description || entry.history || 'Lançamento contábil'),
+                originalDescription: String(entry.originalDescription || entry.description || entry.history || 'Lançamento contábil'),
+                amount: Math.abs(signedAmount),
+                signedAmount,
+                direction: entry.direction === 'saida' || signedAmount < 0 ? 'saida' : 'entrada',
+                taxId: numberOnly(entry.taxId || entry.document || ''),
+                debitAccount: String(entry.debitAccount || entry.debitCode || ''),
+                creditAccount: String(entry.creditAccount || entry.creditCode || ''),
+                descriptionEdited: Boolean(entry.descriptionEdited),
+                debitEdited: Boolean(entry.debitEdited),
+                creditEdited: Boolean(entry.creditEdited),
+                autoDescriptionApplied: Boolean(entry.autoDescriptionApplied),
+                groupId: entry.groupId || null
+            };
+        }
+
+        function normalizeFiscalEntry(entry) {
+            return {
+                id: String(entry.id || `fis-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`),
+                date: normalizeDate(entry.date || entry.issueDate),
+                amount: Math.abs(Number(entry.amount || 0)),
+                name: String(entry.name || entry.supplier || 'Lançamento fiscal'),
+                taxId: numberOnly(entry.taxId || entry.issuerTaxId || ''),
+                invoiceNumber: String(entry.invoiceNumber || entry.docNumber || ''),
+                key: String(entry.key || ''),
+                groupId: entry.groupId || null
+            };
+        }
+
+        function sortEntries(entries) {
+            return [...entries].sort((left, right) => {
+                if (Boolean(left.groupId) !== Boolean(right.groupId)) return left.groupId ? 1 : -1;
+                return parseDateKey(right.date) - parseDateKey(left.date);
+            });
+        }
+
+        function groupAccounting(entries) {
+            const sorted = sortEntries(entries);
+            const groups = [];
+            let lastKey = null;
+            sorted.forEach((entry) => {
+                const key = `${entry.groupId ? 'conciliated' : 'pending'}-${entry.date || 'Sem data'}`;
+                if (key !== lastKey) {
+                    groups.push({ type: 'group', label: `${entry.groupId ? 'Conciliados' : 'Data'}: ${entry.date || 'Sem data'}` });
+                    lastKey = key;
+                }
+                groups.push({ type: 'entry', entry });
+            });
+            return groups;
+        }
+
+        function getFilterTerm() {
+            return elements.globalFilter.value.trim().toLowerCase();
+        }
+
+        function matchesFilter(entry, type) {
+            const term = getFilterTerm();
+            if (!term) return true;
+            const amountText = currency(entry.amount).toLowerCase();
+            const rawAmount = String(entry.amount.toFixed ? entry.amount.toFixed(2) : entry.amount || '').replace('.', ',');
+            const haystack = type === 'accounting'
+                ? [entry.description, entry.taxId, amountText, rawAmount, entry.debitAccount, entry.creditAccount, entry.date].join(' ').toLowerCase()
+                : [entry.name, entry.taxId, amountText, rawAmount, entry.invoiceNumber, entry.date].join(' ').toLowerCase();
+            return haystack.includes(term);
+        }
+
+        function getFilteredAccounting() {
+            return state.accountingEntries.filter((entry) => matchesSelectedAccountingMonth(entry) && matchesFilter(entry, 'accounting'));
+        }
+
+        function getFilteredFiscal() {
+            return state.fiscalEntries.filter((entry) => matchesSelectedAccountingMonth(entry) && matchesFilter(entry, 'fiscal'));
+        }
+
+        function syncAccountingMonthOptions() {
+            const months = getAvailableAccountingMonths();
+            if (state.selectedAccountingMonth !== 'all' && !months.includes(state.selectedAccountingMonth)) {
+                state.selectedAccountingMonth = 'all';
+            }
+            elements.accountingMonthFilter.innerHTML = [
+                '<option value="all">Todos os meses</option>',
+                ...months.map((monthKey) => `<option value="${monthKey}">${formatMonthLabel(monthKey)}</option>`)
+            ].join('');
+            elements.accountingMonthFilter.value = state.selectedAccountingMonth;
+            elements.accountingMonthFilter.disabled = months.length <= 1;
+        }
+
+        function getPendingTotals() {
+            const accountingPending = state.accountingEntries.filter((entry) => !entry.groupId).reduce((sum, entry) => sum + entry.amount, 0);
+            const fiscalPending = state.fiscalEntries.filter((entry) => !entry.groupId).reduce((sum, entry) => sum + entry.amount, 0);
+            return {
+                accountingPending,
+                fiscalPending,
+                difference: accountingPending - fiscalPending
+            };
+        }
+
+        function getDraftTotals() {
+            const accountingAmount = state.accountingEntries
+                .filter((entry) => state.selectedAccountingIds.has(entry.id))
+                .reduce((sum, entry) => sum + entry.amount, 0);
+            const fiscalAmount = state.fiscalEntries
+                .filter((entry) => state.selectedFiscalIds.has(entry.id))
+                .reduce((sum, entry) => sum + entry.amount, 0);
+            return { accountingAmount, fiscalAmount, difference: accountingAmount - fiscalAmount };
+        }
+
+        function isZeroDifference(value) {
+            return Math.abs(Number(value || 0)) < 0.009;
+        }
+
+        function escapeCsv(value) {
+            const text = String(value ?? '');
+            return `"${text.replace(/"/g, '""')}"`;
+        }
+
+        function buildAutoDescription(accountingEntry, fiscalEntries) {
+            const fiscalNames = [...new Set(fiscalEntries.map((entry) => String(entry.name || '').trim()).filter(Boolean))];
+            const joinedNames = fiscalNames.length ? fiscalNames.join(' / ') : 'Lançamento fiscal';
+            return accountingEntry.direction === 'saida'
+                ? `PAGAMENTO A - ${joinedNames}`
+                : `RECEBIMENTO DE - ${joinedNames}`;
+        }
+
+        function updateAccountingEntryField(id, field, value) {
+            const normalizedValue = String(value || '').trim();
+            const editFlagByField = {
+                description: 'descriptionEdited',
+                debitAccount: 'debitEdited',
+                creditAccount: 'creditEdited'
+            };
+            const editFlag = editFlagByField[field];
+            state.accountingEntries = state.accountingEntries.map((entry) => {
+                if (entry.id !== id) return entry;
+                const nextEntry = { ...entry, [field]: normalizedValue };
+                if (field === 'description') {
+                    nextEntry.descriptionEdited = normalizedValue !== String(entry.originalDescription || '').trim();
+                    nextEntry.autoDescriptionApplied = false;
+                } else if (editFlag) {
+                    nextEntry[editFlag] = normalizedValue !== String(entry[field] || '').trim() ? true : entry[editFlag];
+                }
+                return nextEntry;
+            });
+            saveWorkspace();
+            render();
+        }
+
+        function buildMovementCsv() {
+            const fiscalByGroupId = new Map();
+            state.fiscalEntries.forEach((entry) => {
+                if (!entry.groupId) return;
+                const current = fiscalByGroupId.get(entry.groupId) || [];
+                current.push(entry);
+                fiscalByGroupId.set(entry.groupId, current);
+            });
+
+            const header = [
+                'Data Contabil',
+                'Descricao Contabil',
+                'Valor Contabil',
+                'Movimento',
+                'CNPJ/CPF',
+                'Conta Debito',
+                'Conta Credito',
+                'Conciliado',
+                'Fiscal Nome(s)',
+                'Fiscal Valor(es)',
+                'Fiscal Documento(s)',
+                'Fiscal CNPJ/CPF'
+            ];
+
+            const rows = state.accountingEntries.map((entry) => {
+                const relatedFiscal = entry.groupId ? (fiscalByGroupId.get(entry.groupId) || []) : [];
+                return [
+                    entry.date || '',
+                    entry.description || '',
+                    currency(entry.amount),
+                    entry.direction === 'saida' ? 'Saida' : 'Entrada',
+                    formatTaxId(entry.taxId),
+                    entry.debitAccount || '',
+                    entry.creditAccount || '',
+                    entry.groupId ? 'Sim' : 'Nao',
+                    relatedFiscal.map((item) => item.name).join(' | '),
+                    relatedFiscal.map((item) => currency(item.amount)).join(' | '),
+                    relatedFiscal.map((item) => item.invoiceNumber || '').join(' | '),
+                    relatedFiscal.map((item) => formatTaxId(item.taxId)).join(' | ')
+                ];
+            });
+
+            return [header, ...rows].map((row) => row.map(escapeCsv).join(';')).join('\r\n');
+        }
+
+        function downloadMovementReport() {
+            if (!state.accountingEntries.length) {
+                setStatus('Nao ha lancamentos contabeis para baixar na movimentacao.');
+                return;
+            }
+            const csv = buildMovementCsv();
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `movimentacao_conciliada_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(url);
+            setStatus('Planilha CSV de movimentacao gerada com os lancamentos contabeis e respectivos fiscais conciliados.');
+        }
+
+        function saveWorkspace() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    accountingEntries: state.accountingEntries,
+                    fiscalEntries: state.fiscalEntries,
+                    groups: state.groups,
+                    finalizedAt: state.finalizedAt
+                }));
+            } catch (error) {
+                console.warn('Falha ao salvar workspace de conciliação:', error);
+            }
+        }
+
+        function loadWorkspace() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const parsed = JSON.parse(raw);
+                state.accountingEntries = Array.isArray(parsed.accountingEntries) ? parsed.accountingEntries.map(normalizeAccountingEntry) : [];
+                state.fiscalEntries = Array.isArray(parsed.fiscalEntries) ? parsed.fiscalEntries.map(normalizeFiscalEntry) : [];
+                state.groups = Array.isArray(parsed.groups) ? parsed.groups : [];
+                state.finalizedAt = parsed.finalizedAt || null;
+            } catch (error) {
+                console.warn('Falha ao carregar workspace salvo:', error);
+            }
+        }
+
+        function mergePayload(payload) {
+            const incomingAccounting = Array.isArray(payload.accountingEntries) ? payload.accountingEntries.map(normalizeAccountingEntry) : [];
+            const incomingFiscal = Array.isArray(payload.fiscalEntries) ? payload.fiscalEntries.map(normalizeFiscalEntry) : [];
+            const existingAccountingById = new Map(state.accountingEntries.map((entry) => [entry.id, entry]));
+            const existingFiscalById = new Map(state.fiscalEntries.map((entry) => [entry.id, entry]));
+            const mergedFiscal = [...incomingFiscal];
+            state.fiscalEntries.forEach((entry) => {
+                if (!incomingFiscal.some((item) => item.id === entry.id)) mergedFiscal.push(entry);
+            });
+            state.accountingEntries = incomingAccounting.map((entry) => {
+                const existing = existingAccountingById.get(entry.id);
+                if (!existing) return entry;
+                return {
+                    ...entry,
+                    description: existing.descriptionEdited || existing.autoDescriptionApplied ? existing.description : entry.description,
+                    originalDescription: existing.originalDescription || entry.originalDescription,
+                    debitAccount: existing.debitEdited ? existing.debitAccount : entry.debitAccount,
+                    creditAccount: existing.creditEdited ? existing.creditAccount : entry.creditAccount,
+                    descriptionEdited: existing.descriptionEdited,
+                    debitEdited: existing.debitEdited,
+                    creditEdited: existing.creditEdited,
+                    autoDescriptionApplied: existing.autoDescriptionApplied,
+                    groupId: existing.groupId || entry.groupId
+                };
+            });
+            state.fiscalEntries = mergedFiscal.map((entry) => existingFiscalById.get(entry.id) ? { ...entry, groupId: existingFiscalById.get(entry.id).groupId || entry.groupId } : entry);
+            restoreGroupBindings();
+            elements.topAlert.textContent = `${incomingAccounting.length} lançamento(s) contábil(is) carregado(s) do módulo contábil.`;
+            setStatus('Lançamentos recebidos do módulo contábil e integrados à área de conciliação.');
+            render();
+        }
+
+        function loadSharedPayload() {
+            try {
+                const raw = localStorage.getItem(SHARED_PAYLOAD_KEY);
+                if (!raw) return false;
+                const payload = JSON.parse(raw);
+                if (!payload || payload.source !== 'index') return false;
+                if (!Array.isArray(payload.accountingEntries) || !payload.accountingEntries.length) return false;
+                mergePayload(payload);
+                return true;
+            } catch (error) {
+                console.warn('Falha ao carregar payload compartilhado do módulo contábil:', error);
+                return false;
+            }
+        }
+
+        function clearWorkspaceForNextCompany() {
+            if (!window.confirm('Limpar toda a conciliação atual para iniciar outra empresa?')) return;
+            state.accountingEntries = [];
+            state.fiscalEntries = [];
+            state.groups = [];
+            state.finalizedAt = null;
+            state.contextGroupId = null;
+            state.selectedAccountingMonth = 'all';
+            clearSelections();
+            elements.globalFilter.value = '';
+            elements.xmlInput.value = '';
+            hideRowContextCard();
+            localStorage.removeItem(STORAGE_KEY);
+            localStorage.removeItem(SHARED_PAYLOAD_KEY);
+            elements.topAlert.textContent = 'Área limpa. Pronta para receber lançamentos de outra empresa.';
+            setStatus('Conciliação limpa com sucesso.');
+            render();
+        }
+
+        function openAccountingModule() {
+            window.open(ACCOUNTING_MODULE_URL, '_blank');
+        }
+
+        function restoreGroupBindings() {
+            const groupMap = new Map(state.groups.map((group) => [group.id, group]));
+            state.accountingEntries = state.accountingEntries.map((entry) => ({ ...entry, groupId: groupMap.has(entry.groupId) ? entry.groupId : null }));
+            state.fiscalEntries = state.fiscalEntries.map((entry) => ({ ...entry, groupId: groupMap.has(entry.groupId) ? entry.groupId : null }));
+            state.groups = state.groups.filter((group) => {
+                const hasAccounting = state.accountingEntries.some((entry) => entry.groupId === group.id);
+                const hasFiscal = state.fiscalEntries.some((entry) => entry.groupId === group.id);
+                return hasAccounting && hasFiscal;
+            });
+        }
+
+        function setStatus(text) {
+            elements.footerStatus.textContent = text;
+        }
+
+        function hideRowContextCard() {
+            state.contextGroupId = null;
+            elements.rowContextCard.hidden = true;
+        }
+
+        function showRowContextCard(groupId, x, y) {
+            const group = state.groups.find((item) => item.id === groupId);
+            if (!group) return;
+            state.contextGroupId = groupId;
+            elements.rowContextNote.textContent = `${group.accountingIds.length} contábil(is) e ${group.fiscalIds.length} fiscal(is) vinculados neste grupo.`;
+            elements.rowContextCard.hidden = false;
+            elements.rowContextCard.style.left = `${Math.min(x, window.innerWidth - 252)}px`;
+            elements.rowContextCard.style.top = `${Math.min(y, window.innerHeight - 132)}px`;
+        }
+
+        function clearSelections() {
+            state.selectedAccountingIds.clear();
+            state.selectedFiscalIds.clear();
+        }
+
+        function toggleSelection(type, id, ctrlKey, additive = false) {
+            const list = type === 'accounting' ? state.accountingEntries : state.fiscalEntries;
+            const selectedSet = type === 'accounting' ? state.selectedAccountingIds : state.selectedFiscalIds;
+            const entry = list.find((item) => item.id === id);
+            if (!entry || entry.groupId) return;
+
+            if (ctrlKey || additive) {
+                if (selectedSet.has(id)) selectedSet.delete(id); else selectedSet.add(id);
+                if (ctrlKey) state.ctrlTouchedSelection = true;
+            } else {
+                selectedSet.clear();
+                selectedSet.add(id);
+            }
+            render();
+        }
+
+        function buildDraftLabel() {
+            const accountingCount = state.selectedAccountingIds.size;
+            const fiscalCount = state.selectedFiscalIds.size;
+            if (!accountingCount && !fiscalCount) return 'Selecione lançamentos dos dois lados.';
+            return `${accountingCount} lançamento(s) contábil(is) x ${fiscalCount} lançamento(s) fiscal(is)`;
+        }
+
+        function hasDraftSelectionReady() {
+            return state.selectedAccountingIds.size > 0 && state.selectedFiscalIds.size > 0;
+        }
+
+        function confirmConciliation(triggerLabel) {
+            if (!hasDraftSelectionReady()) {
+                setStatus('Selecione ao menos um lançamento contábil e um fiscal para conciliar.');
+                return;
+            }
+
+            const draft = getDraftTotals();
+            const accountingCount = state.selectedAccountingIds.size;
+            const fiscalCount = state.selectedFiscalIds.size;
+            const message = [
+                `Confirmar conciliação ${triggerLabel ? `(${triggerLabel})` : ''}?`,
+                '',
+                `Contábil selecionado(s): ${accountingCount}`,
+                `Fiscal selecionado(s): ${fiscalCount}`,
+                `Total contábil: ${currency(draft.accountingAmount)}`,
+                `Total fiscal: ${currency(draft.fiscalAmount)}`,
+                `Diferença: ${currency(draft.difference)}`
+            ].join('\n');
+
+            if (!window.confirm(message)) {
+                setStatus('Confirmação de conciliação cancelada.');
+                return;
+            }
+
+            const groupId = `group-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+            const group = {
+                id: groupId,
+                accountingIds: Array.from(state.selectedAccountingIds),
+                fiscalIds: Array.from(state.selectedFiscalIds),
+                accountingAmount: draft.accountingAmount,
+                fiscalAmount: draft.fiscalAmount,
+                difference: draft.difference,
+                fiscalNames: state.fiscalEntries.filter((entry) => state.selectedFiscalIds.has(entry.id)).map((entry) => entry.name),
+                createdAt: new Date().toISOString()
+            };
+
+            const selectedFiscalEntries = state.fiscalEntries.filter((entry) => state.selectedFiscalIds.has(entry.id));
+            state.accountingEntries = state.accountingEntries.map((entry) => {
+                if (!state.selectedAccountingIds.has(entry.id)) return entry;
+                return {
+                    ...entry,
+                    groupId,
+                    description: buildAutoDescription(entry, selectedFiscalEntries),
+                    autoDescriptionApplied: true
+                };
+            });
+            state.fiscalEntries = state.fiscalEntries.map((entry) => state.selectedFiscalIds.has(entry.id) ? { ...entry, groupId } : entry);
+            state.groups.unshift(group);
+            clearSelections();
+            state.ctrlTouchedSelection = false;
+            saveWorkspace();
+            setStatus(`Conciliação confirmada com ${group.accountingIds.length} contábil(is) e ${group.fiscalIds.length} fiscal(is).`);
+            render();
+        }
+
+        function undoConciliation(groupId) {
+            const group = state.groups.find((item) => item.id === groupId);
+            if (!group) return;
+
+            const message = [
+                'Desfazer esta conciliação?',
+                '',
+                `Contábil vinculado(s): ${group.accountingIds.length}`,
+                `Fiscal vinculado(s): ${group.fiscalIds.length}`,
+                `Total contábil: ${currency(group.accountingAmount)}`,
+                `Total fiscal: ${currency(group.fiscalAmount)}`
+            ].join('\n');
+
+            if (!window.confirm(message)) {
+                setStatus('Desfazer conciliação cancelado.');
+                return;
+            }
+
+            state.accountingEntries = state.accountingEntries.map((entry) => {
+                if (entry.groupId !== groupId) return entry;
+                return {
+                    ...entry,
+                    groupId: null,
+                    description: entry.autoDescriptionApplied ? entry.originalDescription : entry.description,
+                    autoDescriptionApplied: false
+                };
+            });
+            state.fiscalEntries = state.fiscalEntries.map((entry) => entry.groupId === groupId ? { ...entry, groupId: null } : entry);
+            state.groups = state.groups.filter((item) => item.id !== groupId);
+            hideRowContextCard();
+            saveWorkspace();
+            setStatus('Conciliação desfeita e lançamentos retornados para pendentes.');
+            render();
+        }
+
+        function maybeConciliateOnCtrlRelease() {
+            if (!state.ctrlTouchedSelection) return;
+            state.ctrlTouchedSelection = false;
+            if (state.selectedAccountingIds.size && state.selectedFiscalIds.size) {
+                confirmConciliation('atalho Ctrl');
+            }
+        }
+
+        function parseFiscalXml(text, fileName) {
+            const xml = new DOMParser().parseFromString(text, 'text/xml');
+            const tag = (name) => xml.getElementsByTagName(name)[0]?.textContent?.trim() || '';
+            const amountText = tag('vNF') || tag('vCFe') || '0';
+            const rawAmount = Number(String(amountText).replace(',', '.')) || 0;
+            return normalizeFiscalEntry({
+                id: `xml-${fileName}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+                date: tag('dhEmi') || tag('dEmi') || tag('dhSaiEnt') || '',
+                amount: Math.abs(rawAmount),
+                name: tag('xNome') || fileName,
+                taxId: tag('CNPJ') || tag('CPF') || '',
+                invoiceNumber: tag('nNF') || tag('nCT') || tag('nCFe') || '',
+                key: tag('chNFe') || ''
+            });
+        }
+
+        async function importXmlFiles(files) {
+            if (!files.length) return;
+            const imported = [];
+            for (const file of files) {
+                const text = await file.text();
+                imported.push(parseFiscalXml(text, file.name));
+            }
+
+            const deduped = [...imported, ...state.fiscalEntries].filter((entry, index, list) => {
+                const key = `${entry.invoiceNumber}-${entry.taxId}-${entry.amount}`;
+                return list.findIndex((item) => `${item.invoiceNumber}-${item.taxId}-${item.amount}` === key) === index;
+            });
+
+            state.fiscalEntries = deduped;
+            saveWorkspace();
+            setStatus(`${imported.length} XML(s) importado(s) para a área fiscal.`);
+            render();
+        }
+
+        function finalizeConciliation() {
+            const pending = getPendingTotals();
+            const hasPending = pending.accountingPending > 0.009 || pending.fiscalPending > 0.009;
+            const message = hasPending
+                ? 'Ainda existem valores não conciliados. Deseja finalizar mesmo assim?'
+                : 'Finalizar a conciliação atual?';
+            if (!window.confirm(message)) return;
+            state.finalizedAt = new Date().toISOString();
+            saveWorkspace();
+            setStatus(`Conciliação finalizada em ${new Date(state.finalizedAt).toLocaleString('pt-BR')}.`);
+            render();
+        }
+
+        function renderAccountingTable() {
+            const entries = groupAccounting(getFilteredAccounting());
+            if (!entries.length) {
+                elements.accountingTableBody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhum lançamento contábil disponível para o filtro atual.</td></tr>';
+                return;
+            }
+
+            elements.accountingTableBody.innerHTML = entries.map((row) => {
+                if (row.type === 'group') return `<tr class="group-row"><td colspan="8">${row.label}</td></tr>`;
+                const entry = row.entry;
+                const selected = state.selectedAccountingIds.has(entry.id);
+                const classes = [selected ? 'selected' : '', entry.groupId ? 'conciliated' : ''].join(' ').trim();
+                const tickClass = entry.groupId ? 'is-conciliated' : (selected ? 'is-selected' : '');
+                return `
+                    <tr class="${classes}" data-id="${entry.id}" data-type="accounting" ${entry.groupId ? `data-group-id="${entry.groupId}"` : ''}>
+                        <td>${entry.date || '—'}</td>
+                        <td class="wrap">
+                            <input class="table-input" type="text" value="${String(entry.description || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}" data-field="description" data-entry-id="${entry.id}" aria-label="Editar descrição do lançamento contábil">
+                            ${entry.groupId ? '<div class="seal">Conciliado</div>' : ''}
+                        </td>
+                        <td><span class="amount">${currency(entry.amount)}</span></td>
+                        <td>
+                            <span class="direction ${entry.direction === 'entrada' ? 'in' : 'out'}">
+                                ${entry.direction === 'entrada' ? '↓ Entrada' : '↑ Saída'}
+                            </span>
+                        </td>
+                        <td class="ellipsis">${formatTaxId(entry.taxId)}</td>
+                        <td><input class="table-input" type="text" value="${String(entry.debitAccount || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}" data-field="debitAccount" data-entry-id="${entry.id}" aria-label="Editar conta débito do lançamento contábil"></td>
+                        <td><input class="table-input" type="text" value="${String(entry.creditAccount || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')}" data-field="creditAccount" data-entry-id="${entry.id}" aria-label="Editar conta crédito do lançamento contábil"></td>
+                        <td class="tick-cell">
+                            <button class="tick-button ${tickClass}" type="button" data-id="${entry.id}" data-type="accounting" aria-label="Marcar lançamento contábil para conciliação" ${entry.groupId ? 'disabled' : ''}></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderFiscalTable() {
+            const entries = sortEntries(getFilteredFiscal());
+            if (!entries.length) {
+                elements.fiscalTableBody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum lançamento fiscal disponível para o filtro atual.</td></tr>';
+                return;
+            }
+
+            elements.fiscalTableBody.innerHTML = entries.map((entry) => {
+                const selected = state.selectedFiscalIds.has(entry.id);
+                const classes = [selected ? 'selected-fiscal' : '', entry.groupId ? 'conciliated' : ''].join(' ').trim();
+                const tickClass = entry.groupId ? 'is-conciliated' : (selected ? 'is-selected' : '');
+                return `
+                    <tr class="${classes}" data-id="${entry.id}" data-type="fiscal" ${entry.groupId ? `data-group-id="${entry.groupId}"` : ''}>
+                        <td>${entry.date || '—'}</td>
+                        <td><span class="amount">${currency(entry.amount)}</span></td>
+                        <td class="wrap">
+                            <div>${entry.name}</div>
+                            ${entry.groupId ? '<div class="seal">Conciliado</div>' : ''}
+                        </td>
+                        <td class="ellipsis">${formatTaxId(entry.taxId)}</td>
+                        <td class="ellipsis">${entry.invoiceNumber || '—'}</td>
+                        <td class="tick-cell">
+                            <button class="tick-button ${tickClass}" type="button" data-id="${entry.id}" data-type="fiscal" aria-label="Marcar lançamento fiscal para conciliação" ${entry.groupId ? 'disabled' : ''}></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderTimeline() {
+            const draft = getDraftTotals();
+            elements.draftLabel.textContent = buildDraftLabel();
+            elements.draftAccountingTotal.textContent = currency(draft.accountingAmount);
+            elements.draftFiscalTotal.textContent = currency(draft.fiscalAmount);
+            elements.draftDifference.textContent = currency(draft.difference);
+            elements.draftDifferenceRow.classList.toggle('alert', !isZeroDifference(draft.difference));
+            elements.draftDot.className = `timeline-dot${hasDraftSelectionReady() ? ' ready' : ''}`;
+            elements.draftConciliateButton.disabled = !hasDraftSelectionReady();
+
+            if (!state.groups.length) {
+                elements.timeline.innerHTML = '<div class="empty-state">Nenhuma conciliação confirmada ainda.</div>';
+                return;
+            }
+
+            elements.timeline.innerHTML = `
+                <div class="timeline-summary">
+                    ${state.groups.length} conciliação(ões) registrada(s).<br>
+                    Para desfazer uma conciliação, clique com o botão direito do mouse em um lançamento já conciliado.
+                </div>
+            `;
+        }
+
+        function renderMetrics() {
+            const pending = getPendingTotals();
+            const draft = getDraftTotals();
+            elements.pendingAccountingTotal.textContent = currency(pending.accountingPending);
+            elements.pendingFiscalTotal.textContent = currency(pending.fiscalPending);
+            elements.pendingDifference.textContent = currency(pending.difference);
+            elements.groupCount.textContent = String(state.groups.length);
+            elements.footerAccountingPending.textContent = currency(pending.accountingPending);
+            elements.footerFiscalPending.textContent = currency(pending.fiscalPending);
+            elements.footerPendingDifference.textContent = currency(pending.difference);
+            elements.footerDraftDifference.textContent = currency(draft.difference);
+            elements.accountingCount.textContent = String(getFilteredAccounting().length);
+            elements.fiscalCount.textContent = String(getFilteredFiscal().length);
+            elements.selectedAccountingCount.textContent = String(state.selectedAccountingIds.size);
+            elements.selectedFiscalCount.textContent = String(state.selectedFiscalIds.size);
+            elements.accountingSelectionHint.textContent = state.selectedAccountingIds.size
+                ? `${state.selectedAccountingIds.size} lançamento(s) contábil(is) selecionado(s).`
+                : 'Selecione lançamentos contábeis.';
+            elements.fiscalSelectionHint.textContent = state.selectedFiscalIds.size
+                ? `${state.selectedFiscalIds.size} lançamento(s) fiscal(is) selecionado(s).`
+                : 'Selecione lançamentos fiscais.';
+            elements.manualConciliateButton.disabled = !hasDraftSelectionReady();
+
+            if (state.finalizedAt) {
+                elements.topAlert.textContent = `Conciliação finalizada em ${new Date(state.finalizedAt).toLocaleString('pt-BR')}.`;
+            }
+        }
+
+        function attachRowEvents() {
+            document.querySelectorAll('tr[data-id]').forEach((row) => {
+                row.addEventListener('click', (event) => {
+                    const type = row.getAttribute('data-type');
+                    const id = row.getAttribute('data-id');
+                    hideRowContextCard();
+                    toggleSelection(type, id, false, true);
+                });
+
+                row.addEventListener('contextmenu', (event) => {
+                    const groupId = row.getAttribute('data-group-id');
+                    if (!groupId) return;
+                    event.preventDefault();
+                    showRowContextCard(groupId, event.clientX, event.clientY);
+                });
+            });
+
+            document.querySelectorAll('.tick-button[data-id]').forEach((button) => {
+                button.addEventListener('click', (event) => {
+                    event.stopPropagation();
+                    const type = button.getAttribute('data-type');
+                    const id = button.getAttribute('data-id');
+                    toggleSelection(type, id, false, true);
+                });
+            });
+
+            document.querySelectorAll('.table-input[data-entry-id]').forEach((input) => {
+                const persist = () => updateAccountingEntryField(input.getAttribute('data-entry-id'), input.getAttribute('data-field'), input.value);
+                input.addEventListener('click', (event) => event.stopPropagation());
+                input.addEventListener('change', persist);
+                input.addEventListener('blur', persist);
+            });
+
+        }
+
+        function attachDragScroll() {
+            document.querySelectorAll('.panel-body').forEach((panelBody) => {
+                if (panelBody.dataset.dragScrollReady === 'true') return;
+                panelBody.dataset.dragScrollReady = 'true';
+
+                panelBody.addEventListener('pointerdown', (event) => {
+                    if (event.pointerType === 'mouse' && event.button !== 0) return;
+                    dragScrollState = {
+                        panelBody,
+                        pointerId: event.pointerId,
+                        pointerType: event.pointerType,
+                        activated: false,
+                        startX: event.clientX,
+                        startY: event.clientY,
+                        scrollLeft: panelBody.scrollLeft,
+                        scrollTop: panelBody.scrollTop,
+                        moved: false
+                    };
+                });
+
+                panelBody.addEventListener('pointermove', (event) => {
+                    if (!dragScrollState || dragScrollState.panelBody !== panelBody) return;
+                    const deltaX = event.clientX - dragScrollState.startX;
+                    const deltaY = event.clientY - dragScrollState.startY;
+                    if (!dragScrollState.moved && Math.abs(deltaX) + Math.abs(deltaY) > 3) {
+                        dragScrollState.moved = true;
+                    }
+                    if (!dragScrollState.activated && !dragScrollState.moved) return;
+                    if (!dragScrollState.activated) {
+                        dragScrollState.activated = true;
+                        panelBody.classList.add('is-dragging');
+                        panelBody.setPointerCapture(dragScrollState.pointerId);
+                    }
+                    panelBody.scrollLeft = dragScrollState.scrollLeft - deltaX;
+                    panelBody.scrollTop = dragScrollState.scrollTop - deltaY;
+                });
+
+                const stopDrag = (event) => {
+                    if (!dragScrollState || dragScrollState.panelBody !== panelBody) return;
+                    if (dragScrollState.activated && panelBody.hasPointerCapture(dragScrollState.pointerId)) {
+                        panelBody.releasePointerCapture(dragScrollState.pointerId);
+                    }
+                    panelBody.classList.remove('is-dragging');
+                    dragScrollState = null;
+                };
+
+                panelBody.addEventListener('pointerup', stopDrag);
+                panelBody.addEventListener('pointercancel', stopDrag);
+                panelBody.addEventListener('pointerleave', (event) => {
+                    if (!dragScrollState || dragScrollState.panelBody !== panelBody) return;
+                    if (event.buttons === 0) stopDrag(event);
+                });
+            });
+        }
+
+        function render() {
+            syncAccountingMonthOptions();
+            renderAccountingTable();
+            renderFiscalTable();
+            renderTimeline();
+            renderMetrics();
+            attachRowEvents();
+            attachDragScroll();
+        }
+
+        window.addEventListener('message', (event) => {
+            if (!event.data || event.data.type !== MESSAGE_TYPE) return;
+            mergePayload(event.data.payload || {});
+            saveWorkspace();
+        });
+
+        window.addEventListener('storage', (event) => {
+            if (event.key !== SHARED_PAYLOAD_KEY || !event.newValue) return;
+            loadSharedPayload();
+            saveWorkspace();
+        });
+
+        window.addEventListener('click', (event) => {
+            if (elements.rowContextCard.hidden) return;
+            if (elements.rowContextCard.contains(event.target)) return;
+            hideRowContextCard();
+        });
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') hideRowContextCard();
+        });
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Control') state.isCtrlPressed = true;
+        });
+
+        window.addEventListener('keyup', (event) => {
+            if (event.key !== 'Control') return;
+            state.isCtrlPressed = false;
+            maybeConciliateOnCtrlRelease();
+        });
+
+        elements.globalFilter.addEventListener('input', render);
+        elements.accountingMonthFilter.addEventListener('change', (event) => {
+            state.selectedAccountingMonth = event.target.value || 'all';
+            render();
+        });
+        elements.manualConciliateButton.addEventListener('click', () => confirmConciliation('manual'));
+        elements.draftConciliateButton.addEventListener('click', () => confirmConciliation('trilha'));
+        elements.openAccountingModuleButton.addEventListener('click', openAccountingModule);
+        elements.downloadMovementButton.addEventListener('click', downloadMovementReport);
+        elements.clearWorkspaceButton.addEventListener('click', clearWorkspaceForNextCompany);
+        elements.undoConciliationContextButton.addEventListener('click', () => {
+            if (!state.contextGroupId) return;
+            undoConciliation(state.contextGroupId);
+        });
+        elements.finalizeButton.addEventListener('click', finalizeConciliation);
+        elements.importXmlButton.addEventListener('click', () => elements.xmlInput.click());
+        elements.xmlInput.addEventListener('change', async (event) => {
+            await importXmlFiles(Array.from(event.target.files || []));
+            event.target.value = '';
+        });
+
+        loadWorkspace();
+        loadSharedPayload();
+        render();
+    </script>
+</body>
+</html>

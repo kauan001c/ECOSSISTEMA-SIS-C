@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIS-C | Módulos</title>
+    <link rel="icon" type="image/png" href="icosis-c.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Urbanist:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #07162d;
+            --bg-deeper: #041024;
+            --panel: rgba(13, 35, 58, 0.78);
+            --panel-soft: rgba(17, 44, 71, 0.68);
+            --panel-strong: rgba(8, 24, 43, 0.82);
+            --line: rgba(166, 203, 241, 0.16);
+            --line-strong: rgba(120, 171, 229, 0.34);
+            --text: #edf6ff;
+            --muted: #9bb6d3;
+            --blue: #2f63d8;
+            --blue-2: #254fbe;
+            --cyan: #39d7ff;
+            --green: #59d65f;
+            --orange: #ff8a24;
+            --red: #ff5e52;
+            --sky: #65cfff;
+            --shadow: 0 24px 60px rgba(2, 12, 28, 0.38);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family: "Manrope", sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, var(--bg-dark) 0%, var(--bg-deeper) 100%);
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(2, 13, 29, 0.58), rgba(6, 18, 39, 0.68)), url("fundo_tela_modulos.jpg") center center / cover no-repeat;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 70% 18%, rgba(57, 215, 255, 0.1), transparent 20%), radial-gradient(circle at 20% 82%, rgba(61, 121, 255, 0.12), transparent 24%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .dashboard {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, rgba(17, 19, 25, 0.84) 0%, rgba(23, 26, 34, 0.78) 100%);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 24px 18px;
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .profile {
+            text-align: center;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .avatar {
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 14px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #86bcff 0%, #4e79ff 100%);
+            display: grid;
+            place-items: center;
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.22);
+            font-size: 2rem;
+        }
+
+        .brand-name {
+            font-family: "Urbanist", sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .brand-role {
+            color: #d9e8ff;
+            opacity: 0.82;
+            font-size: 0.78rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-title {
+            color: rgba(255, 255, 255, 0.42);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .nav-list,
+        .module-mini-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .nav-item,
+        .mini-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #eff6ff;
+            text-decoration: none;
+            transition: background 0.18s ease, transform 0.18s ease;
+        }
+
+        .nav-item:hover,
+        .mini-item:hover {
+            background: rgba(69, 103, 194, 0.22);
+            transform: translateX(2px);
+        }
+
+        .nav-item i,
+        .mini-item i {
+            width: 18px;
+            text-align: center;
+            color: #8fd6ff;
+        }
+
+        .main {
+            padding: 22px 22px 26px;
+        }
+
+        .topbar {
+            min-height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 0 8px 18px;
+        }
+
+        .top-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-mark {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Urbanist", sans-serif;
+            font-weight: 800;
+            font-size: 1.22rem;
+        }
+
+        .logo-mark img {
+            width: 28px;
+            height: 28px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .search-bar {
+            width: min(360px, 42vw);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d7ebff;
+        }
+
+        .search-bar input {
+            flex: 1;
+            border: 0;
+            outline: 0;
+            background: transparent;
+            color: inherit;
+            font: 600 0.95rem "Manrope", sans-serif;
+        }
+
+        .search-bar input::placeholder {
+            color: #d7ebff;
+            opacity: 0.78;
+        }
+
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 1.05rem;
+        }
+
+        .toolbar i {
+            color: #f1f6ff;
+        }
+
+        .workspace-tag {
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: #ffffff;
+            white-space: nowrap;
+        }
+
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            margin-bottom: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 40px;
+            padding: 0 14px;
+            background: linear-gradient(90deg, var(--blue-2) 0%, var(--blue) 100%);
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+
+        .panel-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-actions span {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .panel-actions .green { background: #61d84e; }
+        .panel-actions .yellow { background: #d8ce4e; }
+        .panel-actions .orange { background: #ff9c2a; }
+
+        .quick-grid,
+        .module-grid {
+            display: grid;
+            gap: 18px;
+            padding: 20px 18px;
+        }
+
+        .quick-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .quick-card,
+        .module-card {
+            position: relative;
+            padding: 18px 16px;
+            border-radius: 18px;
+            background: rgba(8, 26, 42, 0.34);
+            border: 1px solid rgba(112, 171, 233, 0.12);
+            text-align: center;
+            overflow: hidden;
+            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .quick-card,
+        .module-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .quick-card:hover,
+        .module-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(106, 207, 255, 0.4);
+            background: rgba(12, 36, 58, 0.5);
+        }
+
+        .quick-card::before,
+        .module-card::before {
+            content: "";
+            position: absolute;
+            inset: auto -30px -40px auto;
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, rgba(57, 215, 255, 0.16), rgba(57, 215, 255, 0));
+        }
+
+        .module-card.available {
+            cursor: pointer;
+        }
+
+        .module-card.available::after {
+            content: "Acessar";
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(89, 214, 95, 0.2);
+            border: 1px solid rgba(89, 214, 95, 0.5);
+            color: #dffff0;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .module-card.locked,
+        .quick-card.locked,
+        .mini-item.locked {
+            opacity: 0.74;
+        }
+
+        .module-card.locked {
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(10, 20, 33, 0.5);
+        }
+
+        .module-card.locked:hover,
+        .quick-card.locked:hover,
+        .mini-item.locked:hover {
+            transform: none;
+            border-color: rgba(255, 255, 255, 0.08);
+            background: rgba(10, 20, 33, 0.5);
+        }
+
+        .module-card.locked::after,
+        .quick-card.locked::after {
+            content: "Em desenvolvimento";
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255, 176, 70, 0.18);
+            border: 1px solid rgba(255, 176, 70, 0.42);
+            color: #ffe6bf;
+            font-size: 0.66rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .mini-item.locked {
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .mini-item.locked span::after {
+            content: "  • em desenvolvimento";
+            color: #ffcc8c;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .icon-badge {
+            width: 62px;
+            height: 62px;
+            margin: 0 auto 12px;
+            border-radius: 18px;
+            display: grid;
+            place-items: center;
+            font-size: 1.55rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 16px 28px rgba(0, 0, 0, 0.18);
+        }
+
+        .icon-green { background: linear-gradient(135deg, #37c95f, #11983d); }
+        .icon-red { background: linear-gradient(135deg, #ff6e4a, #e12d25); }
+        .icon-blue { background: linear-gradient(135deg, #4b90ff, #2458d4); }
+        .icon-cyan { background: linear-gradient(135deg, #4fe5ff, #1d9fda); }
+        .icon-orange { background: linear-gradient(135deg, #ffb046, #ff7f11); }
+        .icon-purple { background: linear-gradient(135deg, #9b8cff, #6858ef); }
+
+        .card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #eaf5ff;
+        }
+
+        .card-subtitle {
+            margin-top: 6px;
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .module-grid {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+
+        .module-card {
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lower-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 18px;
+        }
+
+        .chart-wrap,
+        .stats-wrap {
+            padding: 20px 18px 22px;
+        }
+
+        .chart-area {
+            display: grid;
+            grid-template-columns: 1fr;
+            justify-items: center;
+            gap: 18px;
+        }
+
+        .chart-legend {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            color: #dcecff;
+            font-size: 0.88rem;
+            font-weight: 700;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-right: 6px;
+        }
+
+        .donut {
+            width: min(340px, 72vw);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: conic-gradient(#2f63d8 0 69%, #ef3b14 69% 100%);
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+        }
+
+        .donut::after {
+            content: "";
+            position: absolute;
+            inset: 24%;
+            border-radius: 50%;
+            background: rgba(4, 22, 38, 0.84);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+
+        .donut-center {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            z-index: 1;
+            padding: 0 22%;
+        }
+
+        .donut-center strong {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .donut-center span {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .stat-card {
+            min-height: 126px;
+            padding: 16px;
+            border-radius: 16px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 18px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .stat-green { background: linear-gradient(135deg, #54d846 0%, #27a23a 100%); }
+        .stat-red { background: linear-gradient(135deg, #ff6f2b 0%, #ec321a 100%); }
+        .stat-cyan { background: linear-gradient(135deg, #66d6ff 0%, #48abe6 100%); }
+
+        .stat-card small {
+            font-size: 0.8rem;
+            opacity: 0.92;
+        }
+
+        .stat-card strong {
+            font-size: 1.7rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+
+        .stat-card a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 700;
+            opacity: 0.96;
+        }
+
+        @media (max-width: 1280px) {
+            .quick-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .module-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 1080px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                gap: 16px;
+            }
+
+            .nav-list,
+            .module-mini-list {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 840px) {
+            .topbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .top-right {
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .module-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .main {
+                padding: 14px;
+            }
+
+            .sidebar {
+                padding: 18px 14px;
+            }
+
+            .quick-grid,
+            .module-grid,
+            .nav-list,
+            .module-mini-list {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-header {
+                font-size: 0.88rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <aside class="sidebar">
+            <div class="profile">
+                <div class="avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <div class="brand-name">SIS-C</div>
+                <div class="brand-role">Ambiente Principal</div>
+            </div>
+
+            <div>
+                <div class="nav-title">Navegação</div>
+                <div class="nav-list">
+                    <a class="nav-item" href="#" data-login-link><i class="fa-solid fa-arrow-left"></i><span>Voltar ao login</span></a>
+                    <a class="nav-item" href="#modulos"><i class="fa-solid fa-table-cells-large"></i><span>Módulos</span></a>
+                    <a class="nav-item" href="#acesso-rapido"><i class="fa-solid fa-bolt"></i><span>Acesso rápido</span></a>
+                    <a class="nav-item" href="#painel"><i class="fa-solid fa-chart-pie"></i><span>Painel gerencial</span></a>
+                </div>
+            </div>
+
+            <div>
+                <div class="nav-title">Atalhos</div>
+                <div class="module-mini-list">
+                    <a class="mini-item" href="#modulos"><i class="fa-solid fa-book-bookmark"></i><span>Contábil</span></a>
+                    <a class="mini-item locked" href="#"><i class="fa-solid fa-receipt"></i><span>Fiscal</span></a>
+                    <a class="mini-item locked" href="#"><i class="fa-solid fa-id-card-clip"></i><span>DP</span></a>
+                    <a class="mini-item locked" href="#"><i class="fa-solid fa-money-bill-trend-up"></i><span>Financeiro</span></a>
+                    <a class="mini-item locked" href="#"><i class="fa-solid fa-warehouse"></i><span>Estoque</span></a>
+                    <a class="mini-item locked" href="#"><i class="fa-solid fa-arrows-rotate"></i><span>Integrações</span></a>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="topbar">
+                <div class="top-left">
+                    <div class="logo-mark">
+                        <img src="../icosis-c.png" alt="SIS-C">
+                        <span>SIS-C Módulos</span>
+                    </div>
+                </div>
+
+                <div class="top-right">
+                    <label class="search-bar" aria-label="Pesquisar atalhos">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" placeholder="Atalho (F3)">
+                    </label>
+                    <div class="toolbar" aria-hidden="true">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <i class="fa-solid fa-gear"></i>
+                        <i class="fa-solid fa-circle-question"></i>
+                        <i class="fa-solid fa-headset"></i>
+                        <i class="fa-solid fa-video"></i>
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div class="workspace-tag">1 AREA PADRAO</div>
+                </div>
+            </header>
+
+            <section class="panel" id="acesso-rapido">
+                <div class="panel-header">
+                    <span>Acesso rápido</span>
+                    <div class="panel-actions"><span class="orange"></span></div>
+                </div>
+                <div class="quick-grid">
+                    <a class="quick-card" href="#modulos">
+                        <div class="icon-badge icon-green"><i class="fa-solid fa-book-bookmark"></i></div>
+                        <div class="card-title">Contábil</div>
+                        <div class="card-subtitle">Lançamentos, razão e fechamento</div>
+                    </a>
+                    <article class="quick-card locked">
+                        <div class="icon-badge icon-orange"><i class="fa-solid fa-receipt"></i></div>
+                        <div class="card-title">Fiscal</div>
+                        <div class="card-subtitle">Impostos, obrigações e documentos</div>
+                    </article>
+                    <article class="quick-card locked">
+                        <div class="icon-badge icon-cyan"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                        <div class="card-title">Financeiro</div>
+                        <div class="card-subtitle">Contas, fluxo e conciliações</div>
+                    </article>
+                    <article class="quick-card locked">
+                        <div class="icon-badge icon-purple"><i class="fa-solid fa-arrows-rotate"></i></div>
+                        <div class="card-title">Integrações</div>
+                        <div class="card-subtitle">Conectores e sincronização externa</div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="panel" id="modulos">
+                <div class="panel-header">
+                    <span>Módulos do sistema</span>
+                    <div class="panel-actions"><span class="orange"></span></div>
+                </div>
+                <div class="module-grid">
+                    <a class="module-link" href="./contabil.html"><article class="module-card available"><div class="icon-badge icon-green"><i class="fa-solid fa-book-bookmark"></i></div><div class="card-title">Contábil</div><div class="card-subtitle">Gestão contábil completa</div></article></a>
+                    <article class="module-card locked"><div class="icon-badge icon-orange"><i class="fa-solid fa-receipt"></i></div><div class="card-title">Fiscal</div><div class="card-subtitle">Tributos e conformidade</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-blue"><i class="fa-solid fa-id-card-clip"></i></div><div class="card-title">DP</div><div class="card-subtitle">Departamento pessoal</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-cyan"><i class="fa-solid fa-money-bill-trend-up"></i></div><div class="card-title">Financeiro</div><div class="card-subtitle">Receitas, despesas e caixa</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-purple"><i class="fa-solid fa-warehouse"></i></div><div class="card-title">Estoque</div><div class="card-subtitle">Itens, saldos e movimentações</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-blue"><i class="fa-solid fa-arrows-rotate"></i></div><div class="card-title">Integrações</div><div class="card-subtitle">APIs e conexões automáticas</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-green"><i class="fa-solid fa-comments"></i></div><div class="card-title">SIS-C MSG</div><div class="card-subtitle">Mensageria e avisos internos</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-cyan"><i class="fa-solid fa-envelopes-bulk"></i></div><div class="card-title">SIS-C Email</div><div class="card-subtitle">Comunicação por e-mail</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-red"><i class="fa-solid fa-users-viewfinder"></i></div><div class="card-title">CRM</div><div class="card-subtitle">Relacionamento e vendas</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-orange"><i class="fa-solid fa-sliders"></i></div><div class="card-title">Configurações</div><div class="card-subtitle">Parâmetros e ambiente</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-blue"><i class="fa-solid fa-file-circle-check"></i></div><div class="card-title">Office</div><div class="card-subtitle">Documentos e produtividade</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-purple"><i class="fa-solid fa-diagram-project"></i></div><div class="card-title">Sistemas Externos</div><div class="card-subtitle">Conexão com terceiros</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-green"><i class="fa-solid fa-mobile-screen"></i></div><div class="card-title">SIS-C App</div><div class="card-subtitle">Acesso móvel do ecossistema</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-red"><i class="fa-solid fa-file-invoice"></i></div><div class="card-title">Emissão de NF</div><div class="card-subtitle">Notas fiscais e documentos</div></article>
+                    <article class="module-card locked"><div class="icon-badge icon-cyan"><i class="fa-solid fa-square-poll-vertical"></i></div><div class="card-title">Apurações</div><div class="card-subtitle">Cálculos e fechamentos fiscais</div></article>
+                </div>
+            </section>
+
+            <section class="lower-grid" id="painel">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Orçamento por status</span>
+                        <div class="panel-actions"><span class="green"></span><span class="yellow"></span><span class="orange"></span></div>
+                    </div>
+                    <div class="chart-wrap">
+                        <div class="chart-area">
+                            <div class="chart-legend">
+                                <span><span class="legend-dot" style="background:#2f63d8;"></span>Ativos 69%</span>
+                                <span><span class="legend-dot" style="background:#ef3b14;"></span>Pendentes 31%</span>
+                            </div>
+                            <div class="donut">
+                                <div class="donut-center">
+                                    <div>
+                                        <strong>15</strong>
+                                        <span>Módulos disponíveis</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>Demonstrativo gerencial</span>
+                        <div class="panel-actions"><span class="green"></span><span class="orange"></span></div>
+                    </div>
+                    <div class="stats-wrap">
+                        <div class="stats-grid">
+                            <article class="stat-card stat-green">
+                                <small>Módulos prontos para uso</small>
+                                <strong>01</strong>
+                                <a href="#modulos">Visualizar detalhes <i class="fa-solid fa-circle-arrow-right"></i></a>
+                            </article>
+                            <article class="stat-card stat-red">
+                                <small>Módulos em desenvolvimento</small>
+                                <strong>14</strong>
+                                <a href="#modulos">Visualizar detalhes <i class="fa-solid fa-circle-arrow-right"></i></a>
+                            </article>
+                            <article class="stat-card stat-cyan">
+                                <small>Ambiente operacional</small>
+                                <strong>100%</strong>
+                                <a href="#modulos">Visualizar detalhes <i class="fa-solid fa-circle-arrow-right"></i></a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script>
+        const loginLink = document.querySelector("[data-login-link]");
+
+        if (loginLink) {
+            loginLink.href = new URL("./index.html", window.location.href).href;
+        }
+    </script>
+</body>
+</html>
