@@ -583,6 +583,11 @@ def after_request_logging(response: Response) -> Response:
     return response
 
 
+@app.route("/")
+def home() -> str:
+    return "API SIS-C ONLINE 🚀"
+
+
 @app.get("/health")
 def health() -> Response:
     return jsonify({"status": "ok"})
