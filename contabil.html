@@ -1424,12 +1424,43 @@
         .edit-tx-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:2000; display:none; align-items:center; justify-content:center; padding:20px; }
         .edit-tx-modal.show { display:flex; }
         .edit-tx-content { background:white; border-radius:12px; width:90%; max-width:650px; max-height:90vh; overflow-y:auto; box-shadow:0 25px 50px rgba(0,0,0,0.25); padding:24px; animation:slideUp 0.35s ease-out; }
+        .classic-launch-modal { position:fixed; inset:0; background:rgba(15,23,42,0.52); backdrop-filter:blur(3px); z-index:2100; display:none; align-items:center; justify-content:center; padding:20px; }
+        .classic-launch-modal.show { display:flex; }
+        .classic-launch-window { width:min(860px, 96vw); border:2px solid #7a7466; background:#d6cfbf; box-shadow:0 26px 60px rgba(15,23,42,0.28); animation:slideUp 0.28s ease-out; }
+        .classic-launch-titlebar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:7px 10px; color:#ffffff; background:linear-gradient(180deg, #113f9e 0%, #0a2f7a 100%); border-bottom:1px solid #e7e0cf; font:700 0.88rem 'Tahoma', 'MS Sans Serif', sans-serif; letter-spacing:0.02em; }
+        .classic-launch-titlebar strong { display:inline-flex; align-items:center; gap:8px; }
+        .classic-launch-close { width:24px; height:22px; border:1px solid #e9e5da; background:linear-gradient(180deg, #faf7f1, #d1c9b8); color:#1f2937; font:700 0.9rem 'Tahoma', sans-serif; cursor:pointer; box-shadow:inset 1px 1px 0 rgba(255,255,255,0.92); }
+        .classic-launch-body { padding:14px; background:linear-gradient(180deg, #d9d2c2 0%, #cdc4b2 100%); }
+        .classic-launch-frame { border:1px solid #8b846f; background:#d7d0bf; box-shadow:inset 1px 1px 0 rgba(255,255,255,0.72); padding:14px; }
+        .classic-launch-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px 16px; margin-bottom:14px; }
+        .classic-launch-field { border:1px solid #a79f8d; background:#d8d2c4; padding:8px 10px 10px; box-shadow:inset 1px 1px 0 rgba(255,255,255,0.72); }
+        .classic-launch-field.full { grid-column:1 / -1; }
+        .classic-launch-label { display:block; margin-bottom:6px; color:#3f3b30; font:700 0.72rem 'Tahoma', sans-serif; text-transform:uppercase; letter-spacing:0.04em; }
+        .classic-launch-input { width:100%; height:34px; border:1px solid #8d8573; background:#f8f6ef; color:#1f2937; padding:0 10px; font:400 0.92rem 'Tahoma', sans-serif; box-shadow:inset 1px 1px 2px rgba(72,64,42,0.08); }
+        .classic-launch-input:focus { outline:none; border-color:#0d3b96; box-shadow:0 0 0 2px rgba(17,63,158,0.14); }
+        .classic-launch-search { position:relative; }
+        .classic-launch-search .search-dropdown { position:absolute; top:100%; left:0; right:0; background:#f8f6ef; border:1px solid #8d8573; border-top:none; max-height:220px; overflow-y:auto; z-index:15; box-shadow:0 12px 20px rgba(15,23,42,0.16); display:none; }
+        .classic-launch-search .search-dropdown.show { display:block; }
+        .classic-launch-search .search-dropdown-item { padding:8px 12px; cursor:pointer; display:flex; justify-content:space-between; gap:12px; border-bottom:1px solid #d8d2c4; font-size:0.84rem; background:#f8f6ef; }
+        .classic-launch-search .search-dropdown-item:hover { background:#efe7d4; }
+        .classic-launch-search .search-dropdown-item .code { font-family:'Courier New', monospace; font-weight:700; color:#0d3b96; }
+        .classic-launch-footer { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:2px; }
+        .classic-launch-hint { color:#5b5548; font:600 0.77rem 'Tahoma', sans-serif; }
+        .classic-launch-actions { display:flex; gap:10px; flex-wrap:wrap; }
+        .classic-launch-btn { min-width:138px; height:34px; border:1px solid #807760; background:linear-gradient(180deg, #faf7f1, #d1c9b8); color:#1f2937; font:700 0.84rem 'Tahoma', sans-serif; cursor:pointer; box-shadow:inset 1px 1px 0 rgba(255,255,255,0.92); }
+        .classic-launch-btn.primary { border-color:#0b387f; color:#ffffff; background:linear-gradient(180deg, #1b58c4, #0c3e95); }
         .account-search-inline { position:relative; }
         .account-search-inline .search-dropdown { position:absolute; top:100%; left:0; right:0; background:white; border:1px solid var(--border); border-radius:0 0 8px 8px; max-height:200px; overflow-y:auto; z-index:10; box-shadow:var(--shadow-lg); display:none; }
         .account-search-inline .search-dropdown.show { display:block; }
         .account-search-inline .search-dropdown-item { padding:8px 12px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; font-size:0.85rem; border-bottom:1px solid var(--border); }
         .account-search-inline .search-dropdown-item:hover { background:var(--primary-light); }
         .account-search-inline .search-dropdown-item .code { font-family:'Courier New',monospace; font-weight:700; color:var(--primary); }
+        @media (max-width: 720px) {
+            .classic-launch-grid { grid-template-columns:1fr; }
+            .classic-launch-footer { flex-direction:column; align-items:stretch; }
+            .classic-launch-actions { width:100%; }
+            .classic-launch-btn { width:100%; }
+        }
 
         /* BALANCETE */
         .balancete-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
@@ -1553,22 +1584,19 @@
         /* ============================================================
            FLOATING ROBOT BUTTON
         ============================================================ */
-        .float-robot-btn { position:fixed; right:24px; bottom:24px; z-index:1500; width:auto; min-width:88px; min-height:78px; border:none; border-radius:28px; background:radial-gradient(circle at top left,rgba(103,232,249,0.42),transparent 34%),linear-gradient(145deg,#05212b,#0f766e 62%,#14b8a6); color:#fff; box-shadow:0 20px 44px rgba(8,47,73,0.34),0 0 0 1px rgba(94,234,212,0.22); cursor:pointer; display:flex; align-items:center; justify-content:center; gap:12px; padding:14px 18px; transition:transform .22s ease, box-shadow .22s ease, filter .22s ease; overflow:hidden; font-family:'Sora', 'Inter', sans-serif; }
-        .float-robot-btn::before { content:''; position:absolute; inset:1px; border-radius:27px; background:linear-gradient(180deg,rgba(255,255,255,0.16),rgba(255,255,255,0)); pointer-events:none; }
-        .float-robot-btn:hover { transform:translateY(-4px) scale(1.02); box-shadow:0 24px 54px rgba(8,47,73,0.42),0 0 0 1px rgba(153,246,228,0.32); filter:brightness(1.05); }
-        .float-robot-btn .robot-pulse { position:absolute; inset:0; border-radius:28px; border:1px solid rgba(240,253,250,0.24); animation:robotPulse 2.2s ease-out infinite; }
+        .float-robot-btn { position:fixed; right:24px; bottom:24px; z-index:1500; width:50px; height:50px; border:none; border-radius:50%; background:radial-gradient(circle at 30% 30%,rgba(191,219,254,0.95),rgba(96,165,250,0.88) 48%,rgba(29,78,216,0.96) 100%); color:#eff6ff; box-shadow:0 14px 30px rgba(29,78,216,0.28),0 0 0 1px rgba(147,197,253,0.44); cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; transition:transform .22s ease, box-shadow .22s ease, filter .22s ease; overflow:visible; font-family:'Sora', 'Inter', sans-serif; }
+        .float-robot-btn::before { content:''; position:absolute; inset:3px; border-radius:50%; background:linear-gradient(180deg,rgba(255,255,255,0.32),rgba(255,255,255,0.02)); pointer-events:none; }
+        .float-robot-btn:hover { transform:translateY(-3px) scale(1.05); box-shadow:0 18px 34px rgba(29,78,216,0.34),0 0 0 1px rgba(191,219,254,0.72); filter:brightness(1.04); }
+        .float-robot-btn .robot-pulse { position:absolute; inset:-4px; border-radius:50%; border:1px solid rgba(96,165,250,0.4); animation:robotPulse 2s ease-out infinite; }
         .float-robot-btn .robot-badge { position:absolute; top:-7px; right:-7px; min-width:28px; height:28px; border-radius:999px; background:linear-gradient(135deg,#f97316,#ef4444); color:#fff; font-size:0.78rem; font-weight:800; display:flex; align-items:center; justify-content:center; padding:0 8px; box-shadow:0 12px 20px rgba(239,68,68,0.35); opacity:0; transition:opacity 0.3s; z-index:2; }
         .float-robot-btn.has-errors .robot-badge { opacity:1; }
-        .float-robot-btn .robot-icon { position:relative; z-index:1; font-size:1.55rem; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.24)); }
-        .float-robot-btn .robot-label { position:relative; z-index:1; display:flex; flex-direction:column; align-items:flex-start; line-height:1.05; text-align:left; max-width:160px; }
-        .float-robot-btn .robot-label strong { font-size:0.92rem; letter-spacing:0.05em; }
-        .float-robot-btn .robot-label span { font-size:0.69rem; color:rgba(236,254,255,0.82); margin-top:5px; }
-        @keyframes robotPulse { 0%{transform:scale(1);opacity:0.7} 70%{transform:scale(1.18);opacity:0} 100%{transform:scale(1.18);opacity:0} }
+        .float-robot-btn .robot-icon { position:relative; z-index:1; font-size:0.98rem; color:#dbeafe; filter:drop-shadow(0 2px 5px rgba(30,64,175,0.28)); animation:robotBrainFloat 1.9s ease-in-out infinite; }
+        .float-robot-btn .robot-label { display:none; }
+        @keyframes robotPulse { 0%{transform:scale(1);opacity:0.55} 70%{transform:scale(1.22);opacity:0} 100%{transform:scale(1.22);opacity:0} }
+        @keyframes robotBrainFloat { 0%, 100% { transform:translateY(0) scale(1); } 50% { transform:translateY(-1px) scale(1.08); } }
         @media (max-width:768px) {
-            .float-robot-btn { right:16px; bottom:16px; min-width:70px; min-height:70px; border-radius:24px; padding:12px 14px; }
-            .float-robot-btn .robot-icon { font-size:1.35rem; }
-            .float-robot-btn .robot-label strong { font-size:0.78rem; }
-            .float-robot-btn .robot-label span { display:none; }
+            .float-robot-btn { right:16px; bottom:16px; width:46px; height:46px; }
+            .float-robot-btn .robot-icon { font-size:0.9rem; }
         }
 
         /* Robot Validator Modal */
@@ -1911,6 +1939,10 @@
                         <i class="fas fa-upload"></i><span>Importação</span>
                         <span class="nav-tooltip">Importar OFX/CSV/Excel/JSON</span>
                     </a>
+                    <a class="nav-item" data-section="rules">
+                        <i class="fas fa-sliders-h"></i><span>Regras</span>
+                        <span class="nav-tooltip">Configurar regras de lançamento e histórico</span>
+                    </a>
                     <a class="nav-item" data-section="transactions">
                         <i class="fas fa-receipt"></i><span>Lançamentos</span>
                         <span id="txNavBadge" class="nav-item-badge-count" style="display:none;">0</span>
@@ -2052,6 +2084,10 @@
                     <a class="nav-item" data-section="chart">
                         <i class="fas fa-sitemap"></i><span>Plano de Contas</span>
                         <span class="nav-tooltip">Gerenciar contas contábeis</span>
+                    </a>
+                    <a class="nav-item" data-section="sis-ai-rules">
+                        <i class="fas fa-brain"></i><span>Regras IA</span>
+                        <span class="nav-tooltip">Configurar contas obrigatórias da IA contábil</span>
                     </a>
                     <a class="nav-item" onclick="showFileStructureModal()">
                         <i class="fas fa-project-diagram"></i><span>Estrutura de Arquivos</span>
@@ -2367,6 +2403,26 @@
                     </div>
                 </div>
                 <div id="balanceCheckAlert" style="display:none;padding:12px 16px;border-radius:8px;margin-top:8px;font-weight:600;font-size:0.9rem;"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title"><i class="fas fa-sliders-h"></i> Área de Regras</div>
+                        <div class="card-subtitle">Acesse rapidamente as regras de lançamento e histórico dentro do fluxo operacional.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="navigateToSection('rules')"><i class="fas fa-arrow-right"></i> Abrir Regras</button>
+                </div>
+                <div class="d-grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+                    <div style="padding:16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,#ffffff,#f8fafc);">
+                        <div style="font-weight:700;color:var(--dark);margin-bottom:8px;"><i class="fas fa-magic" style="color:var(--primary);margin-right:8px;"></i>Regras de lançamento</div>
+                        <div style="font-size:0.88rem;color:var(--gray);line-height:1.6;">Defina contas, critérios e automações para classificar transações contábeis automaticamente.</div>
+                    </div>
+                    <div style="padding:16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,#ffffff,#f8fafc);">
+                        <div style="font-weight:700;color:var(--dark);margin-bottom:8px;"><i class="fas fa-key" style="color:var(--success);margin-right:8px;"></i>Regras de histórico</div>
+                        <div style="font-size:0.88rem;color:var(--gray);line-height:1.6;">Padronize históricos por complemento para acelerar lançamentos, conferência e exportação.</div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -2881,6 +2937,43 @@
                         <div style="margin-bottom:20px;"><div style="font-weight:600;margin-bottom:5px;">Desenvolvedor</div><div style="color:var(--gray);font-size:0.9rem;">Francisco Kauan</div></div>
                         <div style="margin-bottom:20px;"><div style="font-weight:600;margin-bottom:5px;">Contato</div><div style="color:var(--gray);font-size:0.9rem;">fcokauan01@gmail.com</div></div>
                         <div style="margin-top:30px;"><button class="btn btn-primary w-100" onclick="saveSettings()"><i class="fas fa-save"></i> Salvar Configurações</button></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================== SIS AI RULES SECTION ======================== -->
+        <section class="content-section d-none" id="sisAiRulesSection">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title"><i class="fas fa-brain"></i> Regras IA Contábil</div>
+                        <div class="card-subtitle">Escolha o plano de contas usado pela IA e defina manualmente as contas prioritárias.</div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSisAiRuleAccountsFromUI()"><i class="fas fa-save"></i> Salvar Regras IA</button>
+                </div>
+                <div class="d-grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:16px;">
+                    <div class="input-group">
+                        <label class="input-label">Plano de contas usado pela IA</label>
+                        <select id="sisAiPlanSelect" class="input-field"></select>
+                    </div>
+                </div>
+                <div class="sis-ai-note" style="margin-bottom:14px;">Você pode selecionar a conta pelo plano ou digitar manualmente código ou descrição. Quando a IA reconhecer a conta no plano escolhido, ela salva a referência normalizada.</div>
+                <div class="d-grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+                    <div class="input-group"><label class="input-label">CONTA_RECEBIMENTO_CLIENTE</label><input id="sisAiContaRecebimentoCliente" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                    <div class="input-group"><label class="input-label">CONTA_FORNECEDOR</label><input id="sisAiContaFornecedor" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                    <div class="input-group"><label class="input-label">CONTA_SALARIO</label><input id="sisAiContaSalario" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                    <div class="input-group"><label class="input-label">CONTA_DESPESA_PF</label><input id="sisAiContaDespesaPf" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                    <div class="input-group"><label class="input-label">CONTA_IMPOSTOS</label><input id="sisAiContaImpostos" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                    <div class="input-group"><label class="input-label">CONTA_TRANSFERENCIA</label><input id="sisAiContaTransferencia" class="input-field" list="sisAiAccountsDatalist" placeholder="Código ou descrição da conta"></div>
+                </div>
+                <datalist id="sisAiAccountsDatalist"></datalist>
+                <div id="sisAiRulesStatus" class="status-message" style="display:block;margin-top:8px;"></div>
+                <div style="margin-top:16px;padding:16px;border-radius:12px;background:linear-gradient(180deg,#eff6ff,#f8fafc);border:1px solid #cbd5e1;">
+                    <div style="font-weight:700;color:var(--primary);margin-bottom:8px;"><i class="fas fa-circle-info"></i> Banco e escopo atual</div>
+                    <div style="font-size:0.9rem;color:var(--dark);line-height:1.7;">
+                        <div><strong>Conta bancária padrão:</strong> <span id="sisAiRulesBankAccount"></span></div>
+                        <div><strong>Plano utilizado pela IA:</strong> <span id="sisAiRulesChartScope"></span></div>
                     </div>
                 </div>
             </div>
@@ -4277,6 +4370,10 @@
         <div class="sis-ai-body">
             <!-- STATS TAB -->
             <div id="mlTabStats">
+                <div class="sis-ai-action-grid" style="margin-bottom:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+                    <button class="btn btn-primary" onclick="autoClassifyTransactionsWithSisCAI()"><i class="fas fa-wand-magic-sparkles"></i> Auto classificação</button>
+                    <button class="btn btn-outline" onclick="closeMlRobotModal(); navigateToSection('sis-ai-rules');"><i class="fas fa-brain"></i> Abrir Regras IA</button>
+                </div>
                 <div id="mlRobotStatsContent">Carregando...</div>
             </div>
             <!-- DIAGNOSTICS TAB -->
@@ -4314,7 +4411,30 @@
                 <div class="sis-ai-panel" style="font-size:0.82rem;color:rgba(240,253,244,0.74);border-left:3px solid #22c55e;">
                     <strong>Sobre o banco de conhecimento:</strong> o robô aprende com cada transação que você confirma manualmente. Quanto mais você usar o sistema, mais preciso ele fica. A exportação salva um arquivo JSON que pode ser reimportado em outro computador.
                 </div>
+                <div class="sis-ai-panel" style="margin-top:14px;">
+                    <div style="font-weight:700;margin-bottom:10px;color:#f8fafc;">Backend IA SIS-C</div>
+                    <div class="sis-ai-note" style="margin-bottom:12px;">A chave da Gemini fica somente no servidor Python. O front conversa apenas com o endpoint local do backend.</div>
+                    <div class="d-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+                        <div class="input-group">
+                            <label class="input-label">Ativar fallback do backend</label>
+                            <label style="display:flex;align-items:center;gap:8px;font-size:0.84rem;color:#f8fafc;">
+                                <input id="sisAiGeminiEnabled" type="checkbox">
+                                Consultar o servidor IA quando a regra local não fechar a conta
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">URL do backend IA</label>
+                            <input id="sisAiGeminiBackendUrl" class="input-field" placeholder="http://127.0.0.1:8765">
+                        </div>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;">
+                        <button class="btn btn-primary" onclick="saveSisAiGeminiSettingsFromUI()"><i class="fas fa-save"></i> Salvar backend</button>
+                        <button class="btn btn-outline" onclick="testSisAiGeminiConnection()"><i class="fas fa-plug"></i> Testar backend</button>
+                    </div>
+                    <div id="sisAiGeminiStatus" class="sis-ai-status" style="margin-top:10px;">Backend IA desativado.</div>
+                </div>
                 <div id="mlManageTokenList" style="margin-top:14px;max-height:320px;overflow-y:auto;"></div>
+                <div id="sisAiGeminiLearningList" style="margin-top:14px;max-height:280px;overflow-y:auto;"></div>
             </div>
             <div id="mlTabLogic" style="display:none;">
                 <div class="sis-ai-logic-grid">
@@ -4451,6 +4571,50 @@
         <div class="d-flex justify-between">
             <button class="btn btn-outline" onclick="closeEditTransactionModal()"><i class="fas fa-times"></i> Cancelar</button>
             <button class="btn btn-primary" onclick="saveEditTransaction()"><i class="fas fa-check"></i> Salvar</button>
+        </div>
+    </div>
+</div>
+
+<div class="classic-launch-modal" id="newLaunchModal">
+    <div class="classic-launch-window" role="dialog" aria-modal="true" aria-labelledby="newLaunchTitle">
+        <div class="classic-launch-titlebar">
+            <strong id="newLaunchTitle"><i class="fas fa-file-circle-plus"></i> Novo Lançamento</strong>
+            <button class="classic-launch-close" type="button" onclick="closeNewLaunchModal()" aria-label="Fechar novo lançamento">X</button>
+        </div>
+        <div class="classic-launch-body">
+            <div class="classic-launch-frame">
+                <div class="classic-launch-grid">
+                    <div class="classic-launch-field">
+                        <label class="classic-launch-label" for="newLaunchDate">Data</label>
+                        <input type="date" id="newLaunchDate" class="classic-launch-input">
+                    </div>
+                    <div class="classic-launch-field">
+                        <label class="classic-launch-label" for="newLaunchHistory">Histórico</label>
+                        <input type="text" id="newLaunchHistory" class="classic-launch-input" placeholder="Histórico contábil">
+                    </div>
+                    <div class="classic-launch-field full">
+                        <label class="classic-launch-label" for="newLaunchDescription">Descrição</label>
+                        <input type="text" id="newLaunchDescription" class="classic-launch-input" placeholder="Descrição do lançamento">
+                    </div>
+                    <div class="classic-launch-field classic-launch-search">
+                        <label class="classic-launch-label" for="newLaunchDebit">Débito</label>
+                        <input type="text" id="newLaunchDebit" class="classic-launch-input" placeholder="Ex: 1.1.1.001" autocomplete="off" oninput="searchAccountInline(this,'newLaunchDebitDropdown')" onfocus="searchAccountInline(this,'newLaunchDebitDropdown')">
+                        <div class="search-dropdown" id="newLaunchDebitDropdown"></div>
+                    </div>
+                    <div class="classic-launch-field classic-launch-search">
+                        <label class="classic-launch-label" for="newLaunchCredit">Crédito</label>
+                        <input type="text" id="newLaunchCredit" class="classic-launch-input" placeholder="Ex: 3.1.1.001" autocomplete="off" oninput="searchAccountInline(this,'newLaunchCreditDropdown')" onfocus="searchAccountInline(this,'newLaunchCreditDropdown')">
+                        <div class="search-dropdown" id="newLaunchCreditDropdown"></div>
+                    </div>
+                </div>
+                <div class="classic-launch-footer">
+                    <div class="classic-launch-hint">Atalho: Ctrl + M. O lançamento será criado na grade com valor inicial R$ 0,00 para ajuste posterior.</div>
+                    <div class="classic-launch-actions">
+                        <button class="classic-launch-btn" type="button" onclick="closeNewLaunchModal()">Cancelar</button>
+                        <button class="classic-launch-btn primary" type="button" onclick="saveNewLaunchModal()">Salvar Lançamento</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -4783,9 +4947,8 @@
 <!-- ======================== FLOATING ROBOT BUTTON ======================== -->
 <button class="float-robot-btn" id="floatRobotBtn" onclick="openMlRobotModal()" title="SIS-C AI — Central inteligente de classificação e aprendizado" style="display:none;">
     <div class="robot-pulse"></div>
-    <span class="robot-icon">🤖</span>
+    <span class="robot-icon"><i class="fas fa-brain"></i></span>
     <span class="robot-badge" id="robotBadgeCount" style="display:none;">0</span>
-    <span class="robot-label"><strong>SIS-C AI</strong><span>Aprender, sugerir e classificar</span></span>
 </button>
 
 <!-- ======================== ROBOT VALIDATOR MODAL ======================== -->
@@ -4897,7 +5060,30 @@ const SIS_AI_DEFAULTS = {
     anomalyAmountMultiplier: 2.5,
     enforceUppercaseImport: true
 };
+const SIS_C_AI_RULE_ACCOUNTS_KEY = 'siscAiRuleAccounts';
+const SIS_C_AI_PLAN_KEY = 'siscAiPlanId';
+const SIS_C_AI_GEMINI_SETTINGS_KEY = 'siscAiGeminiSettings';
+const SIS_C_AI_GEMINI_HISTORY_KEY = 'siscAiGeminiHistory';
+const SIS_C_AI_RULE_DEFAULTS = {
+        CONTA_RECEBIMENTO_CLIENTE: '',
+        CONTA_FORNECEDOR: '',
+        CONTA_SALARIO: '',
+        CONTA_DESPESA_PF: '',
+        CONTA_IMPOSTOS: '',
+        CONTA_TRANSFERENCIA: ''
+};
+const SIS_C_AI_GEMINI_DEFAULTS = {
+    enabled: false,
+    apiBaseUrl: 'http://127.0.0.1:8765',
+    calls: 0,
+    lastUsedAt: '',
+    autoLearn: true
+};
 let sisAiSettings = { ...SIS_AI_DEFAULTS, ...(JSON.parse(localStorage.getItem('sisAiSettings') || 'null') || {}) };
+let sisAiRuleAccounts = { ...SIS_C_AI_RULE_DEFAULTS, ...(JSON.parse(localStorage.getItem(SIS_C_AI_RULE_ACCOUNTS_KEY) || 'null') || {}) };
+let sisAiSelectedPlanId = localStorage.getItem(SIS_C_AI_PLAN_KEY) || '';
+let sisAiGeminiSettings = { ...SIS_C_AI_GEMINI_DEFAULTS, ...(JSON.parse(localStorage.getItem(SIS_C_AI_GEMINI_SETTINGS_KEY) || 'null') || {}) };
+let sisAiGeminiHistory = JSON.parse(localStorage.getItem(SIS_C_AI_GEMINI_HISTORY_KEY) || '[]');
 let sisAiKnowledgeRows = [];
 let searchAccountContext = { mode: 'copy', ruleIndex: null, planId: '', showAll: false };
 const MULTI_COMPANY_STORAGE_KEY = 'multiCompanyImportData';
@@ -5246,6 +5432,7 @@ const sections = {
     banknf: document.getElementById('banknfSection'),
     apuracoes: document.getElementById('apuracoesSection'),
     carteira: document.getElementById('carteiraSection'),
+    'sis-ai-rules': document.getElementById('sisAiRulesSection'),
     settings: document.getElementById('settingsSection'),
     chart: document.getElementById('chartSection'),
     calculos: document.getElementById('calculosSection'),
@@ -5265,6 +5452,7 @@ const pageTitles = {
     caixinha:"Caixinha", conversor:"Conversão PDF → OFX", ferramentas:"Ferramentas", banknf:"Banco NF",
     apuracoes:"Apurações",
     carteira:"Carteira de Empresas",
+    'sis-ai-rules':"Regras IA",
     settings:"Configurações do Sistema", chart:"Plano de Contas", calculos:"Cálculos",
     fechamento:"Conferências", demonstrativos:"Demonstrativos",
     correio:"Correio de Movimentação",
@@ -5286,6 +5474,7 @@ const pageSubtitles = {
     banknf:"Gerencie XMLs e PDFs de notas com separação por empresa cadastrada",
     apuracoes:"Apure Simples Nacional, DAS, Fator R, IRPJ e CSLL em um só lugar",
     carteira:"Cadastre empresas, defina o plano usado e organize arquivos individuais por mês e banco",
+    'sis-ai-rules':"Configure as contas obrigatórias usadas pela IA antes do fallback por plano de contas",
     settings:"Configure as preferências do sistema",
     chart:"Gerencie o plano de contas do sistema",
     calculos:"Controle de imobilizado, depreciação e cálculos por empresa",
@@ -5307,6 +5496,10 @@ const SIS_C_OPERATIONAL_RESET_KEYS = [
     'complementRules',
     'mlReconcData',
     'sisAiSettings',
+    'siscAiRuleAccounts',
+    'siscAiPlanId',
+    'siscAiGeminiSettings',
+    'siscAiGeminiHistory',
     'bankNfDocuments',
     'companies',
     'fileStructures',
@@ -5431,6 +5624,10 @@ function sisCResetRuntimeState() {
     selectedCaixinhaTransactions.clear();
     mlReconcData = {};
     sisAiSettings = { ...SIS_AI_DEFAULTS };
+    sisAiRuleAccounts = { ...SIS_C_AI_RULE_DEFAULTS };
+    sisAiSelectedPlanId = '';
+    sisAiGeminiSettings = { ...SIS_C_AI_GEMINI_DEFAULTS };
+    sisAiGeminiHistory = [];
     sisAiKnowledgeRows = [];
     multiOfxFiles = [];
     multiMonthTransactions = {};
@@ -5449,6 +5646,10 @@ function sisCPrepareCleanStorageSkeleton() {
     localStorage.setItem('complementRules', '[]');
     localStorage.setItem('mlReconcData', '{}');
     localStorage.setItem('sisAiSettings', JSON.stringify(SIS_AI_DEFAULTS));
+    localStorage.setItem(SIS_C_AI_RULE_ACCOUNTS_KEY, JSON.stringify(SIS_C_AI_RULE_DEFAULTS));
+    localStorage.setItem(SIS_C_AI_PLAN_KEY, '');
+    localStorage.setItem(SIS_C_AI_GEMINI_SETTINGS_KEY, JSON.stringify(SIS_C_AI_GEMINI_DEFAULTS));
+    localStorage.setItem(SIS_C_AI_GEMINI_HISTORY_KEY, '[]');
     localStorage.setItem('bankNfDocuments', '[]');
     localStorage.setItem('companies', '[]');
     localStorage.setItem('sisc_tf_empresas', '[]');
@@ -5698,6 +5899,7 @@ function sisAiSyncSettingsUI() {
     if (recurringEl) recurringEl.value = sisAiSettings.recurringMinOccurrences;
     if (anomalyEl) anomalyEl.value = sisAiSettings.anomalyAmountMultiplier;
     if (uppercaseEl) uppercaseEl.checked = !!sisAiSettings.enforceUppercaseImport;
+    sisAiSyncGeminiSettingsUI();
 }
 
 function sisAiComparableText(text) {
@@ -5999,6 +6201,498 @@ function saveSisAiSettingsFromUI() {
     showStatus('Lógica SIS-C AI atualizada.', 'success');
 }
 
+function getSisAiRuleFieldMap() {
+    return {
+        CONTA_RECEBIMENTO_CLIENTE: 'sisAiContaRecebimentoCliente',
+        CONTA_FORNECEDOR: 'sisAiContaFornecedor',
+        CONTA_SALARIO: 'sisAiContaSalario',
+        CONTA_DESPESA_PF: 'sisAiContaDespesaPf',
+        CONTA_IMPOSTOS: 'sisAiContaImpostos',
+        CONTA_TRANSFERENCIA: 'sisAiContaTransferencia'
+    };
+}
+
+function getSisAiEffectiveChart() {
+    const selectedPlan = getChartLookupPlans().find(plan => plan.id === sisAiSelectedPlanId);
+    if (selectedPlan && Array.isArray(selectedPlan.chart) && selectedPlan.chart.length) {
+        return selectedPlan.chart.filter(acc => acc && acc.code);
+    }
+    const currentChart = currentCompanyId
+        ? getCompanyEffectiveChart(currentCompanyId).filter(acc => acc && acc.code)
+        : (Array.isArray(chartOfAccounts) ? chartOfAccounts.filter(acc => acc && acc.code) : []);
+    if (currentChart.length) return currentChart;
+    return (JSON.parse(localStorage.getItem('chartOfAccounts') || '[]') || []).filter(acc => acc && acc.code);
+}
+
+function getSisAiChartScopeLabel() {
+    const selectedPlan = getChartLookupPlans().find(plan => plan.id === sisAiSelectedPlanId);
+    if (selectedPlan) return selectedPlan.name;
+    if (currentCompanyId) {
+        const company = companies.find(item => item.id === currentCompanyId);
+        if (company) return `Plano em uso de ${company.name}`;
+    }
+    return 'Plano geral do sistema';
+}
+
+function sisAiPersistGeminiSettings() {
+    localStorage.setItem(SIS_C_AI_GEMINI_SETTINGS_KEY, JSON.stringify(sisAiGeminiSettings));
+}
+
+function sisAiPersistGeminiHistory() {
+    localStorage.setItem(SIS_C_AI_GEMINI_HISTORY_KEY, JSON.stringify(sisAiGeminiHistory));
+}
+
+function sisAiSyncGeminiSettingsUI() {
+    const enabledEl = document.getElementById('sisAiGeminiEnabled');
+    const backendUrlEl = document.getElementById('sisAiGeminiBackendUrl');
+    const statusEl = document.getElementById('sisAiGeminiStatus');
+    if (enabledEl) enabledEl.checked = !!sisAiGeminiSettings.enabled;
+    if (backendUrlEl) backendUrlEl.value = sisAiGeminiSettings.apiBaseUrl || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl;
+    if (statusEl) {
+        if (!sisAiGeminiSettings.enabled) statusEl.textContent = 'Backend IA desativado.';
+        else statusEl.textContent = `Backend configurado em ${sisAiGeminiSettings.apiBaseUrl || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl}. Chamadas acumuladas: ${sisAiGeminiSettings.calls || 0}.`;
+    }
+}
+
+function saveSisAiGeminiSettingsFromUI() {
+    sisAiGeminiSettings.enabled = !!document.getElementById('sisAiGeminiEnabled')?.checked;
+    sisAiGeminiSettings.apiBaseUrl = String(document.getElementById('sisAiGeminiBackendUrl')?.value || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl).trim().replace(/\/$/, '') || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl;
+    sisAiPersistGeminiSettings();
+    sisAiSyncGeminiSettingsUI();
+    showStatus('Configuração do backend IA salva localmente.', 'success');
+}
+
+function handleSisAiPlanChange() {
+    sisAiSelectedPlanId = document.getElementById('sisAiPlanSelect')?.value || '';
+    localStorage.setItem(SIS_C_AI_PLAN_KEY, sisAiSelectedPlanId);
+    renderSisAiRulesSection();
+}
+
+function sisAiFindAccountByCode(code) {
+    if (!code) return null;
+    return getSisAiEffectiveChart().find(account => String(account.code) === String(code)) || null;
+}
+
+function sisAiResolveAccountReference(reference) {
+    const value = String(reference || '').trim();
+    if (!value) return null;
+    const chart = getSisAiEffectiveChart();
+    const exactCode = chart.find(account => String(account.code).trim() === value);
+    if (exactCode) return exactCode;
+    const codeFromLabel = value.match(/^([^\s-]+(?:\.[^\s-]+)*)\s*[-/]/);
+    if (codeFromLabel) {
+        const byLabelCode = chart.find(account => String(account.code).trim() === codeFromLabel[1].trim());
+        if (byLabelCode) return byLabelCode;
+    }
+    const normalizedValue = sisAiNormalizeAnalysisText(value);
+    const exactDesc = chart.find(account => sisAiNormalizeAnalysisText(account.description) === normalizedValue);
+    if (exactDesc) return exactDesc;
+    const fuzzy = chart.find(account => sisAiNormalizeAnalysisText(`${account.code} ${account.description}`).includes(normalizedValue));
+    if (fuzzy) return fuzzy;
+    return { code: value, description: 'Conta manual', manual: true };
+}
+
+function sisAiNormalizeRuleAccountValue(value) {
+    const trimmed = String(value || '').trim();
+    if (!trimmed) return '';
+    const resolved = sisAiResolveAccountReference(trimmed);
+    return resolved?.code || trimmed;
+}
+
+function sisAiFormatRuleInputValue(value) {
+    const resolved = sisAiResolveAccountReference(value);
+    if (!resolved) return '';
+    if (resolved.manual) return resolved.code || '';
+    return `${resolved.code} - ${resolved.description}`;
+}
+
+function sisAiFormatAccountLabel(account) {
+    if (!account) return 'Conta não encontrada';
+    return account.description ? `${account.code} / ${account.description}` : String(account.code || 'Conta não encontrada');
+}
+
+function sisAiNormalizeAnalysisText(value = '') {
+    return String(value || '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/\bpgto\b/g, 'pagamento')
+        .replace(/\bfunc\b/g, 'funcionario')
+        .replace(/\btrib\b/g, 'tributo')
+        .replace(/\bnf\b/g, 'nota fiscal')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function sisAiBuildAnalysisTokens(value = '') {
+    return sisAiNormalizeAnalysisText(value).split(' ').filter(token => token.length > 2);
+}
+
+function sisAiGetConfiguredAccount(configKey) {
+    return sisAiResolveAccountReference(sisAiRuleAccounts[configKey]);
+}
+
+function sisAiFindChartAccountByKeywords(keywords = [], filters = {}) {
+    const chart = getSisAiEffectiveChart();
+    const keywordList = keywords.map(item => sisAiNormalizeAnalysisText(item)).filter(Boolean);
+    let best = null;
+    let bestScore = 0;
+    chart.forEach(account => {
+        const haystack = sisAiNormalizeAnalysisText(`${account.code} ${account.description} ${account.group || ''} ${account.type || ''}`);
+        if (filters.type && sisAiNormalizeAnalysisText(account.type || '') !== sisAiNormalizeAnalysisText(filters.type)) return;
+        if (filters.group && sisAiNormalizeAnalysisText(account.group || '') !== sisAiNormalizeAnalysisText(filters.group)) return;
+        const score = keywordList.reduce((sum, keyword) => sum + (haystack.includes(keyword) ? Math.max(1, keyword.length / 5) : 0), 0);
+        if (score > bestScore) {
+            bestScore = score;
+            best = account;
+        }
+    });
+    return best;
+}
+
+function sisAiFindSemanticFallbackAccount(description, desiredType = '') {
+    const chart = getSisAiEffectiveChart();
+    const tokens = sisAiBuildAnalysisTokens(description);
+    let best = null;
+    let bestScore = 0;
+    chart.forEach(account => {
+        const haystack = sisAiNormalizeAnalysisText(`${account.description} ${account.group || ''} ${account.type || ''}`);
+        let score = 0;
+        tokens.forEach(token => {
+            if (haystack.includes(token)) score += token.length >= 6 ? 1.25 : 0.7;
+        });
+        if (desiredType && sisAiNormalizeAnalysisText(account.type || '').includes(sisAiNormalizeAnalysisText(desiredType))) score += 0.85;
+        if (score > bestScore) {
+            bestScore = score;
+            best = account;
+        }
+    });
+    return { account: best, score: bestScore };
+}
+
+function sisAiResolveBankAccount() {
+    return sisAiFindAccountByCode(bankAccountCode)
+        || sisAiFindChartAccountByKeywords(['banco conta corrente', 'banco', 'caixa'])
+        || null;
+}
+
+function sisAiLooksLikePersonalPayment(text, tx = {}) {
+    const base = `${text} ${sisAiNormalizeAnalysisText(tx.document || '')}`;
+    return /\bcpf\b|\bpessoa fisica\b|\bautonomo\b|\bdiarista\b|\bfreelancer\b|\bprestador\b/.test(base);
+}
+
+function sisAiLooksLikeCompanyPayment(text, tx = {}) {
+    const base = `${text} ${sisAiNormalizeAnalysisText(tx.document || '')}`;
+    return /\bcnpj\b|\bltda\b|\bme\b|\beireli\b|\bsa\b|\bempresa\b|\bnota fiscal\b|\bfornecedor\b/.test(base);
+}
+
+function sisAiBuildDecisionPayload(debitAccount, creditAccount, tipo, confianca, regra, origem, justificativa) {
+    return {
+        debito: sisAiFormatAccountLabel(debitAccount),
+        credito: sisAiFormatAccountLabel(creditAccount),
+        tipo_lancamento: tipo,
+        confianca: confianca,
+        regra_aplicada: regra,
+        origem_decisao: origem,
+        justificativa: justificativa,
+        _debitCode: debitAccount?.code || '',
+        _creditCode: creditAccount?.code || ''
+    };
+}
+
+function sisAiApplyDecisionToTransaction(tx, result) {
+    tx.debitCode = result._debitCode;
+    tx.creditCode = result._creditCode;
+    tx.sisAiDecision = {
+        tipoLancamento: result.tipo_lancamento,
+        confianca: result.confianca,
+        regraAplicada: result.regra_aplicada,
+        origemDecisao: result.origem_decisao,
+        justificativa: result.justificativa
+    };
+    if (!tx.history || tx.history === defaultHistory) {
+        tx.history = String(result.regra_aplicada || 'CLASSIFICADO IA').replace(/_/g, ' ').toUpperCase();
+    }
+}
+
+function sisAiBuildBackendPayload(tx) {
+    const chart = getSisAiEffectiveChart().map(account => ({
+        code: account.code,
+        description: account.description,
+        group: account.group || '',
+        type: account.type || ''
+    }));
+    return {
+        conta_bancaria: sisAiResolveBankAccount()?.code || bankAccountCode || '',
+        contas_prioritarias: { ...sisAiRuleAccounts },
+        lancamento: {
+            date: tx.date || '',
+            amount: Number(tx.amount || 0),
+            description: tx.description || '',
+            history: tx.history || '',
+            document: tx.document || ''
+        },
+        plano_contas: chart
+    };
+}
+
+async function sisAiQueryGeminiForClassification(tx) {
+    if (!sisAiGeminiSettings.enabled) return null;
+    const baseUrl = String(sisAiGeminiSettings.apiBaseUrl || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl).trim().replace(/\/$/, '');
+    if (!baseUrl) return null;
+    const response = await fetch(`${baseUrl}/classify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sisAiBuildBackendPayload(tx))
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Backend IA ${response.status}: ${errorText.slice(0, 180)}`);
+    }
+    const data = await response.json();
+    const result = data?.result || null;
+    if (!result?._debitCode || !result?._creditCode) return null;
+    sisAiGeminiSettings.calls = Number(sisAiGeminiSettings.calls || 0) + 1;
+    sisAiGeminiSettings.lastUsedAt = new Date().toISOString();
+    sisAiPersistGeminiSettings();
+    return result;
+}
+
+function sisAiOverwriteKnowledgeKeys(keys, debitCode, creditCode, sampleDesc, meta = {}) {
+    (keys || []).forEach(key => {
+        if (!key) return;
+        const now = new Date().toISOString();
+        const entry = sisAiEnsureMlEntry(mlReconcData[key], meta.kind || 'gemini');
+        entry.kind = meta.kind || entry.kind || 'gemini';
+        entry.fixed = true;
+        entry.sampleDesc = sisAiNormalizeImportedDescription(sampleDesc || entry.sampleDesc || '');
+        entry.signature = meta.signature || entry.signature || '';
+        entry.counterparty = meta.counterparty || entry.counterparty || '';
+        entry.direction = meta.direction || entry.direction || '';
+        entry.amountBucket = meta.amountBucket || entry.amountBucket || '';
+        entry.origin = meta.origin || entry.origin || 'gemini';
+        entry.model = meta.model || entry.model || '';
+        entry.lastUsed = now;
+        entry.totalSeen = Math.max(Number(entry.totalSeen || 0), 1);
+        entry.pairStats = {
+            [sisAiGetPairKey(debitCode, creditCode)]: {
+                score: Math.max(6, Number(entry.totalSeen || 0), Number(entry.manualHits || 0) + 1),
+                hits: Math.max(1, Number(entry.pairHits || 0)),
+                hardHits: Math.max(2, Number(entry.hardHits || 0)),
+                lastUsed: now
+            }
+        };
+        mlReconcData[key] = sisAiRefreshMlEntryMeta(entry);
+    });
+    sisAiPersistMlKnowledge();
+}
+
+function sisAiLearnGeminiDecision(tx, result) {
+    const context = sisAiBuildKnowledgeContext(tx);
+    const exactKey = context.signature ? `exact:${context.signature}|${context.direction}|${context.amountBucket}` : '';
+    const signatureKey = context.signature ? `sig:${context.signature}|${context.direction}` : '';
+    const counterpartyKey = context.counterparty ? `cp:${context.counterparty}` : '';
+    const learnedKeys = [exactKey, signatureKey, counterpartyKey].filter(Boolean);
+    sisAiOverwriteKnowledgeKeys(learnedKeys, result._debitCode, result._creditCode, tx.description || tx.history || '', {
+        kind: 'backend',
+        signature: context.signature,
+        counterparty: context.counterparty,
+        direction: context.direction,
+        amountBucket: context.amountBucket,
+        origin: 'backend',
+        model: sisAiGeminiSettings.apiBaseUrl || ''
+    });
+    const historyEntry = {
+        id: generateId(),
+        createdAt: new Date().toISOString(),
+        description: tx.description || '',
+        amount: Number(tx.amount || 0),
+        debitCode: result._debitCode,
+        creditCode: result._creditCode,
+        justificativa: result.justificativa || '',
+        planLabel: getSisAiChartScopeLabel(),
+        learnedKeys
+    };
+    sisAiGeminiHistory.unshift(historyEntry);
+    sisAiGeminiHistory = sisAiGeminiHistory.slice(0, 120);
+    sisAiPersistGeminiHistory();
+}
+
+function classifyTransactionWithSisCAI(tx) {
+    const description = sisAiNormalizeAnalysisText(`${tx.description || ''} ${tx.history || ''} ${tx.document || ''}`);
+    const amount = Number(tx.amount || 0);
+    const bankAccount = sisAiResolveBankAccount();
+    if (!description || !bankAccount) return null;
+
+    const contaRecebimento = sisAiGetConfiguredAccount('CONTA_RECEBIMENTO_CLIENTE');
+    const contaFornecedor = sisAiGetConfiguredAccount('CONTA_FORNECEDOR');
+    const contaSalario = sisAiGetConfiguredAccount('CONTA_SALARIO');
+    const contaDespesaPf = sisAiGetConfiguredAccount('CONTA_DESPESA_PF');
+    const contaImpostos = sisAiGetConfiguredAccount('CONTA_IMPOSTOS');
+    const contaTransferencia = sisAiGetConfiguredAccount('CONTA_TRANSFERENCIA');
+    const patrimonioSocio = sisAiFindChartAccountByKeywords(['patrimonio liquido', 'capital social', 'socio']);
+    const passivoEmprestimo = sisAiFindChartAccountByKeywords(['emprestimo', 'financiamentos', 'mutuo'], { group: 'Passivo' })
+        || sisAiFindChartAccountByKeywords(['emprestimo', 'passivo']);
+    const passivoFornecedor = sisAiFindChartAccountByKeywords(['fornecedores', 'passivo fornecedores'], { group: 'Passivo' })
+        || contaFornecedor;
+
+    if (/transferencia|transf interna|pix entre contas|ted entre contas/.test(description) && contaTransferencia) {
+        return sisAiBuildDecisionPayload(contaTransferencia, bankAccount, 'transferencia', 1.0, 'transferencia_interna', 'regra_usuario', 'Movimentação interna identificada; a conta configurada de transferência foi priorizada.');
+    }
+
+    if (amount > 0) {
+        if (/socio|capital social|aporte/.test(description) && patrimonioSocio) {
+            return sisAiBuildDecisionPayload(bankAccount, patrimonioSocio, 'patrimonio', 1.0, 'aporte_socio', 'plano_contas', 'Recebimento identificado como aporte de sócio; a contrapartida foi lançada no patrimônio.');
+        }
+        if (/emprestimo|mutuo|financiamento/.test(description) && passivoEmprestimo) {
+            return sisAiBuildDecisionPayload(bankAccount, passivoEmprestimo, 'passivo', 1.0, 'emprestimo_recebido', 'plano_contas', 'Recebimento identificado como empréstimo; a contrapartida foi lançada no passivo.');
+        }
+        if (contaRecebimento) {
+            return sisAiBuildDecisionPayload(bankAccount, contaRecebimento, 'receita', 1.0, 'recebimento_padrao', 'regra_usuario', 'Valor positivo classificado pela regra prioritária de recebimento do cliente.');
+        }
+    }
+
+    if (/salario|folha|funcionario|pro labore|holerite/.test(description) && contaSalario) {
+        return sisAiBuildDecisionPayload(contaSalario, bankAccount, 'despesa', 1.0, 'salarios', 'regra_usuario', 'Pagamento de salários identificado; a conta configurada de salários foi priorizada.');
+    }
+
+    if (/darf|imposto|tributo|pis|cofins|iss|icms|irpj|csll|simples nacional|inss|fgts/.test(description) && contaImpostos) {
+        return sisAiBuildDecisionPayload(contaImpostos, bankAccount, 'despesa', 1.0, 'impostos', 'regra_usuario', 'Tributo identificado no histórico; a conta configurada de impostos foi aplicada.');
+    }
+
+    if (amount < 0 && sisAiLooksLikePersonalPayment(description, tx) && contaDespesaPf) {
+        return sisAiBuildDecisionPayload(contaDespesaPf, bankAccount, 'despesa', 1.0, 'pagamento_pessoa_fisica', 'regra_usuario', 'Pagamento para pessoa física identificado por CPF ou termos equivalentes.');
+    }
+
+    if (amount < 0 && sisAiLooksLikeCompanyPayment(description, tx) && contaFornecedor) {
+        if (/prazo|boleto|duplicata|vencimento|parcela|a pagar/.test(description) && passivoFornecedor) {
+            return sisAiBuildDecisionPayload(contaFornecedor, passivoFornecedor, 'passivo', 1.0, 'pagamento_pj_prazo', 'regra_usuario', 'Pagamento para pessoa jurídica com indício de prazo; a contrapartida foi mantida em fornecedores a pagar.');
+        }
+        return sisAiBuildDecisionPayload(contaFornecedor, bankAccount, 'despesa', 1.0, 'pagamento_pj_imediato', 'regra_usuario', 'Pagamento para pessoa jurídica identificado; a conta de fornecedor foi usada contra banco.');
+    }
+
+    const desiredType = amount > 0 ? 'Receita' : 'Despesa';
+    const fallback = sisAiFindSemanticFallbackAccount(description, desiredType);
+    if (fallback.account) {
+        if (amount > 0) {
+            return sisAiBuildDecisionPayload(bankAccount, fallback.account, 'receita', 0.85, 'fallback_plano_contas', 'plano_contas', 'Nenhuma regra fixa foi acionada; a IA usou similaridade com o plano de contas para escolher a conta de crédito.');
+        }
+        return sisAiBuildDecisionPayload(fallback.account, bankAccount, 'despesa', fallback.score >= 2 ? 0.85 : 0.7, fallback.score >= 2 ? 'fallback_plano_contas' : 'fallback_ia', fallback.score >= 2 ? 'plano_contas' : 'ia', 'Nenhuma regra fixa foi acionada; a IA usou o plano de contas e similaridade textual para escolher a conta de débito.');
+    }
+
+    return null;
+}
+
+function renderSisAiRulesSection() {
+    const chart = getSisAiEffectiveChart();
+    const planSelect = document.getElementById('sisAiPlanSelect');
+    const datalist = document.getElementById('sisAiAccountsDatalist');
+    const plans = getChartLookupPlans();
+    if (planSelect) {
+        planSelect.innerHTML = '<option value="">Plano atual em uso</option>' + plans.map(plan => `<option value="${plan.id}">${plan.name}</option>`).join('');
+        planSelect.value = plans.some(plan => plan.id === sisAiSelectedPlanId) ? sisAiSelectedPlanId : '';
+        planSelect.onchange = handleSisAiPlanChange;
+    }
+    if (datalist) {
+        datalist.innerHTML = chart.map(account => `<option value="${account.code} - ${account.description}"></option>`).join('');
+    }
+    const fieldMap = getSisAiRuleFieldMap();
+    Object.entries(fieldMap).forEach(([configKey, elementId]) => {
+        const field = document.getElementById(elementId);
+        if (!field) return;
+        field.value = sisAiFormatRuleInputValue(sisAiRuleAccounts[configKey] || '');
+    });
+    const bankAccountEl = document.getElementById('sisAiRulesBankAccount');
+    const scopeEl = document.getElementById('sisAiRulesChartScope');
+    if (bankAccountEl) bankAccountEl.textContent = sisAiFormatAccountLabel(sisAiResolveBankAccount());
+    if (scopeEl) scopeEl.textContent = getSisAiChartScopeLabel();
+    const configured = Object.values(sisAiRuleAccounts).filter(Boolean).length;
+    const statusEl = document.getElementById('sisAiRulesStatus');
+    if (statusEl) statusEl.textContent = `${configured}/6 conta(s) estratégicas configuradas manualmente no plano selecionado.`;
+}
+
+function saveSisAiRuleAccountsFromUI() {
+    const fieldMap = getSisAiRuleFieldMap();
+    Object.entries(fieldMap).forEach(([configKey, elementId]) => {
+        sisAiRuleAccounts[configKey] = sisAiNormalizeRuleAccountValue(document.getElementById(elementId)?.value || '');
+    });
+    localStorage.setItem(SIS_C_AI_RULE_ACCOUNTS_KEY, JSON.stringify(sisAiRuleAccounts));
+    renderSisAiRulesSection();
+    showStatus('Regras IA salvas com sucesso.', 'success');
+}
+
+async function testSisAiGeminiConnection() {
+    if (!sisAiGeminiSettings.enabled) {
+        showStatus('Ative o backend IA antes do teste.', 'warning');
+        return;
+    }
+    try {
+        const baseUrl = String(sisAiGeminiSettings.apiBaseUrl || SIS_C_AI_GEMINI_DEFAULTS.apiBaseUrl).trim().replace(/\/$/, '');
+        const response = await fetch(`${baseUrl}/health`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const payload = await response.json();
+        sisAiSyncGeminiSettingsUI();
+        showStatus(payload?.ok ? 'Backend IA respondeu com sucesso.' : 'Backend IA respondeu sem status OK.', payload?.ok ? 'success' : 'warning');
+    } catch (error) {
+        showStatus(`Falha no teste do backend IA: ${error.message}`, 'error');
+    }
+}
+
+async function autoClassifyTransactionsWithSisCAI() {
+    if (!transactions.length) {
+        showStatus('Não há lançamentos para auto classificar.', 'warning');
+        return;
+    }
+    const bankAccount = sisAiResolveBankAccount();
+    if (!bankAccount) {
+        showStatus('Defina uma conta bancária válida nas configurações ou no plano de contas antes de usar a auto classificação.', 'error');
+        return;
+    }
+    let applied = 0;
+    let skipped = 0;
+    let uncertain = 0;
+    let geminiApplied = 0;
+    for (const tx of transactions) {
+        if (tx.debitCode && tx.creditCode) {
+            skipped += 1;
+            continue;
+        }
+        let result = classifyTransactionWithSisCAI(tx);
+        if ((!result || !result._debitCode || !result._creditCode || result.confianca < 0.6) && sisAiGeminiSettings.enabled) {
+            try {
+                result = await sisAiQueryGeminiForClassification(tx);
+                if (result && result._debitCode && result._creditCode) {
+                    sisAiLearnGeminiDecision(tx, result);
+                    geminiApplied += 1;
+                }
+            } catch (error) {
+                console.error('Backend IA classification error:', error);
+            }
+        }
+        if (!result || !result._debitCode || !result._creditCode || result.confianca < 0.6) {
+            uncertain += 1;
+            continue;
+        }
+        sisAiApplyDecisionToTransaction(tx, result);
+        mlLearnFromTransaction(tx);
+        applied += 1;
+    }
+    if (isMultiMonth) renderMultiMonthTransactions(); else displayTransactions();
+    updateFinancialSummary();
+    saveToLocalStorage();
+    const pieces = [];
+    if (applied) pieces.push(`${applied} classificado(s)`);
+    if (geminiApplied) pieces.push(`${geminiApplied} via Gemini`);
+    if (skipped) pieces.push(`${skipped} já possuíam D/C`);
+    if (uncertain) pieces.push(`${uncertain} exigem revisão manual`);
+    showStatus(`Auto classificação concluída: ${pieces.join(' | ') || 'nenhuma alteração'}.`, applied ? 'success' : 'warning');
+    sisAiSyncGeminiSettingsUI();
+    if (typeof renderMlStats === 'function') renderMlStats();
+    if (typeof renderMlDiagnostics === 'function') renderMlDiagnostics();
+    if (typeof renderMlManageList === 'function') renderMlManageList();
+}
+
 function showClearPeriodModal() {
     document.getElementById('clearPeriodModal').style.display = 'flex';
 }
@@ -6271,6 +6965,10 @@ function loadFromLocalStorage() {
         if (s.autoSave) document.getElementById('autoSave').value = s.autoSave;
     }
     sisAiSettings = { ...SIS_AI_DEFAULTS, ...(JSON.parse(localStorage.getItem('sisAiSettings') || 'null') || {}), ...sisAiSettings };
+    sisAiRuleAccounts = { ...SIS_C_AI_RULE_DEFAULTS, ...(JSON.parse(localStorage.getItem(SIS_C_AI_RULE_ACCOUNTS_KEY) || 'null') || {}), ...sisAiRuleAccounts };
+    sisAiSelectedPlanId = localStorage.getItem(SIS_C_AI_PLAN_KEY) || sisAiSelectedPlanId || '';
+    sisAiGeminiSettings = { ...SIS_C_AI_GEMINI_DEFAULTS, ...(JSON.parse(localStorage.getItem(SIS_C_AI_GEMINI_SETTINGS_KEY) || 'null') || {}), ...sisAiGeminiSettings };
+    sisAiGeminiHistory = JSON.parse(localStorage.getItem(SIS_C_AI_GEMINI_HISTORY_KEY) || '[]');
     sisAiSyncSettingsUI();
 
     const st = localStorage.getItem('transactions');
@@ -6360,6 +7058,7 @@ function navigateToSection(section) {
     if (section === 'calculos') populateDepCompanySelect();
     if (section === 'apuracoes') initApuracoes();
     if (section === 'carteira') renderCarteiraSection();
+    if (section === 'sis-ai-rules') renderSisAiRulesSection();
     if (section === 'correio') renderCorreioSection();
     if (section === 'relatorio-mensal') renderRelatorioMensal();
     if (section === 'relatorio-financeiro') renderRelatorioFinanceiro();
@@ -8093,10 +8792,15 @@ function applyTextActionToTransactions(targetText, replacementText) {
 }
 
 function handleTransactionsShortcut(event) {
-    if (!event.ctrlKey || String(event.key || '').toLowerCase() !== 'l') return;
-    if (getVisibleSectionKey() !== 'transactions') return;
     const activeEl = document.activeElement;
     if (activeEl && (['INPUT', 'TEXTAREA', 'SELECT'].includes(activeEl.tagName) || activeEl.isContentEditable)) return;
+    if (event.ctrlKey && String(event.key || '').toLowerCase() === 'm') {
+        event.preventDefault();
+        openNewLaunchModal();
+        return;
+    }
+    if (!event.ctrlKey || String(event.key || '').toLowerCase() !== 'l') return;
+    if (getVisibleSectionKey() !== 'transactions') return;
     event.preventDefault();
     if (!transactions.length) {
         showStatus('Não há lançamentos para editar.', 'warning');
@@ -8182,6 +8886,70 @@ function closeEditTransactionModal() {
     editingTransactionIndex = null;
     document.getElementById('editTxDebitDropdown').classList.remove('show');
     document.getElementById('editTxCreditDropdown').classList.remove('show');
+}
+function resetNewLaunchModal() {
+    document.getElementById('newLaunchDate').value = today;
+    document.getElementById('newLaunchDescription').value = '';
+    document.getElementById('newLaunchHistory').value = defaultHistory || 'Movimentação Bancária';
+    document.getElementById('newLaunchDebit').value = '';
+    document.getElementById('newLaunchCredit').value = '';
+    document.getElementById('newLaunchDebitDropdown').classList.remove('show');
+    document.getElementById('newLaunchCreditDropdown').classList.remove('show');
+}
+function openNewLaunchModal() {
+    navigateToSection('transactions');
+    resetNewLaunchModal();
+    document.getElementById('newLaunchModal').classList.add('show');
+    setTimeout(() => document.getElementById('newLaunchDate')?.focus(), 40);
+}
+function closeNewLaunchModal() {
+    document.getElementById('newLaunchModal').classList.remove('show');
+    document.getElementById('newLaunchDebitDropdown').classList.remove('show');
+    document.getElementById('newLaunchCreditDropdown').classList.remove('show');
+}
+function saveNewLaunchModal() {
+    const date = document.getElementById('newLaunchDate').value;
+    const description = sisAiNormalizeImportedDescription(document.getElementById('newLaunchDescription').value.trim());
+    const history = document.getElementById('newLaunchHistory').value.trim() || defaultHistory;
+    const debitCode = document.getElementById('newLaunchDebit').value.trim();
+    const creditCode = document.getElementById('newLaunchCredit').value.trim();
+    if (!date || !description || !history || !debitCode || !creditCode) {
+        showStatus('Preencha Data, Descrição, Histórico, Débito e Crédito para criar o lançamento.', 'error');
+        return;
+    }
+    if (debitCode === creditCode) {
+        showStatus('Débito e Crédito não podem ser a mesma conta.', 'error');
+        return;
+    }
+    const newTx = {
+        id: generateId(),
+        date,
+        amount: 0,
+        description,
+        debitCode,
+        creditCode,
+        history,
+        type: 'credit',
+        originalDescription: description,
+        document: 'MANUAL',
+        companyId: currentCompanyId || '',
+        companyName: companies.find(company => company.id === currentCompanyId)?.name || ''
+    };
+    rawTransactions.unshift({ date, amount: 0, description, type: 'credit', companyId: newTx.companyId, companyName: newTx.companyName });
+    sisAiSanitizeTransaction(newTx, '', 'lançamento manual');
+    transactions.unshift(newTx);
+    if (isMultiMonth) {
+        const monthKey = getTransactionMonthKey(date);
+        if (!multiMonthTransactions[monthKey]) multiMonthTransactions[monthKey] = [];
+        multiMonthTransactions[monthKey].unshift(newTx);
+        renderMultiMonthTransactions();
+    } else {
+        displayTransactions();
+    }
+    updateFinancialSummary();
+    saveToLocalStorage();
+    closeNewLaunchModal();
+    showStatus('Novo lançamento criado com sucesso.', 'success');
 }
 function saveEditTransaction() {
     if (editingTransactionIndex === null) return;
@@ -15196,6 +15964,7 @@ function closeMlRobotModal() {
     document.getElementById('mlRobotModal').style.display = 'none';
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMlRobotModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNewLaunchModal(); });
 
 function switchMlTab(tab) {
     ['stats','diagnostics','search','chat','manage','logic'].forEach((t, i) => {
@@ -15420,6 +16189,7 @@ function renderMlStats() {
     const diagnostics = sisAiBuildRobotDiagnostics();
     const tokens = Object.keys(mlReconcData || {});
     const nonAmt  = tokens.filter(t => !t.startsWith('amt_'));
+    const geminiLearned = (sisAiGeminiHistory || []).length;
     const total   = nonAmt.reduce((s, t) => s + ((mlReconcData[t].totalSeen) || 0), 0);
     const topTokens = nonAmt.sort((a,b) => (mlReconcData[b].totalSeen||0) - (mlReconcData[a].totalSeen||0)).slice(0,5);
     const recent  = nonAmt.filter(t => {
@@ -15460,6 +16230,10 @@ function renderMlStats() {
             <div class="ml-stat-card">
                 <div class="ml-stat-icon" style="background:linear-gradient(135deg,#7c2d12,#f97316);">🧪</div>
                 <div><div style="font-size:1.4rem;font-weight:800;color:#ffedd5;">${diagnostics.anomalyCount}</div><div style="font-size:0.78rem;color:rgba(220,252,231,0.72);">Anomalias encontradas</div></div>
+            </div>
+            <div class="ml-stat-card">
+                <div class="ml-stat-icon" style="background:linear-gradient(135deg,#4338ca,#38bdf8);">🛰️</div>
+                <div><div style="font-size:1.4rem;font-weight:800;color:#dbeafe;">${geminiLearned}</div><div style="font-size:0.78rem;color:rgba(220,252,231,0.72);">Aprendidos via backend</div></div>
             </div>
         </div>
         <div style="font-weight:700;font-size:0.85rem;margin-bottom:10px;color:#f8fafc;">🏆 Top 5 Padrões mais Vistos</div>
@@ -15610,9 +16384,14 @@ function _mlChatReply(text) {
 function renderMlManageList() {
     const el = document.getElementById('mlManageTokenList');
     if (!el) return;
+    sisAiSyncGeminiSettingsUI();
     const tokens = Object.keys(mlReconcData || {}).filter(t => !t.startsWith('amt_'))
         .sort((a,b) => (mlReconcData[b].totalSeen||0) - (mlReconcData[a].totalSeen||0));
-    if (!tokens.length) { el.innerHTML = '<p style="color:rgba(220,252,231,0.68);font-size:0.85rem;">Banco de conhecimento vazio.</p>'; return; }
+    if (!tokens.length) {
+        el.innerHTML = '<p style="color:rgba(220,252,231,0.68);font-size:0.85rem;">Banco de conhecimento vazio.</p>';
+        renderSisAiGeminiLearningList();
+        return;
+    }
     el.innerHTML = `<div style="font-weight:700;font-size:0.82rem;margin-bottom:8px;color:#f8fafc;">Todos os padrões (${tokens.length}):</div>` +
         tokens.slice(0,200).map(t => {
             const e = sisAiEnsureMlEntry(mlReconcData[t]);
@@ -15620,10 +16399,66 @@ function renderMlManageList() {
                 <input type="checkbox" class="ml-chk" value="${t}" style="margin-right:4px;">
                 <span style="flex:1;font-size:0.8rem;">${sisAiEscapeHtml(sisAiFormatKnowledgeKey(t))}</span>
                 <span style="font-size:0.75rem;color:rgba(220,252,231,0.68);">D:${e.debitAccount||'—'} C:${e.creditAccount||'—'}</span>
-                <span style="font-size:0.7rem;color:${e.fixed ? '#86efac' : 'rgba(220,252,231,0.58)'};font-weight:700;">${e.fixed ? 'FIXO' : (e.kind || 'PADRAO').toUpperCase()}</span>
+                <span style="font-size:0.7rem;color:${e.fixed ? '#86efac' : 'rgba(220,252,231,0.58)'};font-weight:700;">${e.origin === 'backend' ? 'BACKEND' : (e.fixed ? 'FIXO' : (e.kind || 'PADRAO').toUpperCase())}</span>
                 <span style="font-size:0.72rem;color:#4ade80;">${(e.totalSeen||0).toFixed(0)} obs</span>
             </div>`;
         }).join('');
+    renderSisAiGeminiLearningList();
+}
+
+function updateSisAiGeminiHistoryEntry(entryId, field, value) {
+    const entry = (sisAiGeminiHistory || []).find(item => item.id === entryId);
+    if (!entry) return;
+    if (field === 'justificativa') {
+        entry.justificativa = String(value || '').trim();
+    } else {
+        const normalized = sisAiNormalizeRuleAccountValue(value);
+        entry[field] = normalized;
+        sisAiOverwriteKnowledgeKeys(entry.learnedKeys || [], entry.debitCode, entry.creditCode, entry.description || '', {
+            kind: 'backend',
+            origin: 'backend',
+            model: sisAiGeminiSettings.apiBaseUrl || ''
+        });
+    }
+    sisAiPersistGeminiHistory();
+    renderSisAiGeminiLearningList();
+    renderSisAiLogic();
+    renderMlStats();
+}
+
+function deleteSisAiGeminiHistoryEntry(entryId) {
+    sisAiGeminiHistory = (sisAiGeminiHistory || []).filter(item => item.id !== entryId);
+    sisAiPersistGeminiHistory();
+    renderSisAiGeminiLearningList();
+    renderMlStats();
+}
+
+function renderSisAiGeminiLearningList() {
+    const el = document.getElementById('sisAiGeminiLearningList');
+    if (!el) return;
+    const items = (sisAiGeminiHistory || []).slice(0, 30);
+    if (!items.length) {
+        el.innerHTML = '<div class="sis-ai-panel" style="font-size:0.82rem;color:rgba(220,252,231,0.68);">Nenhum aprendizado de backend armazenado ainda.</div>';
+        return;
+    }
+    el.innerHTML = `<div class="sis-ai-panel"><div style="font-weight:700;margin-bottom:10px;color:#f8fafc;">Aprendizados do backend editáveis (${items.length})</div>${items.map(item => {
+        const safeDesc = sisAiEscapeHtml(item.description || 'Sem descrição');
+        const safeReason = sisAiEscapeHtml(item.justificativa || '');
+        return `<div style="border:1px solid rgba(148,163,184,0.28);border-radius:12px;padding:12px;margin-bottom:10px;">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px;">
+                <div>
+                    <div style="font-weight:700;color:#f8fafc;">${safeDesc}</div>
+                    <div style="font-size:0.74rem;color:rgba(220,252,231,0.64);">${fmtBRL(Math.abs(Number(item.amount || 0)))} • ${sisAiEscapeHtml(item.planLabel || 'Plano atual')} • ${new Date(item.createdAt).toLocaleString('pt-BR')}</div>
+                </div>
+                <button class="btn btn-sm btn-danger" onclick="deleteSisAiGeminiHistoryEntry('${item.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+            <div class="d-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;">
+                <input class="input-field" list="sisAiAccountsDatalist" value="${sisAiEscapeHtml(sisAiFormatRuleInputValue(item.debitCode || ''))}" onchange="updateSisAiGeminiHistoryEntry('${item.id}', 'debitCode', this.value)">
+                <input class="input-field" list="sisAiAccountsDatalist" value="${sisAiEscapeHtml(sisAiFormatRuleInputValue(item.creditCode || ''))}" onchange="updateSisAiGeminiHistoryEntry('${item.id}', 'creditCode', this.value)">
+            </div>
+            <textarea class="input-field" style="margin-top:8px;min-height:70px;" onchange="updateSisAiGeminiHistoryEntry('${item.id}', 'justificativa', this.value)">${safeReason}</textarea>
+        </div>`;
+    }).join('')}</div>`;
 }
 
 function updateMlKnowledgeEntry(token, field, value) {
