@@ -1,0 +1,533 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIS-C | Módulos</title>
+<link rel="icon" type="image/png" href="icosis-c.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',sans-serif;background:#f0f0f0;overflow:hidden}
+
+/* ─── TOP BAR ─── */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:38px;display:flex;align-items:center;justify-content:space-between;
+  background:#1c1c1c;padding:0 18px;
+  border-bottom:2px solid #3a3a3a;
+  user-select:none;
+}
+.topbar-brand{display:flex;align-items:center;gap:10px;color:#fff}
+.topbar-brand img{width:20px;height:20px;object-fit:contain}
+.topbar-brand span{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.topbar-info{display:flex;align-items:center;gap:22px}
+.topbar-info span{font-size:.73rem;color:rgba(255,255,255,.55);font-weight:500}
+.topbar-info .tag{color:#a3d977;font-weight:700}
+.topbar-exit{
+  display:flex;align-items:center;gap:7px;
+  color:rgba(255,255,255,.55);font-size:.73rem;font-weight:600;
+  background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:4px;
+  transition:background .15s,color .15s;
+}
+.topbar-exit:hover{background:rgba(255,255,255,.08);color:#fff}
+.btn-theme-mod{
+  display:flex;align-items:center;justify-content:center;
+  width:28px;height:28px;border-radius:5px;
+  border:1px solid rgba(255,255,255,.18);background:transparent;
+  color:rgba(255,255,255,.65);cursor:pointer;font-size:.82rem;
+  transition:background .14s,color .14s;
+}
+.btn-theme-mod:hover{background:rgba(255,255,255,.1);color:#fff}
+.btn-theme-mod .icon-sun{display:none}
+.btn-theme-mod .icon-moon{display:inline}
+html.light .btn-theme-mod .icon-sun{display:inline}
+html.light .btn-theme-mod .icon-moon{display:none}
+html.dark .btn-theme-mod .icon-sun{display:none}
+html.dark .btn-theme-mod .icon-moon{display:inline}
+
+/* ─── LAYOUT ─── */
+.app{
+  display:flex;height:100vh;padding-top:38px;
+}
+
+/* ─── LEFT NAV ─── */
+.sidenav{
+  width:260px;flex-shrink:0;
+  background:#2b2b2b;
+  display:flex;flex-direction:column;
+  border-right:1px solid #1a1a1a;
+  overflow-y:auto;
+}
+.sidenav-logo{
+  padding:20px 18px 16px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.sidenav-logo .sys-title{
+  font-size:1rem;font-weight:800;color:#fff;letter-spacing:.04em;
+}
+.sidenav-logo .sys-sub{
+  font-size:.75rem;color:rgba(255,255,255,.38);margin-top:2px;
+}
+.sidenav-groups{flex:1;padding:10px 0}
+.group-btn{
+  width:100%;display:flex;align-items:center;gap:14px;
+  padding:13px 22px;
+  background:none;border:none;cursor:pointer;
+  color:rgba(255,255,255,.62);font:600 .92rem 'Inter',sans-serif;
+  text-align:left;transition:background .14s,color .14s;
+  border-left:3px solid transparent;
+  position:relative;
+}
+.group-btn i{width:18px;text-align:center;font-size:.95rem;flex-shrink:0}
+.group-btn:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.group-btn.active{
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  border-left-color:#4f9eff;
+}
+.group-btn .badge-dev{
+  margin-left:auto;font-size:.6rem;font-weight:700;
+  padding:2px 6px;border-radius:3px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.35);
+  white-space:nowrap;
+}
+.sidenav-footer{
+  padding:14px 18px;border-top:1px solid rgba(255,255,255,.07);
+}
+.sidenav-user{display:flex;align-items:center;gap:10px}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#4f9eff,#2f63d8);
+  display:grid;place-items:center;font-size:.85rem;color:#fff;flex-shrink:0;
+}
+.user-name{font-size:.75rem;font-weight:700;color:rgba(255,255,255,.75)}
+.user-role{font-size:.65rem;color:rgba(255,255,255,.35)}
+
+/* ─── CONTENT ─── */
+.content{
+  flex:1;overflow-y:auto;background:#e8e8e8;
+  display:flex;flex-direction:column;
+}
+.content-header{
+  padding:22px 28px 0;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  gap:16px;flex-shrink:0;
+}
+.content-title{
+  font-size:1.35rem;font-weight:800;color:#1a1a1a;letter-spacing:.01em;
+}
+.content-desc{font-size:.8rem;color:#666;margin-top:4px}
+.content-search{
+  display:flex;align-items:center;gap:8px;
+  background:#fff;border:1px solid #ccc;border-radius:5px;
+  padding:6px 12px;min-width:220px;
+}
+.content-search input{
+  border:none;outline:none;font:500 .82rem 'Inter',sans-serif;color:#333;
+  flex:1;background:transparent;
+}
+.content-search i{color:#999;font-size:.8rem}
+
+/* ─── TILES AREA ─── */
+.tiles-area{
+  padding:20px 28px 32px;
+  flex:1;
+}
+
+/* Section heading */
+.section-label{
+  font-size:.7rem;font-weight:700;color:#888;letter-spacing:.08em;
+  text-transform:uppercase;margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-label::after{content:'';flex:1;height:1px;background:#ccc}
+
+/* Tiles grid */
+.tiles-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:16px;
+  margin-bottom:32px;
+}
+
+/* Individual tile */
+.tile{
+  aspect-ratio:1/.95;
+  border-radius:4px;
+  display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-end;
+  padding:12px 12px 10px;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:filter .15s,transform .12s;
+  text-decoration:none;border:none;
+  box-shadow:0 2px 6px rgba(0,0,0,.18);
+}
+.tile:hover{filter:brightness(1.1);transform:scale(1.03)}
+.tile:active{transform:scale(.98)}
+.tile.locked{cursor:default;filter:grayscale(.4) brightness(.82)}
+.tile.locked:hover{filter:grayscale(.4) brightness(.82);transform:none}
+
+/* Tile icon */
+.tile-icon{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-60%);
+  font-size:2.8rem;color:rgba(255,255,255,.82);
+  pointer-events:none;
+}
+/* Tile label */
+.tile-label{
+  font-size:.72rem;font-weight:700;color:#fff;
+  line-height:1.2;position:relative;z-index:1;
+  text-shadow:0 1px 3px rgba(0,0,0,.3);
+}
+.tile-sub{
+  font-size:.6rem;color:rgba(255,255,255,.72);margin-top:2px;
+  position:relative;z-index:1;
+}
+/* Lock badge */
+.tile-lock{
+  position:absolute;top:7px;right:7px;
+  font-size:.65rem;background:rgba(0,0,0,.28);
+  color:rgba(255,255,255,.65);padding:2px 5px;border-radius:2px;
+  font-weight:700;letter-spacing:.04em;
+}
+
+/* Tile color variants */
+.t-blue       {background:#2e6bc4}
+.t-blue-dark  {background:#1b4fa0}
+.t-green      {background:#3a9c4e}
+.t-green-dark {background:#2b7a3c}
+.t-orange     {background:#d9760c}
+.t-orange2    {background:#c9500e}
+.t-red        {background:#c0392b}
+.t-gray       {background:#6b7280}
+.t-gray2      {background:#52606d}
+.t-purple     {background:#7c3aed}
+.t-purple2    {background:#5b21b6}
+.t-teal       {background:#0e7490}
+.t-teal2      {background:#155e75}
+.t-yellow     {background:#b45309}
+.t-yellow2    {background:#92400e}
+.t-pink       {background:#be185d}
+.t-slate      {background:#475569}
+
+/* ─── EMPTY STATE ─── */
+.empty-state{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  color:#aaa;text-align:center;padding:40px;
+}
+.empty-state i{font-size:3rem;margin-bottom:16px;opacity:.4}
+.empty-state p{font-size:.9rem;font-weight:600}
+
+/* Scrollbar */
+.sidenav::-webkit-scrollbar,.content::-webkit-scrollbar{width:5px}
+.sidenav::-webkit-scrollbar-track{background:transparent}
+.sidenav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.12);border-radius:3px}
+.content::-webkit-scrollbar-track{background:transparent}
+.content::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:3px}
+
+/* ─── LIGHT MODE (html.light) ─── */
+html.light body{background:#e8e8e8;color:#1a1a2e}
+html.light .topbar{background:#1c1c1c}
+html.light .sidenav{background:#2b2b2b;border-right-color:#1a1a1a}
+html.light .sidenav-logo .sys-title{color:#fff}
+html.light .sidenav-logo .sys-sub{color:rgba(255,255,255,.5)}
+html.light .group-btn{color:rgba(255,255,255,.65)}
+html.light .group-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+html.light .group-btn.active{background:rgba(79,158,255,.15);color:#fff;border-left-color:#4f9eff}
+html.light .content{background:#e8e8e8}
+html.light .content-header{color:#222}
+html.light .search-bar{background:#fff;border-color:#ccc;color:#1a1a2e}
+html.light .tile{color:#fff}
+html.light .tile-locked{background:#ccc!important;color:#666}
+
+/* ─── DARK MODE (html.dark) ─── */
+html.dark body{background:#111318;color:#e2e8f0}
+html.dark .topbar{background:#0d0f14;border-bottom-color:#252830}
+html.dark .sidenav{background:#161920;border-right-color:#252830}
+html.dark .sidenav-logo .sys-title{color:#e2e8f0}
+html.dark .sidenav-logo .sys-sub{color:rgba(255,255,255,.4)}
+html.dark .group-btn{color:rgba(255,255,255,.55)}
+html.dark .group-btn:hover{background:rgba(255,255,255,.07);color:#e2e8f0}
+html.dark .group-btn.active{background:rgba(74,144,226,.18);color:#93c5fd;border-left-color:#4a90e2}
+html.dark .content{background:#111318}
+html.dark .content-header{color:#e2e8f0}
+html.dark .search-bar{background:#1e2029;border-color:#363a47;color:#e2e8f0}
+html.dark .search-bar::placeholder{color:#4b5563}
+html.dark .tile{color:#fff}
+html.dark .tile-label{color:#fff}
+html.dark .tile-locked{background:#252830!important;color:#4b5563}
+html.dark .sidenav-footer{border-top-color:#252830;color:#6b7280}
+html.dark .empty-state{color:#6b7280}
+html.dark .badge-dev{background:#252830;color:#6b7280}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<nav class="topbar">
+  <div class="topbar-brand">
+    <img src="icosis-c.png" alt="SIS-C">
+    <span>NEO SIS-C Contábil</span>
+  </div>
+  <div class="topbar-info">
+    <span>Versão 1.0</span>
+    <span class="tag">AREA PADRÃO</span>
+    <span id="clock"></span>
+  </div>
+  <button class="btn-theme-mod" id="themeToggleMod" onclick="toggleThemeMod()" title="Alternar tema claro/escuro">
+    <i class="fa-solid fa-sun icon-sun"></i>
+    <i class="fa-solid fa-moon icon-moon"></i>
+  </button>
+  <button class="topbar-exit" onclick="window.location.href='index.html'">
+    <i class="fa-solid fa-right-from-bracket"></i> Sair
+  </button>
+</nav>
+
+<div class="app">
+
+  <!-- LEFT SIDEBAR -->
+  <nav class="sidenav">
+    <div class="sidenav-logo">
+      <div class="sys-title">SIS-C</div>
+      <div class="sys-sub">Portal de Módulos</div>
+    </div>
+
+    <div class="sidenav-groups" id="sidenavGroups">
+      <!-- injected by JS -->
+    </div>
+
+    <div class="sidenav-footer">
+      <div class="sidenav-user">
+        <div class="user-avatar"><i class="fa-solid fa-user"></i></div>
+        <div>
+          <div class="user-name">Usuário</div>
+          <div class="user-role">Administrador</div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="content" id="contentArea">
+    <!-- injected by JS -->
+  </main>
+
+</div>
+
+<script>
+(function () {
+
+  /* ── DATA ── */
+  var GROUPS = [
+    {
+      id: 'contabil',
+      label: 'Contábil',
+      icon: 'fa-solid fa-book-bookmark',
+      desc: 'Módulo contábil, movimentação financeira e demonstrativos',
+      sections: [
+        {
+          title: 'Disponíveis',
+          tiles: [
+            { label: 'Módulo\nContábil', sub: 'Lançamentos e classificação', icon: 'fa-solid fa-book-bookmark', color: 't-blue', href: 'contabil.html' },
+            { label: 'Correio de\nMovimentação', sub: 'Movimentação financeira', icon: 'fa-solid fa-envelope-open-text', color: 't-green', href: 'contabil.html' },
+            { label: 'Emissão de\nDemonstrativos', sub: 'DRE, Balanço, Balancete', icon: 'fa-solid fa-print', color: 't-purple', href: 'contabil.html' }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'fiscal',
+      label: 'Fiscal',
+      icon: 'fa-solid fa-receipt',
+      desc: 'Emissão de notas fiscais, operacional e apurações de impostos',
+      sections: [
+        {
+          title: 'Em Desenvolvimento',
+          tiles: [
+            { label: 'Emissão\nde NF', sub: 'NF-e / NFS-e / NFC-e', icon: 'fa-solid fa-file-contract', color: 't-orange', href: 'emissao.html' },
+            { label: 'Operacional', sub: 'Escrituração fiscal', icon: 'fa-solid fa-clipboard-check', color: 't-teal', locked: true },
+            { label: 'Apurações\nde Imposto', sub: 'ICMS, ISS, PIS/COFINS', icon: 'fa-solid fa-calculator', color: 't-orange2', locked: true }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'dp',
+      label: 'Depto. Pessoal',
+      icon: 'fa-solid fa-id-card-clip',
+      desc: 'Folha de pagamento e relatórios de pessoal',
+      sections: [
+        {
+          title: 'Em Desenvolvimento',
+          tiles: [
+            { label: 'Folha de\nPagamento', sub: 'Holerites e encargos', icon: 'fa-solid fa-money-check-dollar', color: 't-green', locked: true },
+            { label: 'Relatórios\nDP', sub: 'RAIS, CAGED e outros', icon: 'fa-solid fa-chart-column', color: 't-blue', locked: true }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'financeiro',
+      label: 'Financeiro',
+      icon: 'fa-solid fa-money-bill-trend-up',
+      desc: 'Honorários e gestão financeira do escritório',
+      sections: [
+        {
+          title: 'Em Desenvolvimento',
+          tiles: [
+            { label: 'Honorários', sub: 'Cobrança e controle', icon: 'fa-solid fa-hand-holding-dollar', color: 't-yellow', locked: true }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'config',
+      label: 'Configurações',
+      icon: 'fa-solid fa-gear',
+      desc: 'Empresas, usuários, permissões e parâmetros do sistema',
+      sections: [
+        {
+          title: 'Em Desenvolvimento',
+          tiles: [
+            { label: 'Empresas', sub: 'Gestão de carteira', icon: 'fa-solid fa-building', color: 't-blue', locked: true },
+            { label: 'Plano de\nContas', sub: 'Estrutura global', icon: 'fa-solid fa-list-tree', color: 't-green', locked: true },
+            { label: 'Usuários', sub: 'Permissões', icon: 'fa-solid fa-users-gear', color: 't-purple', locked: true },
+            { label: 'Parâmetros', sub: 'Sistema', icon: 'fa-solid fa-sliders', color: 't-gray', locked: true },
+            { label: 'Certificado\nDigital', sub: 'A1 / A3', icon: 'fa-solid fa-certificate', color: 't-orange', locked: true }
+          ]
+        }
+      ]
+    }
+  ];
+
+  var activeGroupId = 'contabil';
+
+  /* ── BUILD SIDEBAR ── */
+  function buildSidenav() {
+    var nav = document.getElementById('sidenavGroups');
+    nav.innerHTML = GROUPS.map(function (g) {
+      var hasAvailable = g.sections.some(function (s) {
+        return !s.title.toLowerCase().includes('desenvolvimento');
+      });
+      return '<button class="group-btn' + (g.id === activeGroupId ? ' active' : '') + '" data-gid="' + g.id + '">' +
+        '<i class="' + g.icon + '"></i>' +
+        '<span>' + g.label + '</span>' +
+        (!hasAvailable ? '<span class="badge-dev">DEV</span>' : '') +
+        '</button>';
+    }).join('');
+
+    nav.querySelectorAll('.group-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        nav.querySelectorAll('.group-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeGroupId = btn.dataset.gid;
+        renderContent();
+      });
+    });
+  }
+
+  /* ── BUILD CONTENT ── */
+  function renderContent() {
+    var group = GROUPS.find(function (g) { return g.id === activeGroupId; });
+    if (!group) return;
+
+    var searchVal = (document.getElementById('searchInput') || { value: '' }).value.toLowerCase();
+
+    var sectionsHtml = group.sections.map(function (sec) {
+      var tiles = sec.tiles.filter(function (t) {
+        if (!searchVal) return true;
+        return (t.label + ' ' + (t.sub || '')).toLowerCase().includes(searchVal);
+      });
+      if (!tiles.length) return '';
+
+      return '<div class="section-label">' + sec.title + '</div>' +
+        '<div class="tiles-grid">' +
+        tiles.map(function (t) {
+          var lines = t.label.split('\n');
+          var tag = t.href ? 'a' : 'div';
+          var href = t.href ? ' href="' + t.href + '"' : '';
+          var locked = t.locked ? ' locked' : '';
+          return '<' + tag + href + ' class="tile ' + t.color + locked + '">' +
+            '<i class="tile-icon ' + t.icon + '"></i>' +
+            (t.locked ? '<span class="tile-lock">DEV</span>' : '') +
+            '<div class="tile-label">' + lines.join('<br>') + '</div>' +
+            (t.sub ? '<div class="tile-sub">' + t.sub + '</div>' : '') +
+            '</' + tag + '>';
+        }).join('') +
+        '</div>';
+    }).join('');
+
+    document.getElementById('contentArea').innerHTML =
+      '<div class="content-header">' +
+        '<div>' +
+          '<div class="content-title">' + group.label + '</div>' +
+          '<div class="content-desc">' + group.desc + '</div>' +
+        '</div>' +
+        '<label class="content-search">' +
+          '<i class="fa-solid fa-magnifying-glass"></i>' +
+          '<input id="searchInput" type="search" placeholder="Filtrar módulos…" autocomplete="off">' +
+        '</label>' +
+      '</div>' +
+      '<div class="tiles-area">' + sectionsHtml + '</div>';
+
+    document.getElementById('searchInput').addEventListener('input', renderContent);
+  }
+
+  /* ── THEME TOGGLE ── */
+  var THEME_KEY = 'siscNfTheme';
+
+  function applyThemeMod(theme) {
+    var html = document.documentElement;
+    html.classList.remove('dark', 'light');
+    if (theme === 'dark') html.classList.add('dark');
+    else if (theme === 'light') html.classList.add('light');
+    var btn = document.getElementById('themeToggleMod');
+    if (btn) btn.title = theme === 'dark' ? 'Mudar para tema claro' : theme === 'light' ? 'Mudar para tema escuro' : 'Alternar tema (automático)';
+  }
+
+  window.toggleThemeMod = function () {
+    var current = localStorage.getItem(THEME_KEY) || 'auto';
+    var next = current === 'auto' ? 'dark' : current === 'dark' ? 'light' : 'auto';
+    localStorage.setItem(THEME_KEY, next);
+    applyThemeMod(next);
+    var labels = { dark: 'Modo escuro', light: 'Modo claro', auto: 'Automático (sistema)' };
+    var toast = document.createElement('div');
+    toast.textContent = labels[next] || next;
+    Object.assign(toast.style, { position:'fixed', bottom:'20px', right:'20px', zIndex:'9999',
+      background:'rgba(28,28,28,.95)', color:'#fff', padding:'7px 16px', borderRadius:'5px',
+      fontSize:'.76rem', fontFamily:'Inter,sans-serif', fontWeight:'600',
+      boxShadow:'0 4px 14px rgba(0,0,0,.4)', pointerEvents:'none', transition:'opacity .3s' });
+    document.body.appendChild(toast);
+    setTimeout(function () { toast.style.opacity = '0'; }, 1400);
+    setTimeout(function () { toast.remove(); }, 1700);
+  };
+
+  (function initThemeMod() {
+    var saved = localStorage.getItem(THEME_KEY) || 'auto';
+    applyThemeMod(saved);
+  })();
+
+  /* ── CLOCK ── */
+  function updateClock() {
+    var el = document.getElementById('clock');
+    if (!el) return;
+    var now = new Date();
+    var h = String(now.getHours()).padStart(2, '0');
+    var m = String(now.getMinutes()).padStart(2, '0');
+    el.textContent = h + ':' + m;
+  }
+  updateClock();
+  setInterval(updateClock, 30000);
+
+  /* ── INIT ── */
+  buildSidenav();
+  renderContent();
+
+})();
+</script>
+</body>
+</html>
